@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>KKM T&CM Formulary Malaysia | Chinese Herbal Database + MAL Registered Products</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+            background: #f4fbf0;
+            padding: 1.5rem;
+            color: #1a3a1a;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1f6422, #468a3b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .badge {
+            background: #e2f0da;
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            color: #2a642a;
+            font-weight: 600;
+        }
+
+        .kkm-badge {
+            background: #1e5c1e;
+            color: white;
+            margin-left: 0.5rem;
+        }
+
+        .load-btn-container {
+            margin: 1.2rem 0 0.5rem;
+        }
+
+        .btn-primary-load {
+            background: #2c762f;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+            border: 1px solid #1f5a1f;
+        }
+
+        .btn-primary-load:hover {
+            background: #1d5b1f;
+            transform: scale(1.02);
+        }
+
+        .success-badge {
+            background: #2c762f20;
+            color: #1f5a1f;
+            border-radius: 40px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.7rem;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        /* CSV Import Panel */
+        .csv-panel {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            margin-bottom: 1.8rem;
+            border: 1px solid #cbe2bf;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .csv-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .csv-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2b5e2b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .csv-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-sm {
+            background: #eef4e9;
+            border: 1px solid #bfd9b2;
+            padding: 0.4rem 1rem;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: #2b572b;
+            transition: 0.15s;
+        }
+
+        .btn-sm.primary {
+            background: #2c762f;
+            border-color: #2c762f;
+            color: white;
+        }
+
+        .btn-sm.primary:hover {
+            background: #1d5b1f;
+        }
+
+        .btn-sm:hover {
+            background: #e2ecd9;
+        }
+
+        textarea {
+            width: 100%;
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+            font-size: 0.75rem;
+            padding: 1rem;
+            border-radius: 1rem;
+            border: 1px solid #d0e2c4;
+            background: #fefef8;
+            resize: vertical;
+            margin-bottom: 12px;
+        }
+
+        .csv-status {
+            font-size: 0.7rem;
+            color: #5f7a53;
+            margin-top: 6px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .sample-csv {
+            font-size: 0.7rem;
+            background: #f3f7ef;
+            padding: 6px 10px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+
+        /* Search Panel */
+        .search-panel {
+            background: rgba(255, 255, 248, 0.96);
+            border-radius: 1.8rem;
+            padding: 0.9rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #dcf0ce;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .search-box {
+            flex: 4;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-box input {
+            flex: 3;
+            padding: 0.8rem 1.2rem;
+            border: 1px solid #cde0c2;
+            border-radius: 60px;
+            font-size: 0.95rem;
+            background: white;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #3f9e40;
+            box-shadow: 0 0 0 3px #c3e2b5;
+        }
+
+        .search-box button, .clear-search {
+            background: #2c762f;
+            border: none;
+            padding: 0 1.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .clear-search {
+            background: #7c9172;
+        }
+
+        .clear-search:hover {
+            background: #5b704f;
+        }
+
+        .stats {
+            background: #eaf4e4;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #2f6b2f;
+        }
+
+        /* Table Styles */
+        .table-wrapper {
+            background: white;
+            border-radius: 1.5rem;
+            border: 1px solid #e2f0d6;
+            overflow-x: auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+        }
+
+        th {
+            background: #ecf5e6;
+            padding: 0.9rem 0.8rem;
+            text-align: left;
+            font-weight: 700;
+            color: #1e4a20;
+            border-bottom: 2px solid #d0e4c2;
+        }
+
+        td {
+            padding: 0.75rem 0.8rem;
+            border-bottom: 1px solid #eaf1e2;
+            vertical-align: top;
+            line-height: 1.4;
+        }
+
+        tr:hover td {
+            background-color: #fafff1;
+        }
+
+        .highlight {
+            background-color: #f9ef9c;
+            font-weight: 500;
+            border-radius: 3px;
+            padding: 0 2px;
+        }
+
+        .mal-number {
+            background: #e6f0e0;
+            color: #1e5c1e;
+            font-family: monospace;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 6px;
+            display: inline-block;
+            margin: 0.1rem 0;
+            font-weight: 600;
+        }
+
+        .commercial-name {
+            background: #fef3c7;
+            color: #8a6d1c;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            display: inline-block;
+            margin: 0.1rem 0;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 2.5rem;
+            color: #8a9c7a;
+            font-style: italic;
+        }
+
+        footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #6e8762;
+            border-top: 1px solid #ddecd1;
+            padding-top: 1rem;
+        }
+
+        .disclaimer {
+            background: #fef9e6;
+            border-left: 4px solid #3b7a2a;
+            padding: 0.8rem;
+            margin-bottom: 1.2rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+        }
+
+        @media (max-width: 750px) {
+            body { padding: 1rem; }
+            th, td { font-size: 0.7rem; padding: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🌿 FORMULARI T&CM CINA MALAYSIA 2026</h1>
+        <div class="badge">
+            Berdasarkan Pekeliling KPK Bil. 2/2026 KKM & Formulari PT&K Versi 1.0
+            <span class="kkm-badge" style="background:#1e5c1e; padding:0.2rem 0.8rem;">✓ Rujukan PBKD & MAL</span>
+        </div>
+        <div class="load-btn-container">
+            <button id="loadMasterBtn" class="btn-primary-load"> 🌿 AKTIFKAN PANGKALAN DATA LENGKAP (KKM T&CM + PBKD MAL)</button>
+            <span class="success-badge" id="dbStatusIndicator">⚡ PANGKALAN DATA BELUM DIAKTIFKAN</span>
+        </div>
+    </div>
+
+    <div class="disclaimer">
+        ⚕️ <strong>Rujukan :</strong> Formulari Perubatan Tradisional dan Komplementari (PT&K) KKM Versi 1.0 | 2026. 
+        Senarai Produk Diluluskan PBKD (Mesyuarat ke-404, 16 Jan 2025). Dos berdasarkan herba mentah. 
+        Hanya untuk kegunaan profesional kesihatan.
+    </div>
+
+    <!-- Search Panel -->
+    <div class="search-panel">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔎 Cari herba TCM, indikasi, kontraindikasi, atau nombor MAL... contoh: 'Dang Gui', 'kidney yang', 'MAL25016090T'">
+            <button id="searchBtn">Cari</button>
+            <button id="clearBtn" class="clear-search">Kosongkan</button>
+        </div>
+        <div class="stats" id="resultCount">📋 Rekod: 0</div>
+    </div>
+
+    <!-- Main Table -->
+    <div class="table-wrapper">
+        <table id="mainTable">
+            <thead>
+                <tr>
+                    <th>Nama Herba (Pinyin / Botani)</th>
+                    <th>Tindakan & Indikasi Utama (TCM)</th>
+                    <th>Dos (g/hari)</th>
+                    <th>Kontraindikasi / Langkah Berjaga</th>
+                    <th>Produk Berdaftar / No. MAL (PBKD)</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr><td colspan="5" class="no-data">🌱 Sila klik butang hijau "AKTIFKAN PANGKALAN DATA LENGKAP" untuk memulakan.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        Sumber: Garis Panduan Penyenaraian & Penyahsenaraian Produk PT&K (KKM 2026) | Senarai Produk Diluluskan PBKD Bil.404 (16 Jan 2025) | Formulari PT&K KKM Versi 1.0
+    </footer>
+
+    <!-- CSV Import Panel for Advanced Users -->
+    <div class="csv-panel">
+        <div class="csv-header">
+            <h3>📋 <span>📂 Kemaskini / Import Data Herba (CSV)</span></h3>
+            <div class="csv-actions">
+                <button id="applyCsvBtn" class="btn-sm primary">✅ Guna CSV ini</button>
+                <button id="resetDefaultBtn" class="btn-sm">⟳ Reset ke Data KKM + PBKD</button>
+            </div>
+        </div>
+        <textarea id="csvTextArea" rows="2" placeholder="Tampal data CSV di sini... Format: name,actions,indication,dosage,contraindication,commercial&#10;Contoh:&#10;Ba Ji Tian,Tonify kidney yang...,Deficiency of kidney yang...,3-15g,Heat signs...,MAL123456T"></textarea>
+        <div class="csv-status">
+            <span>💡 <strong>Tampal dari fail CSV (header wajib: name, actions, indication, dosage, contraindication, commercial)</strong></span>
+            <span class="sample-csv">📌 Format 6 kolum: Nama | Tindakan | Indikasi | Dos | Kontra | Komersial/MAL</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ==============================================================
+    // MERGED MASTER DATABASE
+    // ==============================================================
+    // BASE: Complete KKM T&CM Formulary (200+ herbs from File 1)
+    // ENRICHED: Added commercial product names and MAL numbers from File 2 (PBKD 2025)
+    // PLUS: Additional standalone MAL products from File 2
+    
+    const masterHerbDatabase = [
+        { name: "Ba Ji Tian", actions: "Tonify kidney yang, strengthen tendons and bones, dispel wind-damp", indication: "Deficiency of kidney yang, wind-damp arthralgia", dosage: "3-15g", contraindication: "Heat signs caused by yin deficiency or damp heat patterns; difficulty urinating", commercial: "-" },
+        { name: "Bai He", actions: "Moisten lung to suppress cough, clear heart to tranquillise", indication: "Lung yin deficiency syndrome, Heat yin deficiency syndrome", dosage: "6-12g", contraindication: "Wind-cold conditions when there is phlegm, or spleen deficiency with diarrhoea", commercial: "-" },
+        { name: "Bai Hua She She Cao", actions: "Clear heat and remove toxicity, excrete dampness and relieve stranguria", indication: "Sores and abscess, swollen and sore throat, venomous snake bite, heat stranguria", dosage: "15-60g", contraindication: "-", commercial: "-" },
+        { name: "Bai Jiang Cao", actions: "Clear heat and remove toxicity, activate blood and alleviate pain", indication: "Sores and abscess due to heat-toxicity; Abdominal pain due to stasis", dosage: "3-15g", contraindication: "Diarrhoea, lack of appetite associated with Spleen and stomach Deficiency", commercial: "-" },
+        { name: "Bai Mao Gen", actions: "Cool blood and stop bleeding, clear heat and induce diuresis", indication: "Bleeding caused by blood heat; Oedema, heat stranguria and jaundice", dosage: "9-30g", contraindication: "Cold associated with Spleen Deficiency", commercial: "-" },
+        { name: "Bai Shao / Bai Shao Yao", actions: "Tonify blood, astringe yin to check sweating, emolliate liver to alleviate pain", indication: "Blood deficiency; Sweating due to deficiency; Hypochondriac pain, abdominal pain; Hyperactivity of liver yang", dosage: "6-15g", contraindication: "Diarrhoea, spleen and stomach deficiency", commercial: "Si Wu Tang (formula klasik)" },
+        { name: "Bai Xian Pi", actions: "Clear heat and dry dampness, purge fire and detoxicate, dispel wind and relieve itching", indication: "Jaundice, stranguria, eczema, damp sores, dermal pruritis", dosage: "5-15g", contraindication: "Cold, deficient qi with cold in the abdomen", commercial: "-" },
+        { name: "Bai Zhi", actions: "Expel wind and release exterior, alleviate pain, relieve stuffy nose", indication: "Wind-cold exterior syndrome; Headache, toothache; Stuffy nose; Morbid leucorrhoea", dosage: "3-11.5g", contraindication: "Yin or blood deficiency", commercial: "-" },
+        { name: "Bai Zhu", actions: "Tonify spleen qi, dry dampness, induce diuresis, arrest sweating", indication: "Spleen qi deficiency; Spontaneous sweating; Threatened abortion", dosage: "6-15g", contraindication: "Yin deficiency with heat signs or extreme thirst", commercial: "Si Jun Zi Tang, Shen Ling Bai Zhu San" },
+        { name: "Ban Lan Gen", actions: "Clear heat and remove toxicity, cool blood, alleviate sore throat", indication: "Warm disease; Swollen and sore throat", dosage: "9-15g", contraindication: "Deficient or without true Fire toxicity", commercial: "-" },
+        { name: "Ban Zhi Lian", actions: "Clear heat and remove toxicity; activate blood; induce diuresis", indication: "Abscess and sores; Swollen throat; Hepatitis, nephritis", dosage: "15-30g", contraindication: "Pregnancy, blood deficiency", commercial: "-" },
+        { name: "Bo He", actions: "Disperse wind-heat, clear head and eyes, soothe the throat", indication: "Wind-heat exterior syndrome; Headache; Sore throat; Measles", dosage: "3-10g", contraindication: "Nursing mothers (may slow lactation)", commercial: "-" },
+        { name: "Bo Zi Ren", actions: "Calm the mind, moisten the intestine and relax the bowel", indication: "Unsteadiness of heart-mind; Constipation", dosage: "3-12g", contraindication: "-", commercial: "-" },
+        { name: "Bu Gu Zhi", actions: "Warm kidney and tonify yang, secure essence, warm spleen to check diarrhoea", indication: "Seminal emission, enuresis; Impotence; Diarrhoea before dawn", dosage: "5-12g", contraindication: "Yin deficiency with heat signs", commercial: "-" },
+        { name: "Cang Er Zi", actions: "Disperse wind-cold, relieve nasal obstruction", indication: "Wind-cold exterior syndrome; Nasal stuffiness", dosage: "3-12g", contraindication: "Blood or yin deficiency", commercial: "-" },
+        { name: "Cang Zhu", actions: "Dry dampness and invigorate spleen, dispel wind-dampness", indication: "Damp obstruction; Wind-damp arthralgia", dosage: "3-9g", contraindication: "Qi deficiency or yin deficiency with heat", commercial: "-" },
+        { name: "Chai Hu", actions: "Release exterior and cure fever, soothe liver, ascend yang qi", indication: "Shaoyang syndrome (alternating chills/fever); Liver depression; Sinking of middle qi", dosage: "3-10g", contraindication: "Yin Deficiency, extreme headaches", commercial: "Xiao Chai Hu Tang, Chai Hu Shu Gan Tang (granul)" },
+        { name: "Che Qian Zi", actions: "Induce diuresis, drain dampness, clear Liver fire", indication: "Stranguria and oedema; Diarrhoea; Blood-shot eyes", dosage: "5-15g", contraindication: "-", commercial: "-" },
+        { name: "Chen Pi", actions: "Promote flow of qi, arrest vomiting, dry dampness", indication: "Liver depression; Abdominal pain; Food retention", dosage: "3-11.5g", contraindication: "Cough with yin deficiency", commercial: "-" },
+        { name: "Chi Shao", actions: "Clear heat and cool blood, activate blood, clear liver fire", indication: "Heat entering nutrient-blood; Blood stasis; Blood-shot eyes", dosage: "3-12g", contraindication: "Blood Deficiency", commercial: "-" },
+        { name: "Chi Xiao Dou", actions: "Induce diuresis, remove toxin, drain pus", indication: "Oedema; Stranguria; Dysentery; Abscess; Jaundice", dosage: "9-30g", contraindication: "-", commercial: "-" },
+        { name: "Chuan Bei Mu", actions: "Clear heat-phlegm, moisten dry-phlegm, stop cough", indication: "Dry cough due to lung heat; Scrofula; Abscess", dosage: "3-10g", contraindication: "Cold-Damp Phlegm. Incompatible with Wu Tou", commercial: "-" },
+        { name: "Chuan Lian Zi", actions: "Move Qi and alleviate pain, expel ascaris", indication: "Pain due to qi stagnation; Ascariasis", dosage: "4.5-11.5g", contraindication: "Cold deficiency of stomach and spleen", commercial: "-" },
+        { name: "Chuan Xiong", actions: "Activate blood circulation and move qi, expel wind", indication: "Pain due to blood stasis; Headache; Wind-damp arthralgia", dosage: "3-10g", contraindication: "Yin deficiency, abnormal bleeding, pregnancy", commercial: "BTY CHUAN XIONG CHA TIAO HE JI (MAL25016089T)" },
+        { name: "Da Fu Pi", actions: "Move qi and remove stagnation, induce diuresis", indication: "Distention in stomach; Belching; Oedema", dosage: "4.5-11.5g", contraindication: "Weak with qi deficiency", commercial: "-" },
+        { name: "Da Huang", actions: "Remove accumulation, clear heat, cool blood, remove toxicity", indication: "Constipation; Excess fire-heat; Blood stasis", dosage: "0.2-15g", contraindication: "Pregnancy, menstruation, lactation", commercial: "-" },
+        { name: "Da Zao", actions: "Tonify qi, tonify spleen, nourish blood", indication: "Spleen qi deficiency; Insomnia; Blood deficiency", dosage: "6-30g", contraindication: "Dampness, food stagnation", commercial: "-" },
+        { name: "Dan Shen", actions: "Activate blood and remove stasis, cool Blood, relieve restlessness", indication: "Blood stasis; Abscesses; Restlessness and insomnia", dosage: "5-15g", contraindication: "Contraindicated to Li Lu; No blood stasis", commercial: "Plus Danshen Tablet (MAL05012350T)" },
+        { name: "Dang Gui", actions: "Tonify blood, activate blood, alleviate pain, regulate menstruation", indication: "Blood insufficiency; Pain syndromes; Irregular menstruation; Constipation", dosage: "5-15g", contraindication: "Diarrhoea, yin deficiency with heat", commercial: "BTY DANG GUI SI NI TANG HE JI (MAL25016091T)" },
+        { name: "Dang Shen", actions: "Invigorate lung-qi and spleen-qi, nourish blood", indication: "Lung-spleen qi deficiency; Blood deficiency", dosage: "9-30g", contraindication: "-", commercial: "-" },
+        { name: "Di Gu Pi", actions: "Clear deficiency heat, clear lung fire, cool blood", indication: "Bone-steaming tidal fever; Cough due to lung heat; Bleeding", dosage: "9-15g", contraindication: "Weakness in spleen or stomach", commercial: "-" },
+        { name: "Du Huo", actions: "Dispel wind-damp, alleviate pain, release exterior", indication: "Arthralgia due to wind-cold-damp; Exterior syndrome with dampness", dosage: "3-11.5g", contraindication: "Yin deficiency with heat signs", commercial: "-" },
+        { name: "Du Zhong", actions: "Tonify liver and kidney, strengthen bones, prevent abortion", indication: "Liver-kidney deficiency; Lumbar pain; Threatened abortion", dosage: "6-15g", contraindication: "Heat signs with yin deficiency", commercial: "-" },
+        { name: "E Zhu", actions: "Break blood and move qi, resolve food stagnation", indication: "Mass, amenorrhea; Distension from food stagnation", dosage: "6-9g", contraindication: "Pregnancy and during menstrual periods", commercial: "San Zhong Kui Jian Tang" },
+        { name: "Fa Ban Xia", actions: "Dry Dampness and resolve phlegm, stop vomiting", indication: "Damp-phlegm; Nausea; Epigastric stuffiness", dosage: "3-9g", contraindication: "Contraindicated to Wu Tou", commercial: "-" },
+        { name: "Fang Feng", actions: "Dispel wind and release exterior, expel wind-damp", indication: "Exterior wind-cold; Rubella; Wind-damp arthralgia", dosage: "4.5-11.5g", contraindication: "Yin deficiency, blood deficiency", commercial: "-" },
+        { name: "Fo Shou/Fo Shou Gan", actions: "Soothe liver and regulate qi, dry dampness", indication: "Liver depression; Spleen-stomach qi stagnation; Cough with phlegm", dosage: "3-10g", contraindication: "-", commercial: "-" },
+        { name: "Fu Ling", actions: "Induce diuresis and alleviate oedema", indication: "Oedema; Dysuria", dosage: "9-30g", contraindication: "-", commercial: "Si Jun Zi Tang, Wu Ling San" },
+        { name: "Fu Pen Zi", actions: "Supplement Liver and Kidney, secure essence, assist Yang", indication: "Seminal emission; Enuresis; Liver-kidney deficiency; Poor vision", dosage: "6-12g", contraindication: "Yin Deficiency patterns", commercial: "-" },
+        { name: "Fu Shen", actions: "Calm the mind and drain dampness", indication: "Tranquillising medicinal", dosage: "9-30g", contraindication: "-", commercial: "-" },
+        { name: "Fu Xiao Mai", actions: "Strengthen superficies to check sweating, replenish Qi", indication: "Spontaneous sweating, night sweat; Bone-steaming fever", dosage: "15-30g", contraindication: "-", commercial: "-" },
+        { name: "Gan Cao", actions: "Tonify qi, relieve cough, relieve spasm, harmonise herbs", indication: "Palpitation; Spleen deficiency; Cough; Spasm pain; Sores", dosage: "2-11.5g", contraindication: "Excess dampness, nausea or vomiting", commercial: "Komponen utama formula TCM" },
+        { name: "Gan Jiang", actions: "Warm the middle, restore yang, warm lung", indication: "Spleen-stomach cold; Yang exhaustion; Cold-phlegm in lung", dosage: "3-10g", contraindication: "Yin deficiency and heat signs", commercial: "-" },
+        { name: "Gao Ben", actions: "Dispel wind-cold, relieve damp and pain", indication: "Common cold; Abdominal pain from cold", dosage: "3-11.5g", contraindication: "Yin deficiency with heat", commercial: "-" },
+        { name: "Ge Gen", actions: "Release exterior, promote eruption, promote fluids, ascend yang", indication: "High fever; Measles; Thirst; Diarrhoea due to spleen deficiency", dosage: "9-15g", contraindication: "Cold stomach and excessive sweating", commercial: "-" },
+        { name: "Gou Qi Zi", actions: "Nourish liver and kidney yin, supplement blood, improve vision", indication: "Essence-blood deficiency; Blurred vision due to liver-kidney deficiency", dosage: "6-15g", contraindication: "Heat and excess patterns, spleen deficiency with dampness", commercial: "Nutriforte Bilberry & Marigold Plus (MAL25016114TC)" },
+        { name: "Gu Sui Bu", actions: "Supplement kidney, strengthen bone, activate blood", indication: "Traumatic injuries; Lumbago; Tinnitus; Toothache", dosage: "3-12g", contraindication: "Yin deficiency or without blood stagnation", commercial: "-" },
+        { name: "Gu Ya/Dao Ya", actions: "Promote digestion", indication: "Food stagnation; Spleen deficiency", dosage: "9-30g", contraindication: "Stagnation of food", commercial: "-" },
+        { name: "Gua Lou/Gua Lou Shi", actions: "Clear heat and resolve phlegm, open chest", indication: "Cough due to heat-phlegm; Chest impediment; Lung abscess; Constipation", dosage: "9-15g", contraindication: "Cold-damp, spleen deficiency", commercial: "-" },
+        { name: "Gua Lou Gen/Tian Hua Fen", actions: "Clear heat, generate fluids, moisten dryness", indication: "Heat syndrome with thirst; Diabetes; Dry cough", dosage: "10-15g", contraindication: "Diarrhoea or no heat", commercial: "-" },
+        { name: "Guang Huo Xiang", actions: "Resolve dampness, arrest vomiting, release exterior", indication: "Damp obstruction; Vomiting; Summer-damp syndrome", dosage: "3-11.5g", contraindication: "Yin deficiency or heat", commercial: "-" },
+        { name: "Gui Zhi", actions: "Induce sweating, warm and unblock meridians", indication: "Wind-cold exterior syndrome; Cold with blood stasis; Yang deficiency", dosage: "3-10g", contraindication: "Warm febrile diseases, heat signs", commercial: "-" },
+        { name: "Han Lian Cao", actions: "Nourish liver and kidney, cool blood to stop bleeding", indication: "Liver-kidney yin deficiency; Bleeding syndromes", dosage: "6-15g", contraindication: "Cold deficiency of spleen or kidney", commercial: "-" },
+        { name: "He Huan Pi", actions: "Induce tranquillisation, relieve depression, activate blood", indication: "Depression, insomnia; Traumatic fracture; Abscess", dosage: "6-15g", contraindication: "-", commercial: "-" },
+        { name: "He Shou Wu", actions: "Tonify blood, supplement essence, moisten Intestine", indication: "Blood-essence deficiency; Chronic malaria; Constipation", dosage: "3-6g", contraindication: "Diarrhoea, phlegm with spleen deficiency", commercial: "-" },
+        { name: "Hong Hua", actions: "Activate blood and dredge meridians, dispel stasis", indication: "Amenorrhea, dysmenorrhea; Mass; Traumatic injuries", dosage: "3-10g", contraindication: "Pregnancy", commercial: "Xue Fu Zhu Yu Tang" },
+        { name: "Hong Jing Tian", actions: "Promote qi and activate blood, free pulse", indication: "Tonifying and replenishing", dosage: "3-6g", contraindication: "-", commercial: "-" },
+        { name: "Hu Zhang", actions: "Excrete dampness, remove jaundice, clear heat, resolve stasis", indication: "Jaundice; Scald; Amenorrhea; Cough due to lung heat", dosage: "9-20g", contraindication: "-", commercial: "-" },
+        { name: "Huai Niu Xi", actions: "Activate blood, tonify liver-kidney, promote diuresis", indication: "Amenorrhea; Lower back pain; Stranguria; Headache", dosage: "5-15g", contraindication: "-", commercial: "-" },
+        { name: "Huang Bo", actions: "Clear heat and dry dampness, purge fire", indication: "Damp-Heat syndromes; Heat-toxin; Yin deficiency with fire", dosage: "3-12g", contraindication: "Deficiency-cold syndrome", commercial: "-" },
+        { name: "Huang Jing", actions: "Nourish yin of lung, spleen, kidney, tonify qi", indication: "Dry cough due to lung deficiency; Spleen-stomach deficiency; Kidney deficiency", dosage: "9-15g", contraindication: "Spleen deficiency with dampness", commercial: "-" },
+        { name: "Huang Lian", actions: "Clear heat and dry dampness, purge fire", indication: "Damp-heat dysentery; Excess heat; Abscesses", dosage: "1.5-11.5g", contraindication: "Deficiency-cold syndrome", commercial: "BTY YIN QIAO JIE DU HE JI (MAL25016093T)" },
+        { name: "Huang Qi", actions: "Tonify qi, raise yang, secure superficial, promote diuresis", indication: "Spleen-lung qi deficiency; Spontaneous sweating; Oedema; Sores", dosage: "9-30g", contraindication: "Exterior excess, yin deficiency with yang hyperactivity", commercial: "Lionball Huang Qi Wu Wu Tang Powder (MAL25016087TC)" },
+        { name: "Huang Qin", actions: "Clear heat and dry dampness, purge fire, cool blood", indication: "Damp-heat syndromes; Cough due to lung heat; Heat-toxin", dosage: "3-10g", contraindication: "Lung deficiency heat with middle burner cold", commercial: "BTY YIN QIAO JIE DU HE JI" },
+        { name: "Huo Xiang", actions: "Nourish yin to clear lung, resolve phlegm", indication: "Dampness-dispelling", dosage: "4.5-11.5g", contraindication: "Yin deficiency or heat", commercial: "-" },
+        { name: "Ji Xue Teng", actions: "Move blood and nourish blood, relax tendons", indication: "Irregular menstruation; Wind-damp arthralgia; Numbness", dosage: "9-15g", contraindication: "-", commercial: "-" },
+        { name: "Jiang Huang", actions: "Activate blood and move qi, dredge meridians", indication: "Pain due to qi and blood stasis; Wind-damp arthralgia", dosage: "3-10g", contraindication: "Pregnancy, blood deficiency", commercial: "-" },
+        { name: "Jie Geng", actions: "Ventilate lung, dispel phlegm, relieve sore throat", indication: "Cough with phlegm; Sore throat; Lung abscess", dosage: "3-10g", contraindication: "Blood in sputum, tuberculosis", commercial: "-" },
+        { name: "Jin Qian Cao", actions: "Excrete Damp, relieve jaundice, induce diuresis", indication: "Jaundice; Urolithic stranguria; Gallbladder stone; Snake bite", dosage: "15-60g", contraindication: "-", commercial: "-" },
+        { name: "Jin Yin Hua", actions: "Clear heat and remove toxicity, disperse Wind-Heat", indication: "Warm diseases; Sores and abscess; Sore throat", dosage: "6-30g", contraindication: "Spleen-stomach deficiency with cold/diarrhoea", commercial: "-" },
+        { name: "Jing Jie", actions: "Dispel wind to release exterior, outthrust rashes", indication: "Exterior syndromes; Itching; Epistaxis", dosage: "3-11.5g", contraindication: "Spontaneous sweating", commercial: "-" },
+        { name: "Ju Hua", actions: "Disperse wind-heat, subdue liver yang, clear liver heat", indication: "Wind-heat exterior; Eye diseases; Vertigo", dosage: "5-12g", contraindication: "Qi deficiency with diarrhoea", commercial: "-" },
+        { name: "Ku Shen", actions: "Clear heat and dry dampness, purge fire, kill parasites", indication: "Damp-heat dysentery; Jaundice; Scabies; Leukorrhagia", dosage: "4.5-9g", contraindication: "Weakness and cold in spleen/stomach", commercial: "-" },
+        { name: "Ku Xing Ren", actions: "Relieve cough and dyspnoea, moisten intestines", indication: "Cough syndromes; Constipation", dosage: "3-11.5g", contraindication: "-", commercial: "-" },
+        { name: "Lai Fu Zi", actions: "Promote digestion, direct qi downward, resolve phlegm", indication: "Food stagnation; Cough with phlegm", dosage: "4.5-12g", contraindication: "Weak deficient qi. Contraindicated with Ren Shen", commercial: "-" },
+        { name: "Lian Qiao", actions: "Clear heat and remove toxicity, disperse wind-heat", indication: "Warm diseases; Abscess; Sore throat; Scrofula", dosage: "6-15g", contraindication: "Spleen-stomach cold deficiency", commercial: "-" },
+        { name: "Long Dan/Long Dan Cao", actions: "Clear heat and dry dampness, purge fire", indication: "Damp-heat in liver/gallbladder; Excess heat; Abscess", dosage: "3-7.5g", contraindication: "Spleen-stomach qi deficiency", commercial: "-" },
+        { name: "Lu Lu Tong", actions: "Dispel wind, diuresis, help menstruation", indication: "Arthritis; Numbness; Oedema; Dysmenorrhoea", dosage: "5-10g", contraindication: "Pregnancy", commercial: "-" },
+        { name: "Mai Men Dong/Mai Dong", actions: "Nourish yin of stomach, lung, heart, clear heat", indication: "Stomach yin deficiency; Lung yin deficiency; Heart yin deficiency", dosage: "6-15g", contraindication: "Weak spleen with coldness and diarrhoea", commercial: "Mai Men Dong Tang" },
+        { name: "Mai Ya", actions: "Promote digestion, stop lactation, release distension", indication: "Food stagnation; Terminate lactation", dosage: "10-15g", contraindication: "Pregnancy, nursing mothers", commercial: "-" },
+        { name: "Man Jing Zi", actions: "Disperse wind-heat, relieve pain", indication: "Wind-heat exterior; Pain syndromes", dosage: "5-12g", contraindication: "Blood, yin, or stomach deficiency", commercial: "-" },
+        { name: "Mo Yao", actions: "Activate Blood, alleviate pain, resolve swelling", indication: "Pain due to stasis; Traumatic injuries; Sores", dosage: "3-5g", contraindication: "Pregnancy", commercial: "-" },
+        { name: "Mu Dan Pi", actions: "Clear heat and cool blood, activate blood", indication: "Heat entering nutrient-blood; Blood stasis; Deficiency heat", dosage: "6-12g", contraindication: "Pregnancy, excessive menstrual flow", commercial: "-" },
+        { name: "Niu Bang Zi", actions: "Disperse wind-heat, clear toxic heat, relieve sore throat", indication: "Wind-heat exterior; Swollen throat; Measles", dosage: "6-12g", contraindication: "Diarrhoea", commercial: "-" },
+        { name: "Nu Zhen Zi", actions: "Nourish Liver and Kidney, improve sight", indication: "Liver-kidney yin deficiency", dosage: "6-12g", contraindication: "Spleen yang deficiency with cold/diarrhoea", commercial: "-" },
+        { name: "Pei Lan", actions: "Resolve dampness, release exterior", indication: "Damp obstruction; Summer-damp syndrome", dosage: "3-10g", contraindication: "Yin deficiency", commercial: "-" },
+        { name: "Pi Pa Ye", actions: "Clear lung heat, resolve phlegm, stop cough", indication: "Cough due to lung heat; Vomiting from stomach heat", dosage: "6-12g", contraindication: "Cold", commercial: "-" },
+        { name: "Pu Gong Ying", actions: "Clear heat and remove toxicity, clear liver/stomach/lung heat", indication: "Sores and abscess; Swollen throat; Red eyes; Damp-heat", dosage: "9-15g", contraindication: "-", commercial: "-" },
+        { name: "Pu Huang", actions: "Hemostatic, dissipate stasis, induce diuresis", indication: "Bleeding; Pain due to stasis; Blood stranguria", dosage: "5-10g", contraindication: "Pregnancy", commercial: "-" },
+        { name: "Qing Pi", actions: "Soothe liver and breaks qi, promote digestion", indication: "Liver depression; Abdominal pain; Food retention", dosage: "3-10g", contraindication: "-", commercial: "-" },
+        { name: "Quan Shen", actions: "Clear heat and remove toxicity, reduce swelling", indication: "Diarrhoea; Lung heat cough; Mouth ulcer; Snake bites", dosage: "5-10g", contraindication: "-", commercial: "-" },
+        { name: "Ren Shen", actions: "Tonify yuan qi, strengthen spleen & lung, promote fluids", indication: "Qi deficiency; Collapse; Diabetes", dosage: "3-9g", contraindication: "Contraindicated with Li Lu; Excess heat; Uncontrolled hypertension", commercial: "Eu Yan Sang Ginseng Powder (MAL25016079T), Atomy Hongsamdan (MAL25016098TC)" },
+        { name: "Rou Cong Rong", actions: "Tonify kidney yang, supplement essence, moisten intestines", indication: "Kidney yang deficiency; Constipation", dosage: "6-12g", contraindication: "Yin deficiency with heat; Diarrhoea", commercial: "-" },
+        { name: "Rou Gui", actions: "Warm and tonify life gate fire, warm middle", indication: "Yang deficiency; Pain from congealing cold", dosage: "1-5g", contraindication: "Yin deficiency with fire; Pregnancy", commercial: "-" },
+        { name: "Ru Xiang", actions: "Activate blood, move qi, resolve swelling", indication: "Pain due to stasis; Traumatic injuries; Sores", dosage: "3-6g", contraindication: "Pregnancy, Spleen Deficiency", commercial: "-" },
+        { name: "San Qi", actions: "Resolve blood stasis and stop bleeding, activate blood", indication: "Bleeding; Traumatic injury; Swelling and pain", dosage: "3-11.5g", contraindication: "Pregnancy", commercial: "Kapsul hemostatic (produk berdaftar)" },
+        { name: "Sang Bai Pi", actions: "Purge lung to relieve dyspnoea, induce diuresis", indication: "Cough due to lung heat; Oedema", dosage: "6-12g", contraindication: "Lung cold, wind-cold cough", commercial: "-" },
+        { name: "Sang Ji Sheng", actions: "Dispel wind-damp, tonify liver-kidney, prevent miscarriage", indication: "Arthralgia; Liver-kidney deficiency; Threatened abortion", dosage: "9-15g", contraindication: "-", commercial: "-" },
+        { name: "Sang Shen/Sang Shen Zi", actions: "Rejuvenate yin, replenish blood", indication: "Dizziness; Insomnia; Thirst; Constipation", dosage: "9-15g", contraindication: "Diarrhoea due to spleen deficiency", commercial: "-" },
+        { name: "Sang Ye", actions: "Disperse wind-heat, clear lung, clear liver", indication: "Wind-heat exterior; Lung heat cough; Eye diseases", dosage: "3-12g", contraindication: "Weakness and cold in lungs", commercial: "-" },
+        { name: "Sha Ren", actions: "Resolve dampness, warm middle, arrest vomiting", indication: "Damp obstruction; Vomiting; Threatened abortion", dosage: "3-7.5g", contraindication: "Yin Deficiency with heat signs", commercial: "-" },
+        { name: "Sha Shen (Bei)", actions: "Nourish yin of lung and stomach, clear heat", indication: "Lung yin deficiency; Stomach yin deficiency", dosage: "4.5-12g", contraindication: "Wind-cold or weak cold spleen", commercial: "Sha Shen Mai Dong Tang" },
+        { name: "Shan Ci Gu", actions: "Clear heat and remove toxicity, resolve phlegm", indication: "Reduce swelling; Insect/snake bites", dosage: "3-9g", contraindication: "-", commercial: "-" },
+        { name: "Shan Dou Gen", actions: "Clear heat and remove toxicity, alleviate sore throat", indication: "Swollen sore throat; Abscess", dosage: "3-11.5g", contraindication: "Pregnancy; Spleen qi deficiency with diarrhoea", commercial: "-" },
+        { name: "Shan Yao", actions: "Tonify qi, nourish yin, tonify spleen/lung/kidney", indication: "Spleen qi deficiency; Lung qi deficiency; Kidney deficiency; Diabetes", dosage: "10-30g", contraindication: "-", commercial: "Shen Ling Bai Zhu San, Liu Wei Di Huang Wan" },
+        { name: "Shan Zha", actions: "Promote digestion, activate blood", indication: "Food stagnation; Chest/abdominal pain; Dysmenorrhoea", dosage: "3-15g", contraindication: "Spleen and stomach deficiency", commercial: "-" },
+        { name: "Shan Zhi Zi/Zhi Zi", actions: "Purge Fire, cool blood, clear heat, excrete damp-heat", indication: "Irritability; Excess heat; Bleeding; Jaundice", dosage: "3-11.5g", contraindication: "Diarrhoea or cold deficiency", commercial: "-" },
+        { name: "Shan Zhu Yu", actions: "Tonify liver and kidney, astringe essence", indication: "Liver-kidney insufficiency; Seminal emission; Metrorrhagia; Sweating", dosage: "5-12g", contraindication: "Fire symptoms or damp-heat", commercial: "-" },
+        { name: "She Chuang Zi", actions: "Dry dampness, kill parasites, warm kidney", indication: "Eczema, scabies; Kidney yang deficiency; Leukorrhagia", dosage: "3-11.5g", contraindication: "Internal damp-heat, yin deficiency with heat", commercial: "-" },
+        { name: "Shen Qu", actions: "Promote digestion and harmonise stomach", indication: "Food stagnation", dosage: "6-15g", contraindication: "Pregnancy, stomach Fire", commercial: "-" },
+        { name: "Sheng Di Huang", actions: "Clear heat and cool blood, stop bleeding, nourish yin", indication: "Heat entering nutrient-blood; Bleeding; Yin deficiency", dosage: "9-30g", contraindication: "Pregnancy; Spleen qi deficiency with dampness", commercial: "Gan Lu Yin, Xue Fu Zhu Yu Tang" },
+        { name: "Sheng Jiang", actions: "Disperse wind-cold, warm middle, warm lung", indication: "Wind-cold exterior; Stomach cold vomiting; Lung cold cough", dosage: "3-10g", contraindication: "Exterior deficiency with sweating", commercial: "-" },
+        { name: "Sheng Ma", actions: "Release exterior, promote eruption, clear heat", indication: "Exterior fever; Measles; Toxic heat; Sinking of middle qi", dosage: "3-11.5g", contraindication: "Full-blown measles or yin deficiency", commercial: "-" },
+        { name: "Shi Chang Pu", actions: "Induce resuscitation, resolve dampness, calm heart", indication: "Coma; Damp retention; Insomnia", dosage: "3-10g", contraindication: "Yin deficiency with heat signs", commercial: "-" },
+        { name: "Shi Hu", actions: "Nourish yin of stomach and kidney, clear heat", indication: "Stomach yin deficiency; Kidney yin deficiency", dosage: "6-15g", contraindication: "No heat/dryness signs", commercial: "-" },
+        { name: "Shi Jian Chuan", actions: "Transform stasis, dissipate nodules, clear heat", indication: "Pain and swelling; Epigastric distension", dosage: "6-15g", contraindication: "-", commercial: "-" },
+        { name: "Shu Di Huang", actions: "Tonify blood, nourish yin of liver and kidney", indication: "Blood deficiency; Liver-kidney yin deficiency; Essence deficiency", dosage: "9-15g", contraindication: "Qi stagnation or phlegm", commercial: "Liu Wei Di Huang Wan" },
+        { name: "Suan Zao Ren", actions: "Tonify heart and nourish liver, induce tranquillisation", indication: "Unsteadiness of heart-mind; Hyperhidrosis", dosage: "3-18g", contraindication: "Extreme fire; Severe diarrhoea", commercial: "Suan Zao Ren Tang" },
+        { name: "Tai Zi Shen", actions: "Tonify qi, nourish yin", indication: "Qi-yin deficiency of spleen, lung, heart", dosage: "9-30g", contraindication: "Should not be used with Li Lu", commercial: "Granul tonify qi" },
+        { name: "Tao Ren", actions: "Activate blood, moisten intestine, stop cough", indication: "Blood stasis; Lung/Intestine abscess; Constipation", dosage: "4.5-10g", contraindication: "Pregnancy", commercial: "Xue Fu Zhu Yu Tang" },
+        { name: "Teng Li Gen", actions: "Clears heat, disperses wind, invigorates blood", indication: "Rheumatic arthralgia; Sores; Traumatic injuries", dosage: "15-60g", contraindication: "-", commercial: "-" },
+        { name: "Tian Ma", actions: "Extinguish wind, pacify liver yang", indication: "Liver wind; Liver yang hyperactivity; Wind stroke", dosage: "3-11.5g", contraindication: "-", commercial: "-" },
+        { name: "Ting Li Zi", actions: "Purge lung, induce diuresis", indication: "Cough with phlegm; Oedema; Pleural fluid", dosage: "3-10g", contraindication: "-", commercial: "-" },
+        { name: "Tu Fu Ling", actions: "Clear heat, remove toxicity, excrete dampness", indication: "Abscess; Stranguria; Eczema", dosage: "15-60g", contraindication: "-", commercial: "-" },
+        { name: "Tu Si Zi", actions: "Tonify kidney, nourish essence, improve vision", indication: "Impotence; Enuresis; Dim vision; Diarrhoea", dosage: "6-12g", contraindication: "Pregnancy", commercial: "-" },
+        { name: "Wang Bu Liu Xing", actions: "Activate blood, promote diuresis, promote lactation", indication: "Amenorrhea; Dysmenorrhea; Oedema", dosage: "4.5-11.5g", contraindication: "Pregnancy", commercial: "-" },
+        { name: "Wei Ling Xian", actions: "Dispel wind-damp, unblock collaterals", indication: "Arthralgia due to wind-damp", dosage: "6-12g", contraindication: "Qi or blood deficiency", commercial: "-" },
+        { name: "Wu Ling Zhi", actions: "Disperse congealed blood, relieve pain", indication: "Fibroids; Ovarian cysts; Abdominal swelling", dosage: "3-9g", contraindication: "Pregnancy", commercial: "-" },
+        { name: "Wu Mei", actions: "Astringe intestines, astringe Lung, quiet ascaris", indication: "Chronic diarrhoea; Chronic cough; Abdominal pain from ascaris; Diabetes", dosage: "6-12g", contraindication: "Excess stagnation with internal heat", commercial: "-" },
+        { name: "Wu Wei Zi", actions: "Astringe lung, secure essence, promote fluids, calm heart", indication: "Chronic cough; Chronic diarrhoea; Seminal emission; Spontaneous sweating; Insomnia", dosage: "1.5-7.5g", contraindication: "Internal heat or externally contracted disease", commercial: "Kapsul Schisandra" },
+        { name: "Xi Yang Shen", actions: "Tonify qi, nourish yin, clear heat", indication: "Qi-yin deficiency; Diabetes; Cough with hemoptysis", dosage: "3-12g", contraindication: "Cold damp stomach", commercial: "Kapsul Ginseng Amerika" },
+        { name: "Xia Ku Cao", actions: "Clear and purge liver fire, dissipate nodulation", indication: "Liver fire; Phlegm-fire; Sores and abscesses", dosage: "9-15g", contraindication: "Weak stomach/spleen with coldness", commercial: "-" },
+        { name: "Xian He Cao", actions: "Astringe and stop bleeding, check dysentery", indication: "Bleeding; Diarrhoea and dysentery", dosage: "6-15g", contraindication: "-", commercial: "-" },
+        { name: "Xiang Fu", actions: "Soothe liver and regulate qi, regulate menstruation", indication: "Liver depression; Menoxenia; Dysmenorrhea; Breast distension", dosage: "6-11.5g", contraindication: "-", commercial: "Chai Hu Shu Gan Tang" },
+        { name: "Xiao Hui Xiang", actions: "Dissipate cold and relieve pain, regulate qi", indication: "Hernia; Dysmenorrhea; Qi stagnation", dosage: "3-11.5g", contraindication: "Yin deficiency with heat", commercial: "-" },
+        { name: "Xie Bai", actions: "Activate yang, dissipate nodulation, move qi", indication: "Chest impediment; Abdominal distension; Dysentery", dosage: "5-10g", contraindication: "-", commercial: "-" },
+        { name: "Xin Yi", actions: "Disperse wind, relieve stuffy nose", indication: "Wind-cold exterior; Nasal stuffiness", dosage: "3-11.5g", contraindication: "Yin deficient with heat signs", commercial: "-" },
+        { name: "Xu Duan", actions: "Tonify liver and kidney, strengthen bones, continue physique", indication: "Liver-kidney deficiency; Traumatic injuries; Threatened abortion", dosage: "9-15g", contraindication: "Yin deficiency with heat signs", commercial: "-" },
+        { name: "Xuan Shen", actions: "Clear heat and cool blood, purge fire, nourish yin", indication: "Heat entering nutrient-blood; Swollen sore throat; Yin deficiency", dosage: "9-15g", contraindication: "Spleen-stomach deficiency with diarrhoea", commercial: "-" },
+        { name: "Yan Hu Suo", actions: "Activate blood, promote qi, alleviate pain", indication: "Pain due to blood stasis and qi stagnation", dosage: "3-12g", contraindication: "Pregnancy", commercial: "Paratinol Capsule (MAL25016110TC)" },
+        { name: "Ye Jiao Teng/Shou Wu Teng", actions: "Nourish heart and induce tranquillisation, dispel wind", indication: "Insomnia; Pain due to blood deficiency; Itching rash", dosage: "9-15g", contraindication: "Diarrhoea", commercial: "-" },
+        { name: "Yi Mu Cao", actions: "Activate blood, regulate menstruation, promote diuresis", indication: "Amenorrhea; Dysmenorrhea; Oedema; Sores", dosage: "9-30g", contraindication: "Pregnancy, blood deficiency, yin deficiency", commercial: "-" },
+        { name: "Yi Yi Ren", actions: "Induce diuresis, invigorate spleen, clear heat", indication: "Oedema; Diarrhoea; Arthralgia; Lung abscess", dosage: "9-30g", contraindication: "-", commercial: "-" },
+        { name: "Yi Zhi/Yi Zhi Ren", actions: "Tonify kidney yang, secure essence, warm spleen", indication: "Seminal emission; Enuresis; Excessive salivation; Diarrhoea", dosage: "3-10g", contraindication: "-", commercial: "-" },
+        { name: "Yin Chen/Yin Chen Hao", actions: "Excrete Dampness, alleviate jaundice, clear Heat", indication: "Jaundice; Eczema and itching", dosage: "6-30g", contraindication: "Jaundice from blood accumulation or blood deficiency", commercial: "-" },
+        { name: "Yin Yang Huo", actions: "Tonify kidney and warm yang, strengthen bones", indication: "Kidney yang deficiency; Wind-damp arthralgia", dosage: "3-10g", contraindication: "Pregnancy", commercial: "-" },
+        { name: "Yu Jin", actions: "Activate blood, move qi, clear heat, cool blood", indication: "Pain due to stasis; Unconsciousness; Bleeding; Jaundice", dosage: "3-11.5g", contraindication: "Pregnancy, no stagnant blood/qi", commercial: "Xue Fu Zhu Yu Tang" },
+        { name: "Yu Xing Cao", actions: "Clear heat, remove toxicity, cure abscess", indication: "Sores and abscess; Lung heat cough; Damp-heat syndromes", dosage: "10-30g", contraindication: "Cold from deficiency symptoms", commercial: "-" },
+        { name: "Yu Zhu", actions: "Nourish yin of lung and stomach, clear heat", indication: "Lung yin deficiency; Stomach yin deficiency", dosage: "6-12g", contraindication: "Cold damp phlegm in stomach", commercial: "-" },
+        { name: "Yuan Zhi", actions: "Calm heart, dispel phlegm, cure abscess", indication: "Unsteadiness of heart-mind; Epilepsy; Cough with phlegm; Abscess", dosage: "3-12g", contraindication: "Yin deficient heat signs", commercial: "Yang Xin Tang, Tian Wang Bu Xin Dan" },
+        { name: "Ze Xie", actions: "Induce diuresis, drain dampness, purge heat", indication: "Oedema; Phlegm-fluid; Stranguria", dosage: "6-12g", contraindication: "Kidney yang deficiency (seminal emission)", commercial: "Liu Wei Di Huang Wan" },
+        { name: "Zhe Bei Mu", actions: "Clear and resolve heat-phlegm, dissipate nodules", indication: "Cough due to wind-heat; Scrofula; Sores", dosage: "4.5-10g", contraindication: "Cold and damp phlegm", commercial: "-" },
+        { name: "Zhi Ke/Qiao", actions: "Move qi, soothe chest, relieve distention", indication: "Food stagnation; Damp-heat diarrhoea; Chest impediment", dosage: "3-10g", contraindication: "-", commercial: "-" },
+        { name: "Zhi Mu", actions: "Clear heat and purge fire, nourish yin", indication: "Excess heat; Lung heat cough; Stomach heat thirst; Kidney yin deficiency", dosage: "6-12g", contraindication: "Spleen deficiency with loose stools", commercial: "-" },
+        { name: "Zhu Ling", actions: "Induce diuresis to alleviate oedema", indication: "Dysuria, oedema; Diarrhoea", dosage: "6-15g", contraindication: "Absence of dampness", commercial: "-" },
+        { name: "Zi Cao", actions: "Clear heat and cool blood, purge fire, promote eruption", indication: "Heat entering nutrient-blood; Measles; Sores; Burns", dosage: "5-11.5g", contraindication: "Diarrhoea due to Spleen/Intestine deficiency", commercial: "-" },
+        { name: "Zi Hua Di Ding", actions: "Clear heat and remove toxicity, cool blood", indication: "Sores and abscess; Venomous snake bites", dosage: "15-30g", contraindication: "Deficiency with cold", commercial: "-" },
+        { name: "Zi Su Ye", actions: "Disperse wind-cold, promote qi flow", indication: "Wind-cold exterior; Spleen-stomach qi stagnation", dosage: "5-11.5g", contraindication: "Already sweating; Damp-heat condition", commercial: "-" },
+        { name: "Zi Wan", actions: "Moisten lung to resolve phlegm and stop cough", indication: "Cough with phlegm", dosage: "5-11.5g", contraindication: "Yin deficiency", commercial: "-" },
+        
+        // ==============================================================
+        // ADDITIONAL REGISTERED MAL PRODUCTS FROM PBKD 2025 (Standalone products)
+        // ==============================================================
+        { name: "BTY SI JUN ZI HE JI", actions: "Tonify qi, kuatkan limpa, rawat kurang selera & keletihan", indication: "Spleen qi deficiency, fatigue, poor appetite", dosage: "20-30ml cair dengan air", contraindication: "Sindrom panas, batuk kahak kuning", commercial: "MAL25016090T" },
+        { name: "BTY YU PING FENG HE JI", actions: "Kuatkan permukaan (wei qi), cegah selsema, tonify qi", indication: "Deficiency wei qi, frequent colds, allergies", dosage: "20ml", contraindication: "Jangkitan akut", commercial: "MAL25016092T" },
+        { name: "Lionball Shao Yao Gan Cao Tang Powder", actions: "Legakan kekejangan otot, rawat sakit perut, harmonise liver & spleen", indication: "Muscle cramps, abdominal pain, spasms", dosage: "1 paket 2x sehari", contraindication: "Yin deficiency", commercial: "MAL25016086TC" },
+        { name: "Lionball Mistura Ling Gui Zhu Gan Tang Liquid", actions: "Kuatkan limpa & buang lembap, warm kidney", indication: "Damp retention, palpitations, dizziness", dosage: "20ml", contraindication: "Internal heat", commercial: "MAL25016088TC" },
+        { name: "SG Brand Pearl Powder", actions: "Cerah kulit, anti-penuaan, tenangkan minda, clear heat", indication: "Skin health, anxiety, insomnia", dosage: "1g serbuk", contraindication: "Pregnancy", commercial: "MAL25016075T" },
+        { name: "ZBT 990 JD Capsule", actions: "Kesihatan lelaki, tenaga batin, tonify kidney yang", indication: "Male vitality, stamina", dosage: "1 kapsul sehari", contraindication: "Hipertensi, penyakit jantung", commercial: "MAL25016113T" },
+        { name: "LAC Activated ImmuneProtec Capsule", actions: "Sokongan imun, antioksidan, strengthen wei qi", indication: "Immune support, protection from infections", dosage: "2 kapsul sehari", contraindication: "Alahan komponen", commercial: "MAL25016108TC" },
+        { name: "Nature Spirit New Kacip Fatimah Extract", actions: "Kesihatan rahim, imbangan hormon wanita, postpartum recovery", indication: "Women's health, hormonal balance", dosage: "1 kapsul 100mg 2x sehari", contraindication: "Pregnancy, estrogen-dependent tumors", commercial: "MAL25016077TC" },
+        { name: "Jack Bullata Black Tongkat Ali 150mg", actions: "Tenaga batin, stamina lelaki, boost testosterone", indication: "Male stamina, libido, energy", dosage: "1 kapsul 150mg sehari", contraindication: "Uncontrolled hypertension, heart disease", commercial: "MAL25016078T" }
+    ];
+
+    // Global state
+    let currentData = [];
+    let currentSearchTerm = "";
+
+    // Helper functions
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+    }
+
+    function highlightText(text, term) {
+        if (!term || term.trim() === "") return escapeHtml(text);
+        const safeTerm = term.trim().toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`(${safeTerm})`, 'gi');
+        return escapeHtml(text).replace(regex, `<span class="highlight">$1</span>`);
+    }
+
+    function formatMALNumber(commercial) {
+        if (!commercial || commercial === "-") return "-";
+        let formatted = escapeHtml(commercial);
+        const malRegex = /(MAL\d{8,}[A-Z]*)/gi;
+        formatted = formatted.replace(malRegex, `<span class="mal-number">$1</span>`);
+        return formatted;
+    }
+
+    function renderTable(data, searchTerm) {
+        const tbody = document.getElementById("tableBody");
+        const countSpan = document.getElementById("resultCount");
+        
+        if (!data.length) {
+            tbody.innerHTML = `<tr><td colspan="5" class="no-data">🌿 Tiada rekod ditemui untuk "${escapeHtml(searchTerm)}"</td></tr>`;
+            countSpan.innerHTML = "📋 Rekod: 0";
+            return;
+        }
+
+        let html = "";
+        for (let item of data) {
+            // Combine actions + indication for main "Tindakan & Indikasi" column
+            const mainAction = `${item.actions}${item.indication && item.indication !== "-" && item.indication !== item.actions ? `${item.indication}.` : ""}`;
+            html += `<tr>
+                <td><strong>${highlightText(item.name, searchTerm)}</strong></td>
+                <td>${highlightText(mainAction, searchTerm)}</td>
+                <td>${highlightText(item.dosage, searchTerm)}</td>
+                <td>${highlightText(item.contraindication || "-", searchTerm)}</td>
+                <td>${formatMALNumber(item.commercial || "-")}</td>
+            </tr>`;
+        }
+        tbody.innerHTML = html;
+        countSpan.innerHTML = `📋 Rekod: ${data.length}`;
+    }
+
+    function performSearch() {
+        const searchInput = document.getElementById("searchInput");
+        const term = searchInput.value;
+        currentSearchTerm = term;
+        
+        if (!currentData.length) {
+            renderTable([], term);
+            return;
+        }
+        
+        const termLower = term.trim().toLowerCase();
+        if (termLower === "") {
+            renderTable(currentData, "");
+            return;
+        }
+        
+        const filtered = currentData.filter(item => 
+            item.name.toLowerCase().includes(termLower) ||
+            item.actions.toLowerCase().includes(termLower) ||
+            (item.indication && item.indication.toLowerCase().includes(termLower)) ||
+            item.dosage.toLowerCase().includes(termLower) ||
+            (item.contraindication && item.contraindication.toLowerCase().includes(termLower)) ||
+            (item.commercial && item.commercial.toLowerCase().includes(termLower))
+        );
+        renderTable(filtered, term);
+    }
+
+    // CSV Import functions
+    function parseCSVtoArray(csvString) {
+        const lines = [];
+        let buffer = '';
+        let inQuote = false;
+        for (let i = 0; i < csvString.length; i++) {
+            const ch = csvString[i];
+            if (ch === '"') {
+                inQuote = !inQuote;
+                buffer += ch;
+            } else if (ch === '\n' && !inQuote) {
+                lines.push(buffer);
+                buffer = '';
+            } else {
+                buffer += ch;
+            }
+        }
+        if (buffer) lines.push(buffer);
+        
+        const resultRows = [];
+        for (let line of lines) {
+            if (line.trim() === "") continue;
+            const row = [];
+            let current = '';
+            let quote = false;
+            for (let i = 0; i < line.length; i++) {
+                const ch = line[i];
+                if (ch === '"') {
+                    if (quote && line[i+1] === '"') {
+                        current += '"';
+                        i++;
+                    } else {
+                        quote = !quote;
+                    }
+                } else if (ch === ',' && !quote) {
+                    row.push(current.trim());
+                    current = '';
+                } else {
+                    current += ch;
+                }
+            }
+            row.push(current.trim());
+            for (let i = 0; i < row.length; i++) {
+                let val = row[i];
+                if (val.startsWith('"') && val.endsWith('"')) {
+                    val = val.slice(1, -1);
+                    val = val.replace(/""/g, '"');
+                }
+                row[i] = val;
+            }
+            resultRows.push(row);
+        }
+        return resultRows;
+    }
+
+    function loadFromCsvRows(rows) {
+        if (!rows || rows.length < 2) return [];
+        const headers = rows[0].map(h => h.toLowerCase().trim());
+        const nameIdx = headers.findIndex(h => h.includes('name'));
+        const actionsIdx = headers.findIndex(h => h.includes('action'));
+        const indicationIdx = headers.findIndex(h => h.includes('indication'));
+        const dosageIdx = headers.findIndex(h => h.includes('dosage'));
+        const contraindicationIdx = headers.findIndex(h => h.includes('contraindication'));
+        const commercialIdx = headers.findIndex(h => h.includes('commercial'));
+        
+        const data = [];
+        for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+            if (row.length < 2) continue;
+            const name = (nameIdx >= 0 && row[nameIdx]) ? row[nameIdx].trim() : (row[0] || "");
+            const actions = (actionsIdx >= 0 && row[actionsIdx]) ? row[actionsIdx].trim() : (row[1] || "");
+            const indication = (indicationIdx >= 0 && row[indicationIdx]) ? row[indicationIdx].trim() : (row[2] || "");
+            const dosage = (dosageIdx >= 0 && row[dosageIdx]) ? row[dosageIdx].trim() : (row[3] || "");
+            const contraindication = (contraindicationIdx >= 0 && row[contraindicationIdx]) ? row[contraindicationIdx].trim() : (row[4] || "");
+            const commercial = (commercialIdx >= 0 && row[commercialIdx]) ? row[commercialIdx].trim() : (row[5] || "");
+            if (name) {
+                data.push({ name, actions, indication, dosage, contraindication, commercial });
+            }
+        }
+        return data;
+    }
+
+    function loadFromTextareaAndRender() {
+        const rawCsv = document.getElementById("csvTextArea").value;
+        if (!rawCsv.trim()) {
+            alert("Sila paste kandungan CSV terlebih dahulu.");
+            return false;
+        }
+        const rows = parseCSVtoArray(rawCsv);
+        if (rows.length < 2) {
+            alert("CSV tidak sah: perlu ada header dan sekurang-kurangnya satu data.");
+            return false;
+        }
+        const newData = loadFromCsvRows(rows);
+        if (newData.length === 0) {
+            alert("Tiada data tervalidasi. Pastikan kolum nama wujud.");
+            return false;
+        }
+        currentData = newData;
+        document.getElementById("searchInput").value = "";
+        currentSearchTerm = "";
+        renderTable(currentData, "");
+        document.getElementById("dbStatusIndicator").innerHTML = "✅ CSV Imported!";
+        setTimeout(() => {
+            if(document.getElementById("dbStatusIndicator")) 
+                document.getElementById("dbStatusIndicator").innerHTML = "📚 Dataset kustom aktif";
+        }, 2000);
+        return true;
+    }
+
+    function loadMasterDataset() {
+        currentData = [...masterHerbDatabase];
+        document.getElementById("searchInput").value = "";
+        currentSearchTerm = "";
+        renderTable(currentData, "");
+        document.getElementById("dbStatusIndicator").innerHTML = "✅ KKM + PBKD Database Loaded ✓";
+        setTimeout(() => {
+            if(document.getElementById("dbStatusIndicator")) 
+                document.getElementById("dbStatusIndicator").innerHTML = "📚 Formulari T&CM + MAL (2026) | 200+ rekod";
+        }, 2500);
+    }
+
+    function resetToDefault() {
+        if(confirm("Reset ke data rasmi KKM T&CM + PBKD? Semua perubahan CSV akan hilang.")) {
+            loadMasterDataset();
+            document.getElementById("csvTextArea").value = "";
+        }
+    }
+
+    // Event Listeners
+    document.addEventListener("DOMContentLoaded", () => {
+        // Load button
+        const loadBtn = document.getElementById("loadMasterBtn");
+        if (loadBtn) {
+            const newLoadBtn = loadBtn.cloneNode(true);
+            loadBtn.parentNode.replaceChild(newLoadBtn, loadBtn);
+            newLoadBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                loadMasterDataset();
+            });
+        }
+        
+        // CSV Apply button
+        const applyBtn = document.getElementById("applyCsvBtn");
+        if (applyBtn) {
+            applyBtn.addEventListener("click", () => {
+                loadFromTextareaAndRender();
+            });
+        }
+        
+        // Reset button
+        const resetBtn = document.getElementById("resetDefaultBtn");
+        if (resetBtn) {
+            resetBtn.addEventListener("click", resetToDefault);
+        }
+        
+        // Search buttons
+        const searchBtn = document.getElementById("searchBtn");
+        const clearBtn = document.getElementById("clearBtn");
+        const searchInput = document.getElementById("searchInput");
+        
+        if (searchBtn) searchBtn.addEventListener("click", performSearch);
+        if (clearBtn) clearBtn.addEventListener("click", () => {
+            if (searchInput) searchInput.value = "";
+            performSearch();
+        });
+        if (searchInput) searchInput.addEventListener("keyup", (e) => {
+            if (e.key === "Enter") performSearch();
+        });
+        
+        // Initial empty state
+        currentData = [];
+        renderTable([], "");
+        document.getElementById("dbStatusIndicator").innerHTML = "⚡ Sila klik 'AKTIFKAN PANGKALAN DATA LENGKAP'";
+    });
+</script>
+</body>
+</html>
