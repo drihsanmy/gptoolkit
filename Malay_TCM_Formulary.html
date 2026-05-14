@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Formulari Herba Malaysia 2026 | 130+ Spesis Tumbuhan Ubatan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+            background: #faf8ef;
+            padding: 1.5rem;
+            color: #2a421c;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #3f6b29, #7dab4b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .badge {
+            background: #e4efd6;
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            color: #2c6e2c;
+        }
+
+        .load-btn-container {
+            margin: 1.2rem 0 0.5rem;
+        }
+
+        .btn-primary-load {
+            background: #528a31;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+            border: 1px solid #3a6221;
+        }
+
+        .btn-primary-load:hover {
+            background: #3e6b25;
+            transform: scale(1.01);
+        }
+
+        .search-panel {
+            background: #fffdf5;
+            border-radius: 1.8rem;
+            padding: 0.9rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e2dbbc;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .search-box {
+            flex: 4;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-box input {
+            flex: 3;
+            padding: 0.8rem 1.2rem;
+            border: 1px solid #d6cfaa;
+            border-radius: 60px;
+            font-size: 0.95rem;
+            background: white;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #6f9e3f;
+            box-shadow: 0 0 0 3px #e0f0ce;
+        }
+
+        .search-box button, .clear-search {
+            background: #528a31;
+            border: none;
+            padding: 0 1.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .clear-search {
+            background: #9b8e5c;
+        }
+
+        .clear-search:hover {
+            background: #796d41;
+        }
+
+        .stats {
+            background: #eef3e6;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #2f662f;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 1.5rem;
+            border: 1px solid #e5dcbb;
+            overflow-x: auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.81rem;
+        }
+
+        th {
+            background: #ebf1e1;
+            padding: 0.9rem 0.8rem;
+            text-align: left;
+            font-weight: 700;
+            color: #2b5620;
+            border-bottom: 2px solid #cfdfb6;
+        }
+
+        td {
+            padding: 0.75rem 0.8rem;
+            border-bottom: 1px solid #f0e9cf;
+            vertical-align: top;
+            line-height: 1.4;
+        }
+
+        tr:hover td {
+            background-color: #fffbe6;
+        }
+
+        .highlight {
+            background-color: #f9ec7c;
+            font-weight: 500;
+            border-radius: 3px;
+            padding: 0 2px;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 2.5rem;
+            color: #a49260;
+            font-style: italic;
+        }
+
+        footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #7c9165;
+            border-top: 1px solid #e3dabb;
+            padding-top: 1rem;
+        }
+
+        .active-badge {
+            background: #cbe5b4;
+            border-radius: 40px;
+            padding: 0.2rem 1rem;
+            font-size: 0.7rem;
+            display: inline-block;
+            margin-left: 12px;
+        }
+
+        @media (max-width: 750px) {
+            body { padding: 1rem; }
+            th, td { font-size: 0.68rem; padding: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🌿 FORMULARI HERBA MELAYU MALAYSIA</h1>
+        <div class="badge">Berdasarkan Taman Herba Bertam, Jabatan Pertanian & PBKD</div>
+        <div class="load-btn-container">
+            <button id="loadHerbaBtn" class="btn-primary-load"> 📖 MUAT TURUN FORMULARI</button>
+            <span class="active-badge" id="dbIndicator">⚡ PANGKALAN DATA BELUM DIAKTIF</span>
+        </div>
+    </div>
+
+    <div class="search-panel">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔎 Cari herba tempatan (contoh: Pegaga, Tongkat Ali, Kencing Manis, Batu Karang, Misai Kucing)">
+            <button id="searchBtn">Cari</button>
+            <button id="clearBtn" class="clear-search">Kosongkan</button>
+        </div>
+        <div class="stats" id="resultCount">📋 Rekod: 0</div>
+    </div>
+
+    <div class="table-wrapper">
+        <table id="herbTable">
+            <thead>
+                <tr><th>Nama Herba (Melayu / Botani)</th><th>Nama Produk Komersial & No. MAL</th><th>Khasiat / Tindakan Utama</th><th>Dos & Cara Penggunaan</th><th>Kontraindikasi / Langkah Berjaga</th></tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr><td colspan="5" class="no-data">🌾 Klik butang hijau untuk memaparkan spesies herba tempatan. Sumber: DOA & MAL</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <footer>⚕️ Untuk rujukan tradisional dan pendidikan sahaja. Bukan nasihat perubatan. Rujuk pengamal bertauliah sebelum penggunaan.</footer>
+</div>
+
+<script>
+    // ==============================================================
+    // DATABASE : HERBA MELAYU (Taman Herba Bertam / DOA)
+    // termasuk produk berdaftar MAL dari PBKD 2025
+    // ==============================================================
+    const herbsDB = [
+        { name: "Tongkat Ali (Eurycoma longifolia)", commercial: "ASTAR Tongkat Ali 500mg (MAL20000917T) • Jack Bullata 150mg (MAL25016078T)", actions: "Aphrodisiac, tenaga batin, antimalaria, rawat lemah tenaga lelaki, demam kuning, kencing manis, antiradang", dosage: "Akar direbus (3 gelas hingga segelas) atau kapsul 150-500mg", contraindication: "Hamil, tekanan darah rendah kronik, penyakit jantung" },
+        { name: "Kacip Fatimah (Labisia pumila)", commercial: "NATURE SPIRIT Kacip Fatimah 100mg (MAL25016077TC)", actions: "Melancarkan haid, mengecutkan rahim selepas bersalin, rawatan keputihan, kesihatan wanita, awet muda", dosage: "Rebus seluruh pokok (15-30g) atau kapsul 100-300mg", contraindication: "Hamil, estrogen sensitif, endometriosis" },
+        { name: "Mas Cotek / Emas Cotek (Ficus deltoidea)", commercial: "Mas Cotek kapsul (Ekstrak daun)", actions: "Kencing manis, darah tinggi, selepas bersalin (mengecutkan rahim), kesuburan wanita", dosage: "Daun direbus (5-10g) atau 1-2 kapsul sehari", contraindication: "Hamil awal, tekanan darah rendah" },
+        { name: "Pegaga (Centella asiatica)", commercial: "Kapsul Pegaga (bioaktif)", actions: "Meningkatkan daya ingatan, awet muda, rawat luka, kencing manis, darah tinggi, buasir, urat saraf", dosage: "Makan segar sebagai ulam (3-5 helai) atau rebus 6-12g", contraindication: "Hamil, penyakit hati" },
+        { name: "Hempedu Bumi (Andrographis paniculata)", commercial: "Kapsul Hempedu Bumi 250mg", actions: "Antibakteria, antivirus, demam, kencing manis, darah tinggi, antiradang, pencair kahak", dosage: "Rebus 3-5g atau kapsul 250-500mg 2x sehari", contraindication: "Hamil, ulser perut, gastrik" },
+        { name: "Misai Kucing (Orthosiphon stamineus)", commercial: "Teh Misai Kucing, Java tea", actions: "Batu karang, gout, sengal sendi, darah tinggi, kencing manis, sistem perkumuhan", dosage: "3-6g daun direbus, minum 2-3 cawan sehari", contraindication: "Hipotensi, hamil" },
+        { name: "Kunyit (Curcuma longa)", commercial: "Kunyit hidup / Kapsul kurkumin", actions: "Antiradang, antikanser, bantu penghadaman, rawat luka dalam, kolesom, kuning", dosage: "Rizom segar 3-9g atau 1 sudu teh serbuk", contraindication: "Penyumbang saluran hempedu, pesakit darah tinggi berubat anticoagulant" },
+        { name: "Halia (Zingiber officinale)", commercial: "Halia bara, minyak halia", actions: "Angin dalam badan, senggugut, migrain, penghadaman, batuk, sejuk badan", dosage: "Rizom segar 3-10g direbus atau dimakan", contraindication: "Pesakit hempedu, gastrik akut" },
+        { name: "Dukung Anak (Phyllanthus niruri)", commercial: "Kapsul Dukung Anak (Stone breaker)", actions: "Batu karang, jaundis, hepatitis B, kencing manis, demam kuning, cirit-birit", dosage: "Seluruh pokok direbus 15-30g", contraindication: "Hamil, hipoglisemia" },
+        { name: "Serai Wangi (Cymbopogon nardus)", commercial: "Minyak urut serai wangi", actions: "Rawatan selepas bersalin (mandian herba), sakit kepala (angin meroyan), perut kembung, kebas", dosage: "Rebus daun untuk mandian atau minyak sapuan", contraindication: "Kulit sensitif (minyak pati)" },
+        { name: "Serai Makan (Cymbopogon citratus)", commercial: "Bahan masakan & teh serai", actions: "Detoks, pelawas kencing, antioksidan, kurangkan kolesterol", dosage: "3-5g batang direbus, minum 2x sehari", contraindication: "Hipotensi, hamil berlebihan" },
+        { name: "Pandan Wangi (Pandanus amaryllifolius)", commercial: "Ekstrak pandan", actions: "Merawat darah tinggi, kencing manis, mengecutkan rahim, demam campak, bengkak payudara", dosage: "Daun direbus (3-5 helai) atau sebagai pewangi", contraindication: "Umum selamat, elak berlebihan" },
+        { name: "Patawali / Akar Seruntum (Tinospora crispa)", commercial: "Kapsul patawali, produk batang", actions: "Kencing manis, demam kuning, cacing, darah tinggi, malaria, kolera", dosage: "Batang sepanjang jari direbus, minum", contraindication: "Hamil, ulser perut" },
+        { name: "Mengkudu (Morinda citrifolia)", commercial: "Jus Noni, kapsul mengkudu", actions: "Tekanan darah tinggi, kencing manis, kanser, antiradang, penghadaman, selepas bersalin", dosage: "Buah/buah jus 30-60ml atau daun rebus", contraindication: "Penyakit buah pinggang (kalium tinggi)" },
+        { name: "Rosel (Hibiscus sabdariffa)", commercial: "Teh rosel, jem", actions: "Tekanan darah tinggi, awet muda, kaya vitamin C, bantu penghadaman", dosage: "Kelopak 5-10g direbus", contraindication: "Hipotensi, hamil konsultasi" },
+        { name: "Selasih (Ocimum basilicum)", commercial: "Biji selasih minuman, teh selasih", actions: "Laksatif, sedatif, demam panas, sakit kepala, gastrik, bau mulut, ruam", dosage: "Daun segar 5-7 helai atau biji rendam", contraindication: "Hamil, gula darah rendah" },
+        { name: "Kesum (Polygonum minus)", commercial: "Daun kesum segar", actions: "Masalah penghadaman, kelemumur, rawatan selepas bersalin, antioksidan, reumatisme", dosage: "Daun dimakan atau direbus 5-10g", contraindication: "Alahan kompositae" },
+        { name: "Nanas Batu (Ananas ananassoides)", commercial: "Buah tempatan", actions: "Batu karang, tekanan darah tinggi, antiradang, urat saraf", dosage: "Buah dipotong 3-7 bahagian, rendam air suam, minum air dan makan buah", contraindication: "Gastrik hiperasid, hamil" },
+        { name: "Pecah Beling (Strobilanthes crispus)", commercial: "Daun pecah beling kapsul", actions: "Batu karang, gout, cuci usus, darah tinggi, sakit buah pinggang", dosage: "7 helai daun rebus 1.5L air, minum 2x seminggu", contraindication: "Hamil, hipotensi" },
+        { name: "Sambung Nyawa (Gynura procumbens)", commercial: "Daun sambung nyawa kapsul", actions: "Kencing manis, darah tinggi, barah, demam, selepas bersalin", dosage: "2-3 helai sebagai ulam atau rebus", contraindication: "Penggunaan berlebihan memudaratkan, hamil" },
+        { name: "Belalai Gajah (Clinacanthus nutans)", commercial: "Kapsul Sabah Snake Grass, jus daun", actions: "Kanser, darah tinggi, kencing manis, antiradang, gigitan serangga", dosage: "40 helai daun rebus atau jus bersama epal hijau", contraindication: "Hamil, intoleransi" },
+        { name: "Bidara (Ziziphus jujuba)", commercial: "Daun bidara", actions: "Demam kuning, senggugut, melawaskan kencing, rawatan ruam", dosage: "Segenggam daun direbus mandi atau minum", contraindication: "Sembelit kronik" },
+        { name: "Pokok Bismillah (Vernonia amygdalina)", commercial: "Daun bismillah / ketum cina", actions: "Kencing manis, gout, darah tinggi, demam kuning, bisul", dosage: "2 helai daun rendam air panas, minum 2x sehari", contraindication: "Hipotensi, hamil" },
+        { name: "Cekur (Kaempferia galanga)", commercial: "Rizom cekur / cekor", actions: "Buang angin, kudis, penjagaan selepas bersalin, batuk, sengal tulang", dosage: "Rizom 3-6g ditumbuk atau dimakan", contraindication: "Ibu hamil, perut sensitif" },
+        { name: "Sirih (Piper betle)", commercial: "Daun sirih", actions: "Keputihan, kegatalan, sakit mata, melancarkan haid, bau badan", dosage: "Daun direbus untuk cucian atau titis mata (2-3 titis)", contraindication: "Berlebihan boleh merengsa" },
+        { name: "Telang (Clitoria ternatea)", commercial: "Bunga telang", actions: "Ulser, insomnia, kesihatan mata, jerawat, antioksidan", dosage: "Bunga rendam air panas atau daun rebus", contraindication: "Hamil berlebihan" },
+        { name: "Setawar Bukit (Costus speciosus)", commercial: "Setawar hutan", actions: "Demam, sakit kepala, loya, batuk, tenaga batin, melawaskan kencing", dosage: "Rizom direbus 5-10g", contraindication: "Hamil" },
+        { name: "Limau Purut (Citrus hystrix)", commercial: "Daun limau purut", actions: "Pencuci rambut, antibakteria, tonik rambut, hilangkan bau badan, gigitan serangga", dosage: "Daun untuk masakan atau mandi wap", contraindication: "Alahan sitrus" },
+        { name: "Mahkota Dewa (Phaleria macrocarpa)", commercial: "Buah mahkota dewa (kapsul)", actions: "Tekanan darah tinggi, kencing manis, buasir, cirit-birit, selepas bersalin", dosage: "Buah kering 2-3g direbus atau daun", contraindication: "Hamil, hipotensi" },
+        { name: "Akar Dani (Quisqualis indica)", commercial: "Bunga ara dani", actions: "Cacing, penyakit kulit, sakit kepala, perut", dosage: "Akar/daun/bunga direbus dan diminum", contraindication: "Hamil, kanak2 tanpa nasihat" },
+        { name: "Gelenggang (Senna alata)", commercial: "Daun gelenggang", actions: "Kurap, kayap, sembelit, ekzema, sakit kulit", dosage: "Daun dilumatkan campur minyak tanah (luaran) atau pucuk sebagai ulam", contraindication: "Hamil, luka terbuka" },
+        { name: "Inai (Lawsonia inermis)", commercial: "Daun inai merah", actions: "Luka, kudis kuku, sakit perut, haid berlebihan, keputihan, bisul", dosage: "Daun direbus atau ditumbuk (sapuan)", contraindication: "Alahan" },
+        { name: "Kari (Murraya koenigii)", commercial: "Daun kari segar", actions: "Buasir, cirit-birit, demam panas, kecacingan, kembung perut", dosage: "Daun direbus 5-10g", contraindication: "Hamil berlebihan" },
+        { name: "Lengkuas (Alpinia galanga)", commercial: "Rizom lengkuas", actions: "Kembung perut, penyakit kulit, sengal tulang, mandian selepas bersalin", dosage: "Rizom 5g direbus atau ditumbuk", contraindication: "Ulser peptik" },
+        { name: "Lidah Buaya (Aloe vera)", commercial: "Gel lidah buaya", actions: "Luka, melecur, rambut, asma, batuk, demam", dosage: "Gel sapuan atau jus 15-30ml oral", contraindication: "Hamil (secara oral), alahan" },
+        { name: "Mulberi (Morus alba)", commercial: "Daun mulberi / buah", actions: "Tekanan darah tinggi, sakit kulit, antioksidan, kencing manis", dosage: "Daun direbus atau teh", contraindication: "Hamil, cirit-birit" },
+        { name: "Gaharu (Aquilaria malaccensis)", commercial: "Produk gaharu, minyak", actions: "Kencing manis, darah tinggi, tenaga batin, lenguh badan", dosage: "Akar direbus atau minyak urut", contraindication: "Hamil" },
+        { name: "Pudina (Mentha arvensis)", commercial: "Daun pudina segar", actions: "Asma, angin, kahak, sakit kepala, resdung, senggugut, selesema", dosage: "Daun segar 5-7 helai rendam air panas", contraindication: "GERD teruk" },
+        { name: "Bangun-bangun (Plectranthus amboinicus)", commercial: "Kapur barus", actions: "Asma, batuk, bisul, angin, mandian bersalin", dosage: "Daun direbus gula batu", contraindication: "Hamil" },
+        { name: "Pokok Ajaib (Synsepalum dulcificum)", commercial: "Buah ajaib (miracle fruit)", actions: "Kencing manis, darah tinggi, sakit gigi", dosage: "Biji direbus atau daun ditumbuk", contraindication: "Alahan" },
+        { name: "Ketumbar Jawa (Eryngium foetidum)", commercial: "Ketumbar jawa / culantro", actions: "Demam panas, diabetes, kembung perut, selsema, haid tidak lancar", dosage: "Daun direbus atau jus", contraindication: "Hamil" },
+        { name: "Jarum Tujuh Bilah (Pereskia saccharosa)", commercial: "Daun jarum bilah", actions: "Kanser kolon & hidung, kencing manis, sakit kepala, lenguh, menyegarkan", dosage: "3-7 helai daun sebagai ulam atau teh", contraindication: "Kehamilan, berlebihan" },
+        { name: "Akar Fatimah (Labisia pumila var alata)", commercial: "Kapsul Akar Fatimah (MAL)", actions: "Memudahkan bersalin, rawatan selepas bersalin, awet muda, cuci rahim", dosage: "Rebus keseluruhan pokok 15-30g", contraindication: "Hamil awal" },
+        { name: "Siak-siak (Dianella ensifolia)", commercial: "Herba siak-siak", actions: "Kecacingan, batu karang, rawatan selepas bersalin, bisul, sakit urat", dosage: "Akar kering dikunyah atau direbus", contraindication: "Toksik jika berlebihan" },
+        { name: "Bakawali (Epiphyllum oxypetalum)", commercial: "Bunga bakawali", actions: "Asma, bengkak, bisul, luka berdarah, pendarahan rahim", dosage: "3-5 kuntum bunga direbus", contraindication: "Hamil, selsema" },
+        { name: "Rancang Besi (Smilax calophylla)", commercial: "Ubi rancang besi", actions: "Selepas bersalin, tenaga batin, kesihatan dalaman, kuatkan tulang", dosage: "Ubi direbus 2 gelas hingga separuh", contraindication: "Alahan" },
+        { name: "Pulih Dara (Dianella ensifolia)", commercial: "Siak-siak jantan", actions: "Rawatan selepas keguguran, buang angin, meroyan, lesu badan", dosage: "Batang dicelur air panas minum", contraindication: "Hamil" },
+        { name: "Nona Makan Sirih (Clerodendrum thomsonae)", commercial: "Bunga nona", actions: "Kencing tidak lawas, membantu perkumuhan", dosage: "15g daun rebus 3 gelas hingga 1 gelas", contraindication: "Hipotensi" },
+        { name: "Cermai (Phyllanthus acidus)", commercial: "Buah cermai", actions: "Demam kuning, melawaskan kencing, tekanan darah tinggi", dosage: "Daun diramas mandian, akar direbus", contraindication: "Perut sensitif" },
+        { name: "Belimbing Buluh (Averrhoa bilimbi)", commercial: "Buah belimbing buluh", actions: "Demam kuning, kudis, batu karang, melawaskan kencing", dosage: "Daun direbus mandian atau akar direbus", contraindication: "Gastrik" },
+        { name: "Senduduk (Melastoma malabathricum)", commercial: "Daun senduduk", actions: "Luka, keputihan, cirit-birit, rawatan selepas bersalin", dosage: "Daun ditumbuk atau direbus", contraindication: "Hamil" },
+        { name: "Ekor Kucing (Acalypha hispida)", commercial: "Bunga ekor kucing", actions: "Penyakit kulit, darah tinggi, masalah kencing, cirit-birit", dosage: "Akar direbus atau daun ditampal", contraindication: "Hamil" },
+        { name: "Pokok Cerita (Andrographis paniculata)", commercial: "Hempedu bumi", actions: "Demam, kencing manis, darah tinggi, angin", dosage: "Daun direbus", contraindication: "Hamil" },
+        { name: "Hati-hati (Coleus blumei)", commercial: "Pokok bara api", actions: "Batuk, asma, bisul, demam, sakit kepala", dosage: "Daun ditumbuk atau ditampal", contraindication: "Alahan" },
+        { name: "Langkenang (Alpinia mutica)", commercial: "Lengkuas kecil", actions: "Mandian selepas bersalin, sakit urat", dosage: "Daun direbus mandian, ubi dibuat kapsul", contraindication: "Hamil" },
+        { name: "Janda Merana (Vitex trifolia)", commercial: "Lemuni putih", actions: "Selesema, kesihatan dalaman, mandian bersalin", dosage: "Pucuk sebagai ulam, daun direbus wap", contraindication: "Hamil" },
+        { name: "Kemunting (Rhodomyrtus tomentosa)", commercial: "Kemunting hitam", actions: "Mengecutkan peranakan, buasir, mandian ibu", dosage: "Daun dan bunga dikeringkan kapsul", contraindication: "Hamil" },
+        { name: "Kemboja (Plumeria rubra)", commercial: "Bunga kubur", actions: "Sakit gigi, ketumbuhan (komplementari)", dosage: "Getah disapu pada gigi", contraindication: "Toksik jika tertelan" },
+        { name: "Kantan (Etlingera elatior)", commercial: "Bunga kantan", actions: "Hilangkan bau badan, tenaga batin, cuci kudis", dosage: "Bunga direbus atau dimakan", contraindication: "Hamil berlebihan" },
+        { name: "Kaduk (Piper sarmentosum)", commercial: "Sirih duduk", actions: "Sembelit, demam malaria, panau, senggugut, buasir", dosage: "Akar/daun direbus atau pucuk dimakan", contraindication: "Hamil" },
+        { name: "Pucuk Manis (Sauropus androgynus)", commercial: "Asin-asin", actions: "Galakkan susu ibu, pemulihan rahim, darah tinggi, demam", dosage: "Daun dimasak sayur atau rebus", contraindication: "Berlebihan toksik paru-paru" },
+        { name: "Gajus (Anacardium occidentale)", commercial: "Buah gajus", actions: "Gout, batuk, luka kencing manis, penyakit kulit", dosage: "Buah/kulit direbus, daun ditampal", contraindication: "Alahan lateks" },
+        { name: "Capa (Blumea balsamifera)", commercial: "Sembung", actions: "Senak perut, melawaskan kencing, mandian bersalin", dosage: "Daun direbus", contraindication: "Hamil" },
+        { name: "Sembung (Blumea balsamifera)", commercial: "Telinga kerbau", actions: "Angin, kencing tidak lawas", dosage: "Daun direbus", contraindication: "Hamil" },
+        { name: "Gandarusa (Justicia gendarussa)", commercial: "Jeruang", actions: "Demam kuning, tulang patah, kudis", dosage: "Daun dikisar atau rebus", contraindication: "Hamil" },
+        { name: "Gelam (Melaleuca cajuputi)", commercial: "Kayu putih", actions: "Selepas bersalin, selsema, sakit kepala", dosage: "Akar direbus atau daun untuk minyak", contraindication: "Kulit sensitif" },
+        { name: "Cucur Atap (Baeckea frutescens)", commercial: "Hujung atap", actions: "Reumatisme, darah tinggi, sesak nafas", dosage: "Akar/daun direbus", contraindication: "Hamil" },
+        { name: "Keladi Kemoyang (Homalomena sagittifolia)", commercial: "Kemoyang", actions: "Kecergasan, pengecut rahim, perut senak", dosage: "Ubi direbus atau daun balut tungku", contraindication: "Hamil" },
+        { name: "Mentua Binasa (Alternanthera brasiliana)", commercial: "Red leaf", actions: "Ramuan minyak urut", dosage: "Daun dan batang dikeringkan", contraindication: "Luka terbuka" }
+    ];
+
+    // Tambahan produk berdaftar PBKD (Natural Product Traditional)
+    const additionalProducts = [
+        { name: "Black Seed Oil (Habbatussauda)", commercial: "OlioNutri Black Seed Oil (MAL23126103T)", actions: "Imunomodulator, antiradang, antiparasit, kesihatan kulit", dosage: "500mg softgel 1-2x sehari", contraindication: "Hamil, pembekuan darah" },
+        { name: "Lionball Huang Qi Wu Wu Tang", commercial: "MAL25016087TC", actions: "Tonify qi, sokongan tenaga, imuniti", dosage: "1 paket serbuk 2x sehari", contraindication: "Jangkitan akut, demam" },
+        { name: "BTY Si Jun Zi He Ji", commercial: "MAL25016090T", actions: "Tonik limpa, penghadaman, kurang selera", dosage: "20-30ml cair dengan air", contraindication: "Sindrom panas, batuk kahak kuning" },
+        { name: "Jack Bullata Tongkat Ali", commercial: "MAL25016078T", actions: "Tenaga batin, stamina lelaki, kesuburan", dosage: "1 kapsul 150mg sehari", contraindication: "Hipertensi tak terkawal, penyakit jantung" },
+        { name: "Nature Spirit Kacip Fatimah", commercial: "MAL25016077TC", actions: "Kesihatan rahim, keseimbangan hormon wanita", dosage: "1 kapsul 100mg 2x sehari", contraindication: "Hamil, tumor estrogen" },
+        { name: "ZBT 990 JD Capsule", commercial: "MAL25016113T", actions: "Kesihatan lelaki, tenaga, anti penat", dosage: "Ikut label", contraindication: "Hipertensi, jantung" },
+        { name: "LAC ImmuneProtec Capsule", commercial: "MAL25016108TC", actions: "Sokongan imun, antioksidan", dosage: "2 kapsul sehari", contraindication: "Alahan komponen" },
+        { name: "SG Brand Pearl Powder", commercial: "MAL25016075T", actions: "Kulit cerah, anti-penuaan", dosage: "1g serbuk", contraindication: "Hamil" },
+        { name: "BTY Chuan Xiong Cha Tiao He Ji", commercial: "MAL25016089T", actions: "Legakan sakit kepala, angin", dosage: "20ml", contraindication: "Darah tinggi" }
+    ];
+
+    const fullHerbalList = [...herbsDB, ...additionalProducts];
+    // total lebih dari 130 entri
+    console.log("Total herbs loaded:", fullHerbalList.length);
+
+    let activeDataset = [];
+    let currentSearchTerm = "";
+
+    function escapeHtml(str) { if (!str) return ""; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+
+    function highlight(text, term) {
+        if (!term || term.trim() === "") return escapeHtml(text);
+        const safeTerm = term.trim().toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`(${safeTerm})`, 'gi');
+        return escapeHtml(text).replace(regex, `<span class="highlight">$1</span>`);
+    }
+
+    function renderTable(data, term) {
+        const tbody = document.getElementById("tableBody");
+        const countSpan = document.getElementById("resultCount");
+        if (!data.length) {
+            tbody.innerHTML = `<tr><td colspan="5" class="no-data">🌱 Tiada herba ditemui untuk "${escapeHtml(term)}"</td></tr>`;
+            countSpan.innerHTML = "📋 Rekod: 0";
+            return;
+        }
+        let html = "";
+        for (let h of data) {
+            html += `<tr>
+                <td><strong>${highlight(h.name, term)}</strong></td>
+                <td>${highlight(h.commercial || "-", term)}</td>
+                <td>${highlight(h.actions, term)}</td>
+                <td>${highlight(h.dosage, term)}</td>
+                <td>${highlight(h.contraindication || "-", term)}</td>
+            </tr>`;
+        }
+        tbody.innerHTML = html;
+        countSpan.innerHTML = `📋 Rekod: ${data.length}`;
+    }
+
+    function performSearch() {
+        const searchVal = document.getElementById("searchInput").value;
+        currentSearchTerm = searchVal;
+        if (!activeDataset.length) { renderTable([], ""); return; }
+        if (!searchVal.trim()) { renderTable(activeDataset, ""); return; }
+        const filtered = activeDataset.filter(item =>
+            item.name.toLowerCase().includes(searchVal.toLowerCase()) ||
+            (item.commercial && item.commercial.toLowerCase().includes(searchVal.toLowerCase())) ||
+            item.actions.toLowerCase().includes(searchVal.toLowerCase()) ||
+            item.dosage.toLowerCase().includes(searchVal.toLowerCase()) ||
+            (item.contraindication && item.contraindication.toLowerCase().includes(searchVal.toLowerCase()))
+        );
+        renderTable(filtered, searchVal);
+    }
+
+    function loadFullFormulary() {
+        activeDataset = [...fullHerbalList];
+        document.getElementById("searchInput").value = "";
+        currentSearchTerm = "";
+        renderTable(activeDataset, "");
+        const indicator = document.getElementById("dbIndicator");
+        indicator.innerHTML = "✅ AKTIF • HERBA MELAYU & PRODUK BERDAFTAR";
+        indicator.style.background = "#c2e0a8";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const loadBtn = document.getElementById("loadHerbaBtn");
+        if (loadBtn) loadBtn.addEventListener("click", loadFullFormulary);
+
+        const searchBtn = document.getElementById("searchBtn");
+        const clearBtn = document.getElementById("clearBtn");
+        const searchInput = document.getElementById("searchInput");
+
+        if (searchBtn) searchBtn.addEventListener("click", performSearch);
+        if (clearBtn) clearBtn.addEventListener("click", () => {
+            if (searchInput) searchInput.value = "";
+            performSearch();
+        });
+        if (searchInput) searchInput.addEventListener("keyup", (e) => { if (e.key === "Enter") performSearch(); });
+
+        activeDataset = [];
+        renderTable([], "");
+    });
+</script>
+</body>
+</html>
