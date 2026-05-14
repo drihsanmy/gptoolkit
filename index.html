@@ -259,25 +259,7 @@
 </div>
 
 <script>
-  // ---------- TOOLKIT DATA (all local files + external drug formulary) ----------
-  // Added Chinese_TCM_Formulary.html as requested.
-  // Original files list: Malay_TCM_Formulary.html, Framingham_score.html, IPSS.html, MMSE.html, PHQ9.html,
-  // WHODAS2.html, Stopbang.html, Epworth.html, BMI.html, Alvarado.html, Paediatric_calculator.html, fagestrom.html
-  // plus now Chinese_TCM_Formulary.html (additional)
-  
   const tools = [
-    {
-      name: "Chinese TCM Formulary",
-      file: "Chinese_TCM_Formulary.html",
-      desc: "Traditional Chinese Medicine formulary & herbal reference database.",
-      icon: "🏮"
-    },
-    {
-      name: "Malay TCM Formulary",
-      file: "Malay_TCM_Formulary.html",
-      desc: "Traditional & complementary medicine formulary reference (Malay language).",
-      icon: "🌿"
-    },
     {
       name: "Framingham Score",
       file: "Framingham_score.html",
@@ -343,16 +325,34 @@
       file: "fagestrom.html",
       desc: "Nicotine dependence assessment for smoking cessation guidance.",
       icon: "🚬"
-    }
+    },
+    {
+      name: "Drug Formulary",
+      file: "https://myformulary.pharmacy.gov.my/",
+      desc: "Official Malaysia National Drug Formulary — search for medicines, indications, and formulary status.",
+      icon: "💊"
+    },
+{
+      name: "Chinese TCM Formulary",
+      file: "Chinese_TCM_Formulary.html",
+      desc: "Traditional Chinese Medicine formulary & herbal reference database.",
+      icon: "🏮"
+    },
+    {
+      name: "Malay TCM Formulary",
+      file: "Malay_TCM_Formulary.html",
+      desc: "Traditional & complementary medicine formulary reference.",
+      icon: "🌿"
+    },
   ];
 
   // External Drug Formulary (Malaysia myformulary)
   const externalDrugFormulary = {
-    name: "Drug Formulary (Malaysia)",
+    name: "Doctor's Search",
     file: null,
-    externalUrl: "https://myformulary.pharmacy.gov.my/",
-    desc: "Official Malaysia National Drug Formulary — search for medicines, indications, and formulary status.",
-    icon: "💊",
+    externalUrl: "https://merits.mmc.gov.my/search",
+    desc: "Search KKM's registered doctor",
+    icon: "👨‍⚕️",
     isExternal: true
   };
 
@@ -375,7 +375,7 @@
 
   function getActionButton(item) {
     if (item.isExternal && item.externalUrl) {
-      return `<a href="${item.externalUrl}" target="_blank" rel="noopener noreferrer" class="btn external-link-btn">🔗 Open Formulary →</a>`;
+      return `<a href="${item.externalUrl}" target="_blank" rel="noopener noreferrer" class="btn external-link-btn">🔗 Open Merits →</a>`;
     } else if (item.file) {
       return `<a href="${item.file}" class="btn btn-primary">📂 Launch Tool →</a>`;
     } else {
