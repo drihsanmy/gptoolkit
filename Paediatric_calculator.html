@@ -1,0 +1,409 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Paediatric Dosage Calculator | Evidence-based Dosing Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f0f7ff;
+            padding: 20px;
+            color: #1a2c3e;
+        }
+
+        /* main container */
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 24px 28px;
+            transition: all 0.2s ease;
+        }
+
+        /* header + logo section */
+        .header-area {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            border-bottom: 2px solid #e2edf7;
+            padding-bottom: 20px;
+        }
+
+        .logo-wrapper {
+            flex-shrink: 0;
+        }
+
+        .logo-img {
+            max-width: 180px;
+            height: auto;
+            max-height: 80px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 16px;
+            background: #ffffff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            padding: 4px 8px;
+        }
+
+        .title-tag {
+            text-align: right;
+        }
+
+        .title-tag h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #1e6f9f, #2b8c5e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .title-tag small {
+            font-size: 0.85rem;
+            color: #4a627a;
+            display: block;
+            margin-top: 6px;
+        }
+
+        /* two column layout (flex/grid) */
+        .content-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            margin-top: 8px;
+        }
+
+        .calc-panel {
+            flex: 1.2;
+            min-width: 280px;
+        }
+
+        .ref-panel {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        /* weight card */
+        .weight-card {
+            background: #f9fcfd;
+            border-radius: 28px;
+            padding: 24px 20px;
+            margin-bottom: 28px;
+            box-shadow: 0 6px 14px rgba(0, 20, 30, 0.05);
+            border: 1px solid #ddebf5;
+        }
+
+        .weight-label {
+            font-weight: 600;
+            font-size: 1.2rem;
+            display: block;
+            margin-bottom: 12px;
+            color: #1b4f6e;
+        }
+
+        .weight-input {
+            width: 100%;
+            padding: 16px 18px;
+            font-size: 1.2rem;
+            border: 2px solid #cbdde9;
+            border-radius: 48px;
+            background: white;
+            transition: 0.2s;
+            font-weight: 500;
+        }
+
+        .weight-input:focus {
+            border-color: #2b8c5e;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(43, 140, 94, 0.2);
+        }
+
+        /* result table area */
+        .dosage-results {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px solid #e2edf7;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .dosage-results h3 {
+            background: #eef3fc;
+            padding: 14px 20px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            border-bottom: 1px solid #dce7f0;
+            color: #155f7c;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .result-table, .ref-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 380px;
+        }
+
+        .result-table th, .result-table td,
+        .ref-table th, .ref-table td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid #e9edf2;
+        }
+
+        .result-table th {
+            background-color: #f4f9fe;
+            color: #1a4e6b;
+            font-weight: 600;
+        }
+
+        .result-table tr:hover td {
+            background-color: #fafeff;
+        }
+
+        /* reference table custom */
+        .ref-panel h3 {
+            font-size: 1.4rem;
+            margin-bottom: 16px;
+            font-weight: 600;
+            color: #1f5e7e;
+            display: inline-block;
+            border-left: 5px solid #2b8c5e;
+            padding-left: 15px;
+        }
+
+        .ref-table-container {
+            overflow-x: auto;
+            border-radius: 20px;
+            border: 1px solid #e2edf7;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+        }
+
+        .ref-table {
+            min-width: 720px;
+            font-size: 0.85rem;
+        }
+
+        .ref-table th {
+            background-color: #eef2f8;
+            font-weight: 600;
+            color: #1c5a7a;
+            font-size: 0.85rem;
+        }
+
+        .ref-table td {
+            background-color: #ffffff;
+            color: #1e2f3c;
+        }
+
+        .ref-table tr:hover td {
+            background-color: #f5fafd;
+        }
+
+        .footnote {
+            margin-top: 20px;
+            font-size: 0.75rem;
+            background: #f0f6fa;
+            padding: 12px 18px;
+            border-radius: 28px;
+            color: #3b5d73;
+            text-align: center;
+        }
+
+        /* mobile optimizations */
+        @media (max-width: 780px) {
+            body {
+                padding: 12px;
+            }
+            .dashboard {
+                padding: 18px 16px;
+            }
+            .header-area {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .title-tag {
+                text-align: left;
+            }
+            .title-tag h2 {
+                font-size: 1.5rem;
+            }
+            .weight-input {
+                padding: 14px 16px;
+                font-size: 1rem;
+            }
+            .result-table th, .result-table td,
+            .ref-table th, .ref-table td {
+                padding: 10px 8px;
+                font-size: 0.8rem;
+            }
+            .ref-table {
+                min-width: 650px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .result-table th, .result-table td {
+                padding: 8px 6px;
+                font-size: 0.75rem;
+            }
+            .ref-table th, .ref-table td {
+                padding: 8px 6px;
+                font-size: 0.7rem;
+            }
+            .weight-card {
+                padding: 18px 16px;
+            }
+        }
+
+        button, input {
+            font-family: inherit;
+        }
+        .dosage-note {
+            margin-top: 12px;
+            font-size: 0.75rem;
+            color: #2c6a47;
+            background: #eafaf1;
+            padding: 6px 12px;
+            border-radius: 40px;
+            display: inline-block;
+        }
+    </style>
+    <script>
+        function calculateDosage() {
+            let weight = parseFloat(document.getElementById('weight').value);
+            
+            let medicines = [
+                { name: "Paracetamol", factor: 0.2, cap: 20 },
+                { name: "Dimenhydrinate", factor: 0.5, cap: 8 },
+                { name: "Amoxicillin", factor: 0.4, cap: 13 },
+                { name: "Erythromycin", factor: 0.25, cap: 13 },
+                { name: "Azithromycin", factor: 0.25, cap: 12.5 },
+                { name: "Prednisolone", factor: 0.125, cap: 13 },
+                { name: "Chlorpheniramine", factor: 0.1, cap: 6 },
+                { name: "Loratadine", factor: 0.125, cap: 5 },
+                { name: "Bromhexine", factor: 0.1, cap: 8 },
+                { name: "Diphenhydramine/Duro", factor: 0.25, cap: 13 },
+                { name: "Kaolin", factor: 0.3, cap: 10 },
+                { name: "Augmentin", factor: 0.22, cap: 6.5 }
+            ];
+            
+            let tableHTML = `<tr>
+                                <th>Medicine</th>
+                                <th>Dosage (ml)</th>
+                             </tr>`;
+            
+            medicines.forEach(med => {
+                let dose = (weight > 0 && !isNaN(weight)) ? Math.min(med.factor * weight, med.cap) : 0;
+                tableHTML += `<tr>
+                                <td>${med.name}</td>
+                                <td>${dose.toFixed(2)}</td>
+                             </tr>`;
+            });
+            
+            tableHTML += `</table>`;
+            document.getElementById('dosageTable').innerHTML = tableHTML;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            calculateDosage();  // initial render even if weight empty (shows 0.00)
+        });
+    </script>
+</head>
+<body>
+<div class="dashboard">
+    <!-- header with replaced image & removed old PNG -->
+    <div class="header-area">
+        <div class="logo-wrapper">
+            <img class="logo-img" 
+                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRapfnKWx-M62sVVu3p9heG4yRI2UMNBSj8zojoFl7l03izIT7In4hxe_I&s=10" 
+                 alt="Paediatric Care Logo" 
+                 onerror="this.onerror=null; this.src='https://via.placeholder.com/180x70?text=Clinic+Logo';">
+        </div>
+        <div class="title-tag">
+            <h2>Paediatric Dosage Calculator</h2>
+            <small> Weight-directed dosing (ml)</small>
+        </div>
+    </div>
+
+    <div class="content-grid">
+        <!-- LEFT PANEL: calculator interactive -->
+        <div class="calc-panel">
+            <div class="weight-card">
+                <label class="weight-label" for="weight">⚖️ Child's weight (kg)</label>
+                <input type="number" id="weight" step="0.1" placeholder="e.g., 12.5" 
+                       class="weight-input" oninput="calculateDosage()" value="">
+                <div class="dosage-note">💡 Doses are automatically updated — each value capped at safe max ml/dose.</div>
+            </div>
+            <div class="dosage-results">
+                <h3>📋 Calculated single dose (ml)</h3>
+                <div class="table-wrapper">
+                    <table class="result-table" id="dosageTable">
+                        <tbody>
+                            <tr><td colspan="2">Enter weight to calculate</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: reference table with full medication info -->
+        <div class="ref-panel">
+            <h3>📚 Medication Reference Table</h3>
+            <div class="ref-table-container">
+                <table class="ref-table">
+                    <thead>
+                        <tr>
+                            <th>Medicine</th>
+                            <th>Brand Name</th>
+                            <th>Preparation in the clinic</th>
+                            <th>Dose / session</th>
+                            <th>Frequency</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Paracetamol</td><td>Axcel Paracetamol</td><td>250mg/5ml</td><td>10mg/kg</td><td>TDS / QID</td></tr>
+                        <tr><td>Dimenhydrinate</td><td>Dymenate</td><td>12.5mg/5ml</td><td>1.25mg/kg</td><td>TDS</td></tr>
+                        <tr><td>Amoxicillin</td><td>Amoxigran</td><td>125mg/5ml</td><td>10mg/kg</td><td>TDS</td></tr>
+                        <tr><td>Erythromycin</td><td>Axcel Erythromycin</td><td>200mg/5ml</td><td>10mg/kg</td><td>TDS</td></tr>
+                        <tr><td>Azithromycin</td><td>Binozyt</td><td>200mg/5ml</td><td>10mg/kg</td><td>OD</td></tr>
+                        <tr><td>Prednisolone</td><td>Predsolone</td><td>2.5mg/5ml</td><td>0.075mg/kg</td><td>BD</td></tr>
+                        <tr><td>Chlorpheniramine</td><td>Dyriton</td><td>4mg/5ml</td><td>0.1mg/kg</td><td>TDS</td></tr>
+                        <tr><td>Loratadine</td><td>Axcel Loratadine</td><td>5mg/5ml</td><td>0.1mg/kg</td><td>BD</td></tr>
+                        <tr><td>Bromhexine</td><td>Dysolvon</td><td>4mg/5ml</td><td>0.1mg/kg</td><td>TDS</td></tr>
+                        <tr><td>Diphenhydramine/Duro</td><td>Benadryl</td><td>14mg/5ml</td><td>1mg/kg</td><td>TDS</td></tr>
+                        <tr><td>Kaolin</td><td>Kaolin</td><td>N/A</td><td>0.3ml/kg</td><td>TDS</td></tr>
+                        <tr><td>Augmentin</td><td>Augmentin</td><td>228mg/5ml</td><td>6ml/kg</td><td>BD</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="footnote">
+                <strong>Key:</strong> QID = Four times daily &nbsp;|&nbsp; TDS = Three times daily &nbsp;|&nbsp; BD = Twice daily &nbsp;|&nbsp; OD = Once daily<br>
+                ⚕️ Pediatric dosage calculator uses weight-based formula: <strong>dose (ml) = min(factor × weight, safety cap ml)</strong> → corresponds to clinic's oral preparations.
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Epworth Sleepiness Scale | ESS Screener</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #dce8f2 0%, #c2d3e5 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* main card */
+        .ess-card {
+            max-width: 950px;
+            width: 100%;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        /* header with logo and branding */
+        .ess-header {
+            background: linear-gradient(120deg, #163a4f, #0e2c3b);
+            padding: 1.2rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            border-bottom: 3px solid #ffcd8a;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-img {
+            height: 55px;
+            width: auto;
+            background: white;
+            border-radius: 12px;
+            padding: 4px 12px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .title-badge h1 {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .title-badge p {
+            color: #ffdfb3;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .patient-meta {
+            background: rgba(255,255,240,0.12);
+            backdrop-filter: blur(4px);
+            border-radius: 60px;
+            padding: 0.5rem 1.2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: baseline;
+        }
+
+        .patient-meta .meta-field {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .patient-meta input {
+            background: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            width: 150px;
+            outline: none;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .patient-meta input:focus {
+            box-shadow: 0 0 0 2px #ffcd8a;
+        }
+
+        /* content body */
+        .ess-content {
+            padding: 1.8rem 2rem 2rem;
+        }
+
+        /* questions grid */
+        .questions-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1.5rem 0 2rem;
+        }
+
+        .question-card {
+            background: #fbfeff;
+            border-radius: 1.2rem;
+            border: 1px solid #e4eef5;
+            transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+        }
+
+        .question-prompt {
+            padding: 1rem 1.2rem 0.6rem 1.2rem;
+            font-weight: 700;
+            color: #1e4a62;
+            font-size: 1rem;
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .q-num {
+            background: #e2eff6;
+            border-radius: 40px;
+            padding: 0.1rem 0.7rem;
+            font-size: 0.75rem;
+            color: #1c6d8a;
+        }
+
+        .options-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.3rem 1.2rem 1rem 1.2rem;
+            align-items: center;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #f2f8fc;
+            padding: 0.4rem 0.9rem;
+            border-radius: 60px;
+            transition: 0.1s;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #2c5a72;
+            border: 1px solid transparent;
+        }
+
+        .option-item.selected {
+            background: #e0f0f5;
+            border-color: #2c7da0;
+            color: #0f4b63;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .option-item input {
+            margin: 0;
+            accent-color: #2b7a62;
+            width: 1rem;
+            height: 1rem;
+            cursor: pointer;
+        }
+
+        .option-item label {
+            cursor: pointer;
+        }
+
+        /* result panel */
+        .result-panel {
+            background: #f0f6fb;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            margin: 0.5rem 0 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            border-left: 5px solid #2c7da0;
+        }
+
+        .score-circle {
+            background: #1b4c62;
+            color: white;
+            border-radius: 60px;
+            padding: 0.4rem 1.2rem;
+            font-weight: 800;
+            font-size: 1.8rem;
+            min-width: 110px;
+            text-align: center;
+            letter-spacing: 1px;
+            box-shadow: inset 0 -1px 0 #3f7b94, 0 6px 12px -8px black;
+        }
+
+        .interpret-box {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1a4e64;
+            flex: 1;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .btn {
+            border: none;
+            background: #e4eff6;
+            padding: 0.7rem 1.4rem;
+            border-radius: 3rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #2c7da0;
+            color: white;
+            box-shadow: 0 2px 6px rgba(44,125,160,0.3);
+        }
+
+        .btn-primary:hover {
+            background: #236b8c;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #e2ecf3;
+            color: #235f7a;
+            border: 1px solid #cbdde6;
+        }
+
+        .btn-secondary:hover {
+            background: #d0e2ed;
+        }
+
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            padding: 1rem 1.5rem 1.3rem;
+            color: #7b99ae;
+            border-top: 1px solid #e2edf2;
+            background: #fefefe;
+        }
+
+        /* responsiveness */
+        @media (max-width: 700px) {
+            body {
+                padding: 0.8rem;
+            }
+            .ess-content {
+                padding: 1.2rem;
+            }
+            .ess-header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .patient-meta {
+                justify-content: center;
+            }
+            .result-panel {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .action-buttons {
+                width: 100%;
+                justify-content: stretch;
+            }
+            .btn {
+                flex: 1;
+                justify-content: center;
+            }
+            .options-row {
+                gap: 0.4rem;
+            }
+            .option-item {
+                padding: 0.3rem 0.7rem;
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .options-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .option-item {
+                width: 100%;
+            }
+        }
+
+        /* print specific styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+            .ess-card {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            .ess-header {
+                background: #163a4f;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .action-buttons, .btn, .btn-primary, .btn-secondary {
+                display: none !important;
+            }
+            .options-row input {
+                accent-color: #000;
+            }
+            .option-item {
+                border: 1px solid #ccc;
+                background: #f9f9f9;
+            }
+            footer {
+                display: none;
+            }
+            .patient-meta input {
+                border-bottom: 1px solid black;
+                background: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="ess-card">
+    <div class="ess-header">
+        <div class="logo-area">
+            <img class="logo-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRapfnKWx-M62sVVu3p9heG4yRI2UMNBSj8zojoFl7l03izIT7In4hxe_I&s=10" alt="Clinic Logo" 
+                 onerror="this.src='https://via.placeholder.com/100x50?text=SleepClinic'; this.style.opacity='0.9';">
+            <div class="title-badge">
+                <h1>Epworth Sleepiness Scale</h1>
+                <p>ESS — validated tool for daytime sleepiness</p>
+            </div>
+        </div>
+        <div class="patient-meta">
+            <div class="meta-field">👤 Patient: <input type="text" id="patientName" placeholder="Full name"></div>
+            <div class="meta-field">📅 Date: <input type="text" id="dateField" readonly style="background:#f5f9fe; width:120px;"></div>
+        </div>
+    </div>
+
+    <div class="ess-content">
+        <!-- dynamic questions will be injected here to keep html clean and maintainable -->
+        <div class="questions-grid" id="questionsGrid"></div>
+
+        <!-- results + buttons -->
+        <div class="result-panel">
+            <div class="score-circle" id="totalScoreDisplay">0</div>
+            <div class="interpret-box" id="interpretationText">Awaiting selection</div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="calcBtn">📊 Calculate Score</button>
+                <button class="btn btn-secondary" id="printBtn">🖨️ Print Report</button>
+            </div>
+        </div>
+        <footer>
+            ⚕️ Reference: Johns MW (1991). A new method for measuring daytime sleepiness. Score ≥10 indicates significant sleepiness; ≥16 suggests high risk. Clinical correlation advised.
+        </footer>
+    </div>
+</div>
+
+<script>
+    // Epworth Questions and mapping
+    const EPWORTH_QUESTIONS = [
+        { id: 0, text: "Sitting and reading" },
+        { id: 1, text: "Watching television" },
+        { id: 2, text: "Sitting inactive in a public place (theatre, meeting)" },
+        { id: 3, text: "Sitting for an hour as a passenger in a car" },
+        { id: 4, text: "Lying down in the afternoon to rest" },
+        { id: 5, text: "Sitting and talking to another person" },
+        { id: 6, text: "Sitting quietly after a lunch (no alcohol)" },
+        { id: 7, text: "Sitting in a car, stopped for a few minutes due to traffic" }
+    ];
+
+    // Option definitions: [value, label]
+    const OPTIONS = [
+        { val: 0, label: "No chance of dozing" },
+        { val: 1, label: "Slight chance" },
+        { val: 2, label: "Moderate chance" },
+        { val: 3, label: "High chance" }
+    ];
+
+    // Storage for selected values per question (index -> number 0-3)
+    let selectedAnswers = new Array(EPWORTH_QUESTIONS.length).fill(null);
+
+    // Helper: update total display and interpretation
+    function updateScoreAndInterpretation() {
+        let total = 0;
+        let answeredCount = 0;
+        for (let i = 0; i < selectedAnswers.length; i++) {
+            if (selectedAnswers[i] !== null) {
+                total += selectedAnswers[i];
+                answeredCount++;
+            }
+        }
+
+        const totalDiv = document.getElementById('totalScoreDisplay');
+        const interpDiv = document.getElementById('interpretationText');
+
+        if (answeredCount === EPWORTH_QUESTIONS.length) {
+            // all answered
+            let interpretation = "";
+            let classColor = "";
+            if (total >= 0 && total <= 6) {
+                interpretation = "😴 Normal daytime sleepiness (score 0-6)";
+            } else if (total >= 7 && total <= 8) {
+                interpretation = "📊 Average sleepiness (score 7-8) — monitor";
+            } else if (total >= 9 && total <= 15) {
+                interpretation = "⚠️ Abnormal sleepiness (score 9-15) — consider evaluation";
+            } else if (total >= 16 && total <= 24) {
+                interpretation = "🔴 Severe sleepiness (score ≥16) — high risk, clinical consultation advised";
+            } else {
+                interpretation = "Score outside range";
+            }
+            totalDiv.innerText = total;
+            interpDiv.innerHTML = `<strong>Total ESS: ${total}</strong> · ${interpretation}`;
+        } else {
+            // partial
+            totalDiv.innerText = total;
+            interpDiv.innerHTML = `📋 Partial score (${answeredCount}/8 answered). Complete all items for clinical interpretation.`;
+        }
+        return total;
+    }
+
+    // Render dynamic questions with radios
+    function renderQuestions() {
+        const grid = document.getElementById('questionsGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        
+        EPWORTH_QUESTIONS.forEach((q, idx) => {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question-card';
+            questionDiv.dataset.qidx = idx;
+            
+            const promptDiv = document.createElement('div');
+            promptDiv.className = 'question-prompt';
+            promptDiv.innerHTML = `<span class="q-num">${idx+1}</span> ${escapeHtml(q.text)}`;
+            
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'options-row';
+            
+            // create radio group for this question
+            OPTIONS.forEach(opt => {
+                const radioId = `q${idx}_val${opt.val}`;
+                const isChecked = (selectedAnswers[idx] === opt.val);
+                const optionSpan = document.createElement('div');
+                optionSpan.className = `option-item ${isChecked ? 'selected' : ''}`;
+                
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = `question_${idx}`;
+                radio.value = opt.val;
+                radio.id = radioId;
+                radio.checked = isChecked;
+                
+                const label = document.createElement('label');
+                label.htmlFor = radioId;
+                label.innerText = `${opt.label} (${opt.val} pt)`;
+                
+                optionSpan.appendChild(radio);
+                optionSpan.appendChild(label);
+                
+                // attach event to update selection, styling, and store answer
+                radio.addEventListener('change', (e) => {
+                    if (radio.checked) {
+                        selectedAnswers[idx] = parseInt(radio.value);
+                        // update styling for this question's options
+                        const allOptions = optionsDiv.querySelectorAll('.option-item');
+                        allOptions.forEach(optDiv => {
+                            optDiv.classList.remove('selected');
+                        });
+                        optionSpan.classList.add('selected');
+                        updateScoreAndInterpretation();
+                    }
+                });
+                
+                optionsDiv.appendChild(optionSpan);
+            });
+            
+            questionDiv.appendChild(promptDiv);
+            questionDiv.appendChild(optionsDiv);
+            grid.appendChild(questionDiv);
+        });
+    }
+    
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    // calculate full score and also update with message if any radio missing
+    function calculateFullScore() {
+        let missingIndexes = [];
+        for (let i = 0; i < selectedAnswers.length; i++) {
+            if (selectedAnswers[i] === null) missingIndexes.push(i+1);
+        }
+        if (missingIndexes.length > 0) {
+            const interpDiv = document.getElementById('interpretationText');
+            const totalDiv = document.getElementById('totalScoreDisplay');
+            let totalPartial = 0;
+            for (let i=0;i<selectedAnswers.length;i++) {
+                if (selectedAnswers[i] !== null) totalPartial += selectedAnswers[i];
+            }
+            totalDiv.innerText = totalPartial;
+            interpDiv.innerHTML = `⚠️ Incomplete: missing question(s) ${missingIndexes.join(', ')}. Please complete all 8 items for valid score.`;
+            return false;
+        }
+        let total = 0;
+        for (let i=0;i<selectedAnswers.length;i++) {
+            total += selectedAnswers[i];
+        }
+        updateScoreAndInterpretation(); // refreshes with full interpretation
+        return true;
+    }
+    
+    // generate printable report content
+    function generatePrintHTML() {
+        const patientName = document.getElementById('patientName').value.trim() || "Not specified";
+        const dateField = document.getElementById('dateField').value;
+        let totalScore = 0;
+        let complete = true;
+        const answersList = [];
+        for (let i=0; i<EPWORTH_QUESTIONS.length; i++) {
+            const val = selectedAnswers[i];
+            if (val === null) {
+                complete = false;
+                answersList.push({ q: EPWORTH_QUESTIONS[i].text, score: null, label: "Not answered" });
+            } else {
+                totalScore += val;
+                let labelText = "";
+                if (val === 0) labelText = "No chance of dozing";
+                else if (val === 1) labelText = "Slight chance";
+                else if (val === 2) labelText = "Moderate chance";
+                else labelText = "High chance";
+                answersList.push({ q: EPWORTH_QUESTIONS[i].text, score: val, label: labelText });
+            }
+        }
+        
+        let interpretationMsg = "";
+        if (complete) {
+            if (totalScore <= 6) interpretationMsg = "Normal daytime sleepiness (0-6)";
+            else if (totalScore <= 8) interpretationMsg = "Average sleepiness (7-8)";
+            else if (totalScore <= 15) interpretationMsg = "Abnormal sleepiness — further evaluation suggested (9-15)";
+            else interpretationMsg = "Severe pathologic sleepiness — clinical consultation recommended (16-24)";
+        } else {
+            interpretationMsg = "⚠️ Incomplete assessment — not all questions answered.";
+        }
+        
+        const rowsHtml = answersList.map(ans => `
+            <tr style="border-bottom:1px solid #d9e6ef;">
+                <td style="padding: 8px 12px;">${escapeHtml(ans.q)}</td>
+                <td style="padding: 8px 12px; text-align:center;">${ans.score !== null ? ans.score : '—'}</td>
+                <td style="padding: 8px 12px;">${ans.label || 'Missing'}</td>
+            </tr>
+        `).join('');
+        
+        return `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Epworth Sleepiness Scale Report</title>
+            <style>
+                * { margin:0; padding:0; box-sizing:border-box; }
+                body {
+                    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+                    background: white;
+                    padding: 2rem;
+                    color: #1f2f3a;
+                }
+                .report-container {
+                    max-width: 900px;
+                    margin: 0 auto;
+                    background: #ffffff;
+                    border-radius: 24px;
+                    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+                    border: 1px solid #e0edf2;
+                    overflow: hidden;
+                }
+                .header-print {
+                    background: #163a4f;
+                    padding: 1.2rem;
+                    text-align: center;
+                    color: white;
+                }
+                .header-print img {
+                    max-width: 180px;
+                    background: white;
+                    border-radius: 12px;
+                    padding: 4px 12px;
+                    margin-bottom: 8px;
+                }
+                .content-print {
+                    padding: 1.6rem 2rem;
+                }
+                .info-line {
+                    display: flex;
+                    justify-content: space-between;
+                    border-bottom: 1px solid #d9e9f0;
+                    padding: 0.6rem 0;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 1.2rem 0;
+                }
+                th {
+                    background: #eef3f7;
+                    padding: 8px 12px;
+                    text-align: left;
+                }
+                td {
+                    padding: 8px 12px;
+                }
+                .total-box {
+                    background: #f2f7fb;
+                    border-radius: 20px;
+                    padding: 1rem;
+                    margin-top: 1rem;
+                    text-align: center;
+                    border-left: 5px solid #2c7da0;
+                }
+                .footer-note {
+                    font-size: 0.7rem;
+                    text-align: center;
+                    margin-top: 2rem;
+                    color: #6c8d9c;
+                }
+                @media print {
+                    body { padding: 0; margin:0; }
+                }
+            </style>
+        </head>
+        <body>
+        <div class="report-container">
+            <div class="header-print">
+                <img src="https://i.postimg.cc/141g0bXq/ghvTprd.png" alt="Clinic Logo" onerror="this.src='https://via.placeholder.com/150x50?text=SleepClinic'">
+                <h2>Epworth Sleepiness Scale (ESS)</h2>
+                <p>Clinical assessment of daytime sleep propensity</p>
+            </div>
+            <div class="content-print">
+                <div class="info-line"><strong>Patient name</strong> <span>${escapeHtml(patientName)}</span></div>
+                <div class="info-line"><strong>Assessment date</strong> <span>${dateField}</span></div>
+                <h3 style="margin-top: 1.2rem;">Responses</h3>
+                <table>
+                    <thead><tr><th>Situation</th><th>Score</th><th>Chance of dozing</th></tr></thead>
+                    <tbody>${rowsHtml}</tbody>
+                </table>
+                <div class="total-box">
+                    <span style="font-weight:600;">Total Epworth Score</span><br>
+                    <span style="font-size:2rem; font-weight:800;">${complete ? totalScore : 'Incomplete'}</span><br>
+                    <span>${interpretationMsg}</span>
+                </div>
+                <div class="footer-note">
+                    ⚕️ Johns MW (1991) — A score ≥10 indicates significant excessive daytime sleepiness. This report is for clinical guidance.
+                </div>
+            </div>
+        </div>
+        </body>
+        </html>`;
+    }
+    
+    function printReport() {
+        // ensure partial score warning but still print
+        const printHtml = generatePrintHTML();
+        const printWindow = window.open('', '_blank', 'width=900,height=700,toolbar=yes,scrollbars=yes,resizable=yes');
+        if (!printWindow) {
+            alert("Please allow pop-ups to generate the report.");
+            return;
+        }
+        printWindow.document.write(printHtml);
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+    }
+    
+    // set today's date immutable
+    function setDate() {
+        const today = new Date();
+        const formatted = today.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+        const dateInput = document.getElementById('dateField');
+        if (dateInput) dateInput.value = formatted;
+    }
+    
+    // initialise all
+    function init() {
+        renderQuestions();
+        setDate();
+        updateScoreAndInterpretation();
+        
+        const calcButton = document.getElementById('calcBtn');
+        const printButton = document.getElementById('printBtn');
+        if (calcButton) calcButton.addEventListener('click', () => calculateFullScore());
+        if (printButton) printButton.addEventListener('click', printReport);
+        
+        // optional: quick warning if any radios missed (the button triggers anyway)
+        // Also add listener for patient name for print.
+    }
+    
+    init();
+</script>
+</body>
+</html>

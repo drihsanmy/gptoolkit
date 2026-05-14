@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>IPSS Pro | Prostate Symptom Score & Records</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(145deg, #e9f0f5 0%, #dce5ec 100%);
+            padding: 24px 16px;
+            color: #1a2c3e;
+        }
+
+        /* custom scroll */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2c7da0;
+            border-radius: 8px;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* cards & glassmorphism */
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(0px);
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0,0,0,0.02);
+            padding: 28px 24px;
+            margin-bottom: 28px;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            border-bottom: 2px solid #eef2f8;
+            padding-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 1.85rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1f6e8c, #0e4b6e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e4a6e;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h2::before {
+            content: "📋";
+            font-size: 1.4rem;
+        }
+
+        h3 {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin: 16px 0 8px 0;
+            color: #2c5a7a;
+        }
+
+        /* patient info grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 8px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #2c7da0;
+        }
+
+        input, select {
+            background: #f8fafc;
+            border: 1.5px solid #e2edf2;
+            border-radius: 20px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            font-family: inherit;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #2c7da0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.2);
+            background: white;
+        }
+
+        /* question styling */
+        .question-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .question-card {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 18px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #eef3f8;
+            transition: all 0.2s;
+        }
+
+        .question-text {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #0f3b4f;
+            margin-bottom: 16px;
+            line-height: 1.4;
+            padding-right: 8px;
+        }
+
+        .options-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 8px;
+            justify-content: space-between;
+        }
+
+        .option-item {
+            flex: 1;
+            min-width: 70px;
+            text-align: center;
+            background: #f9fbfd;
+            border-radius: 40px;
+            padding: 8px 4px;
+            transition: all 0.1s;
+            cursor: pointer;
+            border: 1px solid #e4edf2;
+        }
+
+        .option-item input {
+            display: none;
+        }
+
+        .option-item label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #2c5a7a;
+            cursor: pointer;
+            margin: 0;
+            padding: 4px 2px;
+        }
+
+        .option-item:has(input:checked) {
+            background: #1f6e8c;
+            border-color: #1f6e8c;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .option-item:has(input:checked) label {
+            color: white;
+            font-weight: 600;
+        }
+
+        /* results panel */
+        .results-panel {
+            background: linear-gradient(115deg, #eef4fa, #ffffff);
+            border-radius: 28px;
+            padding: 20px;
+            margin-top: 24px;
+            border-left: 6px solid #2c7da0;
+        }
+
+        .result-field {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 12px 0;
+            border-bottom: 1px solid #cbdde9;
+        }
+
+        .result-field:last-child {
+            border: none;
+        }
+
+        .result-label {
+            font-weight: 700;
+            color: #1e4a6e;
+        }
+
+        .result-value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #1f6e8c;
+        }
+
+        /* buttons */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 28px;
+            justify-content: center;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 60px;
+            padding: 12px 28px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #edf2f7;
+            color: #1e4a6e;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .btn-primary {
+            background: #2c7da0;
+            color: white;
+        }
+        .btn-primary:hover { background: #1f6e8c; transform: translateY(-2px); }
+
+        .btn-success {
+            background: #2e9c6b;
+            color: white;
+        }
+        .btn-success:hover { background: #238b5c; transform: translateY(-2px);}
+        
+        .btn-danger {
+            background: #cd5c5c;
+            color: white;
+        }
+        .btn-danger:hover { background: #b74747;}
+
+        .btn-secondary {
+            background: #dbe7ef;
+            color: #1e4a6e;
+        }
+        .btn-secondary:hover { background: #cbdde9;}
+
+        .btn:active { transform: translateY(1px);}
+
+        /* search table */
+        .records-table-wrapper {
+            overflow-x: auto;
+            margin-top: 12px;
+            border-radius: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th {
+            background: #e2edf2;
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 700;
+            color: #1f5e7e;
+        }
+        td {
+            padding: 12px 12px;
+            border-bottom: 1px solid #eef3f8;
+            vertical-align: middle;
+        }
+        .action-btns {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .tiny-btn {
+            padding: 6px 12px;
+            font-size: 0.7rem;
+            border-radius: 40px;
+            font-weight: 600;
+            background: #eef3fa;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media print {
+            .no-print, .btn, .button-group, .search-section, .patient-info, .actions, .records-table-wrapper, .card-header button {
+                display: none !important;
+            }
+            .print-only {
+                display: block;
+            }
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+            .card {
+                box-shadow: none;
+                padding: 0;
+                margin: 0;
+                background: white;
+            }
+            .question-card {
+                border: 1px solid #ccc;
+                page-break-inside: avoid;
+            }
+            .result-value {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* logo area */
+        .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .clinic-badge {
+            background: #ffffffd9;
+            padding: 6px 18px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1f6e8c;
+        }
+
+        @media (max-width: 680px) {
+            .card {
+                padding: 18px;
+            }
+            .option-item label {
+                font-size: 0.7rem;
+            }
+            .result-value {
+                font-size: 1.3rem;
+            }
+            .btn {
+                padding: 8px 18px;
+            }
+        }
+
+        .info-note {
+            font-size: 0.75rem;
+            color: #5c7f92;
+            margin-top: 6px;
+        }
+        .badge-icon {
+            background: #cbe4f0;
+            border-radius: 40px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- main card -->
+    <div class="card">
+        <div class="logo-area">
+            <div class="clinic-badge">
+                🏥 Urology Health
+            </div>
+            <div class="badge-icon">
+                IPSS v2.0
+            </div>
+        </div>
+        <div class="card-header">
+            <h1>📊 IPSS Assessment</h1>
+            <p class="info-note">International Prostate Symptom Score + QoL Index</p>
+        </div>
+
+        <!-- patient section (no-print) -->
+        <div class="no-print">
+            <div class="info-grid" style="margin-bottom: 24px;">
+                <div class="input-group">
+                    <label>👤 Patient Name</label>
+                    <input type="text" id="patientName" placeholder="Full name" autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <label>🆔 IC / Passport Number</label>
+                    <input type="text" id="icNumber" placeholder="e.g., 880101-10-5678">
+                </div>
+                <div class="input-group">
+                    <label>📅 Assessment Date</label>
+                    <input type="date" id="recordDate">
+                </div>
+            </div>
+        </div>
+
+        <!-- SEARCH + RECORDS (modern) -->
+        <div class="no-print search-section" style="margin-bottom: 24px; background: #f2f8fd; border-radius: 28px; padding: 16px;">
+            <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;">
+                <div style="flex: 2; min-width: 160px;">
+                    <label>🔍 Search by IC / Passport</label>
+                    <input type="text" id="searchIC" placeholder="Enter IC number" style="background:white;">
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button id="searchBtn" class="btn btn-secondary" style="background:#2c7da0; color:white;">🔎 Find</button>
+                    <button id="clearSearchBtn" class="btn btn-secondary">🗑️ Clear</button>
+                </div>
+            </div>
+            <div id="searchResults" class="hidden" style="margin-top: 20px;">
+                <h3>📌 Previous Assessments</h3>
+                <div class="records-table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th>Name</th><th>IC Number</th><th>Date</th><th>Score</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="recordsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questionnaire Area (dynamic with flexible options) -->
+        <div id="questionnaire">
+            <h2>📝 Symptom Questionnaire</h2>
+            <div class="question-list" id="questionsContainer"></div>
+
+            <!-- results block -->
+            <div id="results" class="hidden results-panel">
+                <div class="result-field">
+                    <span class="result-label">🧮 Total IPSS Score</span>
+                    <span class="result-value" id="totalScore">0</span>
+                </div>
+                <div class="result-field">
+                    <span class="result-label">📈 Symptom Severity</span>
+                    <span class="result-value" id="severity">-</span>
+                </div>
+                <div class="result-field">
+                    <span class="result-label">😊 Quality of Life (QoL)</span>
+                    <span class="result-value" id="qolScore">0</span>
+                </div>
+                <div class="info-note" style="margin-top: 12px;">* Mild 0-7 | Moderate 8-19 | Severe 20-35</div>
+            </div>
+
+            <div class="button-group no-print">
+                <button id="calculateBtn" class="btn btn-primary">✨ Calculate Score</button>
+                <button id="saveBtn" class="btn btn-success" disabled>💾 Save Record</button>
+                <button id="printBtn" class="btn btn-secondary">🖨️ Print Report</button>
+                <button id="newRecordBtn" class="btn btn-secondary">🔄 New Record</button>
+            </div>
+        </div>
+
+        <!-- print only content -->
+        <div id="printContent" class="print-only" style="display: none;"></div>
+        <div id="printPreview" class="print-only"></div>
+    </div>
+</div>
+
+<script>
+    // ---------- DATA MODEL ----------
+    let records = JSON.parse(localStorage.getItem('ipssRecords')) || [];
+    
+    // DOM elements
+    const patientNameInp = document.getElementById('patientName');
+    const icNumberInp = document.getElementById('icNumber');
+    const recordDateInp = document.getElementById('recordDate');
+    const searchIcInp = document.getElementById('searchIC');
+    const searchBtn = document.getElementById('searchBtn');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    const searchResultsDiv = document.getElementById('searchResults');
+    const recordsBody = document.getElementById('recordsBody');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const printBtn = document.getElementById('printBtn');
+    const newRecordBtn = document.getElementById('newRecordBtn');
+    const resultsDiv = document.getElementById('results');
+    const totalScoreSpan = document.getElementById('totalScore');
+    const severitySpan = document.getElementById('severity');
+    const qolScoreSpan = document.getElementById('qolScore');
+    const questionsContainer = document.getElementById('questionsContainer');
+
+    // ---------- QUESTION BANK ----------
+    const questionsData = [
+        { id: 'q1', text: "1. Incomplete emptying: Over the past month, how often have you had a sensation of not emptying your bladder completely after you finished urinating?", options: ["Not at all", "Less than 1 time in 5", "Less than half the time", "About half the time", "More than half the time", "Almost always"], values: [0,1,2,3,4,5] },
+        { id: 'q2', text: "2. Frequency: Over the past month, how often have you had to urinate less than every two hours?", options: ["Not at all", "Less than 1 time in 5", "Less than half the time", "About half the time", "More than half the time", "Almost always"], values: [0,1,2,3,4,5] },
+        { id: 'q3', text: "3. Intermittency: Over the past month, how often have you found you stopped and started again several times when you urinated?", options: ["Not at all", "Less than 1 time in 5", "Less than half the time", "About half the time", "More than half the time", "Almost always"], values: [0,1,2,3,4,5] },
+        { id: 'q4', text: "4. Urgency: Over the past month, how often have you found it difficult to postpone urination?", options: ["Not at all", "Less than 1 time in 5", "Less than half the time", "About half the time", "More than half the time", "Almost always"], values: [0,1,2,3,4,5] },
+        { id: 'q5', text: "5. Weak stream: Over the past month, how often have you had a weak urinary stream?", options: ["Not at all", "Less than 1 time in 5", "Less than half the time", "About half the time", "More than half the time", "Almost always"], values: [0,1,2,3,4,5] },
+        { id: 'q6', text: "6. Straining: Over the past month, how often have you had to push or strain to begin urination?", options: ["Not at all", "Less than 1 time in 5", "Less than half the time", "About half the time", "More than half the time", "Almost always"], values: [0,1,2,3,4,5] },
+        { id: 'q7', text: "7. Nocturia: Over the past month, how many times did you typically get up to urinate from bedtime until morning?", options: ["None", "1 time", "2 times", "3 times", "4 times", "5 or more times"], values: [0,1,2,3,4,5] }
+    ];
+    
+    const qolOptions = [
+        "Delighted", "Pleased", "Mostly satisfied", "Mixed", "Mostly dissatisfied", "Unhappy", "Terrible"
+    ];
+    const qolValues = [0,1,2,3,4,5,6];
+
+    // build dynamic UI
+    function buildQuestionnaire() {
+        questionsContainer.innerHTML = '';
+        // render IPSS questions
+        questionsData.forEach(q => {
+            const qDiv = document.createElement('div');
+            qDiv.className = 'question-card';
+            qDiv.innerHTML = `<div class="question-text">${q.text}</div><div class="options-row" id="row-${q.id}"></div>`;
+            const optionsRow = qDiv.querySelector(`.options-row`);
+            q.options.forEach((opt, idx) => {
+                const optVal = q.values[idx];
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option-item';
+                const radioId = `${q.id}_${idx}`;
+                optionDiv.innerHTML = `
+                    <input type="radio" name="${q.id}" value="${optVal}" id="${radioId}">
+                    <label for="${radioId}">${opt}</label>
+                `;
+                optionsRow.appendChild(optionDiv);
+            });
+            questionsContainer.appendChild(qDiv);
+        });
+        // Quality of Life card
+        const qolCard = document.createElement('div');
+        qolCard.className = 'question-card';
+        qolCard.innerHTML = `<div class="question-text">🌟 Quality of Life: If you were to spend the rest of your life with your urinary condition just as it is now, how would you feel?</div><div class="options-row" id="qol-row"></div>`;
+        const qolRow = qolCard.querySelector('#qol-row');
+        qolOptions.forEach((opt, idx) => {
+            const val = qolValues[idx];
+            const optDiv = document.createElement('div');
+            optDiv.className = 'option-item';
+            const radioId = `qol_${idx}`;
+            optDiv.innerHTML = `<input type="radio" name="qol" value="${val}" id="${radioId}"><label for="${radioId}">${opt}</label>`;
+            qolRow.appendChild(optDiv);
+        });
+        questionsContainer.appendChild(qolCard);
+    }
+
+    // get current answers
+    function getAnswers() {
+        let answers = {};
+        for (let q of questionsData) {
+            const selected = document.querySelector(`input[name="${q.id}"]:checked`);
+            answers[q.id] = selected ? parseInt(selected.value) : 0;
+        }
+        const qolSelected = document.querySelector(`input[name="qol"]:checked`);
+        answers.qol = qolSelected ? parseInt(qolSelected.value) : 0;
+        return answers;
+    }
+
+    // compute total and severity
+    function computeScore(answers) {
+        let total = 0;
+        for (let i=1; i<=7; i++) {
+            total += answers[`q${i}`] || 0;
+        }
+        let severityText = '';
+        if (total <= 7) severityText = 'Mild (0-7)';
+        else if (total <= 19) severityText = 'Moderate (8-19)';
+        else severityText = 'Severe (20-35)';
+        return { total, severityText };
+    }
+
+    function updateResultsUI() {
+        const answers = getAnswers();
+        const { total, severityText } = computeScore(answers);
+        totalScoreSpan.innerText = total;
+        severitySpan.innerText = severityText;
+        qolScoreSpan.innerText = answers.qol;
+        resultsDiv.classList.remove('hidden');
+        saveBtn.disabled = false;
+        return { total, severityText, qol: answers.qol, answers };
+    }
+
+    calculateBtn.addEventListener('click', () => {
+        updateResultsUI();
+    });
+
+    // Save record
+    function saveRecord() {
+        const name = patientNameInp.value.trim();
+        const ic = icNumberInp.value.trim();
+        if (!name || !ic) {
+            alert("⚠️ Please fill Patient Name and IC Number before saving.");
+            return;
+        }
+        const answers = getAnswers();
+        const { total, severityText } = computeScore(answers);
+        const record = {
+            id: Date.now(),
+            patientName: name,
+            icNumber: ic,
+            date: recordDateInp.value || new Date().toISOString().split('T')[0],
+            answers: { ...answers },
+            totalScore: total,
+            severity: severityText.split(' ')[0],
+            qolScore: answers.qol
+        };
+        records.push(record);
+        localStorage.setItem('ipssRecords', JSON.stringify(records));
+        alert("✅ Record saved successfully!");
+        saveBtn.disabled = true;
+        searchRecordsByTerm();  // refresh table if search is visible but keep term
+        if (searchResultsDiv.classList.contains('hidden') === false && searchIcInp.value !== "") {
+            // keep showing fresh data
+        }
+    }
+    saveBtn.addEventListener('click', saveRecord);
+
+    // Search logic
+    function searchRecordsByTerm() {
+        const term = searchIcInp.value.trim().toLowerCase();
+        if (!term) {
+            alert("Please enter an IC number to search.");
+            return;
+        }
+        const filtered = records.filter(r => r.icNumber.toLowerCase().includes(term));
+        renderRecordsTable(filtered);
+        if (filtered.length === 0) recordsBody.innerHTML = '<tr><td colspan="5">✨ No records found for this IC.📄</td></tr>';
+        searchResultsDiv.classList.remove('hidden');
+    }
+
+    function renderRecordsTable(recordsArray) {
+        recordsBody.innerHTML = '';
+        recordsArray.forEach(rec => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${escapeHtml(rec.patientName)}</td>
+                <td>${escapeHtml(rec.icNumber)}</td>
+                <td>${rec.date}</td>
+                <td>${rec.totalScore} (${rec.severity})</td>
+                <td class="action-btns">
+                    <button class="tiny-btn view-btn" data-id="${rec.id}">👁️ View</button>
+                    <button class="tiny-btn delete-btn" data-id="${rec.id}" style="background:#ffe0e0;">🗑️ Delete</button>
+                </td>
+            `;
+            recordsBody.appendChild(row);
+        });
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(btn.getAttribute('data-id'));
+                viewRecordById(id);
+            });
+        });
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(btn.getAttribute('data-id'));
+                deleteRecordById(id);
+            });
+        });
+    }
+
+    function viewRecordById(id) {
+        const record = records.find(r => r.id === id);
+        if (!record) return;
+        patientNameInp.value = record.patientName;
+        icNumberInp.value = record.icNumber;
+        recordDateInp.value = record.date;
+        // clear previous radios
+        document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+        // set answers
+        for (let i=1; i<=7; i++) {
+            const val = record.answers[`q${i}`];
+            if (val !== undefined) {
+                const radio = document.querySelector(`input[name="q${i}"][value="${val}"]`);
+                if (radio) radio.checked = true;
+            }
+        }
+        const qolVal = record.answers.qol;
+        if (qolVal !== undefined) {
+            const qolRadio = document.querySelector(`input[name="qol"][value="${qolVal}"]`);
+            if (qolRadio) qolRadio.checked = true;
+        }
+        updateResultsUI();
+        saveBtn.disabled = true;
+        document.getElementById('questionnaire').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function deleteRecordById(id) {
+        if (confirm("⚠️ Permanently delete this record?")) {
+            records = records.filter(r => r.id !== id);
+            localStorage.setItem('ipssRecords', JSON.stringify(records));
+            if (searchIcInp.value.trim()) searchRecordsByTerm();
+            else searchResultsDiv.classList.add('hidden');
+        }
+    }
+
+    function clearSearch() {
+        searchIcInp.value = '';
+        searchResultsDiv.classList.add('hidden');
+    }
+
+    searchBtn.addEventListener('click', searchRecordsByTerm);
+    clearSearchBtn.addEventListener('click', clearSearch);
+
+    // Print with dynamic content
+    function prepareAndPrint() {
+        if (resultsDiv.classList.contains('hidden')) {
+            alert("Please calculate the score before printing.");
+            return;
+        }
+        const name = patientNameInp.value || "_____";
+        const ic = icNumberInp.value || "_____";
+        const date = recordDateInp.value || new Date().toISOString().split('T')[0];
+        const answers = getAnswers();
+        const { total, severityText } = computeScore(answers);
+        // build html for print
+        let qListHtml = '<ol style="margin-top: 8px;">';
+        for(let i=0; i<questionsData.length; i++) {
+            const q = questionsData[i];
+            const selectedVal = answers[q.id];
+            const selectedIdx = q.values.indexOf(selectedVal);
+            const answerText = (selectedIdx !== -1) ? q.options[selectedIdx] : "Not answered";
+            qListHtml += `<li style="margin-bottom: 18px;"><strong>${q.text}</strong><br/>📌 Answer: ${answerText}</li>`;
+        }
+        const qolSelectedVal = answers.qol;
+        const qolIdx = qolValues.indexOf(qolSelectedVal);
+        const qolText = qolIdx !== -1 ? qolOptions[qolIdx] : "Not answered";
+        qListHtml += `<li><strong>Quality of Life:</strong> ${qolText}</li></ol>`;
+        
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html><head><title>IPSS Report</title>
+            <style>
+                body { font-family: 'Inter', sans-serif; padding: 2rem; max-width: 900px; margin: auto; }
+                h1 { color: #1f6e8c; }
+                .header { border-bottom: 2px solid #cbdde9; margin-bottom: 24px; }
+                .results-box { background: #eef4fa; padding: 16px; border-radius: 24px; margin: 24px 0; }
+                .score-badge { font-size: 1.8rem; font-weight: bold; color:#1f6e8c; }
+                li { margin-bottom: 14px; }
+                @media print { body { margin: 0; padding: 0.8rem; } }
+            </style>
+            </head><body>
+            <div class="header"><h1>🏥 International Prostate Symptom Score (IPSS)</h1>
+            <p><strong>Patient:</strong> ${escapeHtml(name)} &nbsp;| <strong>IC:</strong> ${escapeHtml(ic)} &nbsp;| <strong>Date:</strong> ${date}</p>
+            </div>
+            <div class="results-box">
+                <p>📊 <strong>Total IPSS Score:</strong> <span class="score-badge">${total}</span>  (${severityText})</p>
+                <p>😊 <strong>Quality of Life Score:</strong> ${answers.qol} / 6</p>
+            </div>
+            <h3>📋 Detailed Responses</h3>
+            ${qListHtml}
+            <p style="margin-top: 40px; font-size: 0.7rem;">*IPSS Questionnaire - assessed based on last month symptoms</p>
+            </body></html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+    printBtn.addEventListener('click', prepareAndPrint);
+
+    function newRecord() {
+        patientNameInp.value = '';
+        icNumberInp.value = '';
+        recordDateInp.valueAsDate = new Date();
+        document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+        resultsDiv.classList.add('hidden');
+        saveBtn.disabled = true;
+        patientNameInp.focus();
+    }
+    newRecordBtn.addEventListener('click', newRecord);
+    
+    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;});}
+    
+    // set default date
+    recordDateInp.valueAsDate = new Date();
+    buildQuestionnaire();
+    // initial saveBtn state
+    saveBtn.disabled = true;
+</script>
+</body>
+</html>

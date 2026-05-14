@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>PHQ-9 Depression Screening | Patient Health Questionnaire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #e0eafc 0%, #cfdef3 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            padding: 1.5rem;
+            min-height: 100vh;
+        }
+
+        /* Modern card container */
+        .phq-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            backdrop-filter: blur(0px);
+            transition: all 0.2s ease;
+        }
+
+        /* Header / Hero area with clinic branding */
+        .brand-header {
+            background: linear-gradient(135deg, #1a3c6e 0%, #235b8c 100%);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            border-bottom: 4px solid #ffcd7e;
+        }
+
+        .logo-area {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .clinic-badge {
+            background: white;
+            border-radius: 60px;
+            padding: 0.5rem 1.2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 14px rgba(0, 0, 0, 0.1);
+        }
+
+        .clinic-badge span {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #1a3c6e;
+            letter-spacing: -0.3px;
+        }
+
+        .clinic-badge small {
+            font-size: 0.75rem;
+            color: #4b6e8a;
+        }
+
+        .brand-header h2 {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            margin-top: 0.5rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .brand-header p {
+            color: #e2f0ff;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Form inner padding */
+        .form-panel {
+            padding: 2rem 2rem 1.8rem;
+        }
+
+        /* Patient info grid - modern responsive */
+        .info-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            background: #f8fafd;
+            padding: 1.5rem;
+            border-radius: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e9edf2;
+        }
+
+        .input-field {
+            flex: 1 1 180px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .input-field label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #2c5a7a;
+        }
+
+        .input-field input {
+            padding: 0.8rem 1rem;
+            border: 1.5px solid #dce3ec;
+            border-radius: 1rem;
+            font-size: 0.95rem;
+            font-family: inherit;
+            background: white;
+            transition: 0.2s;
+        }
+
+        .input-field input:focus {
+            outline: none;
+            border-color: #2c7da0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.2);
+        }
+
+        /* Questionnaire table - card style + responsive scroll */
+        .questions-section {
+            margin: 1.5rem 0 2rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1f3b4c;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-left: 5px solid #ffb347;
+            padding-left: 1rem;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 1.5rem;
+            border: 1px solid #eef2f8;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .phq-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 560px;
+        }
+
+        .phq-table th {
+            background: #f1f5f9;
+            padding: 1rem 0.8rem;
+            font-weight: 700;
+            color: #1e4663;
+            border-bottom: 2px solid #dce5ef;
+            font-size: 0.85rem;
+        }
+
+        .phq-table td {
+            padding: 1rem 0.5rem;
+            border-bottom: 1px solid #edf2f7;
+            vertical-align: middle;
+            text-align: center;
+            color: #1f2f3e;
+        }
+
+        .question-text {
+            text-align: left;
+            font-weight: 500;
+            background-color: #ffffff;
+            padding-left: 1rem !important;
+            min-width: 220px;
+        }
+
+        /* radio group styling */
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: #f9fbfd;
+            padding: 0.3rem 0.7rem;
+            border-radius: 40px;
+            transition: all 0.1s ease;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+        }
+
+        .radio-option input {
+            margin: 0;
+            accent-color: #2c7da0;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .radio-option label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: #2c5368;
+        }
+
+        /* Buttons & result */
+        .action-area {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.2rem;
+            margin-top: 1.8rem;
+        }
+
+        .btn-print {
+            background: linear-gradient(100deg, #1f6392, #1a4f73);
+            border: none;
+            padding: 0.9rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            border-radius: 3rem;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+            font-family: inherit;
+        }
+
+        .btn-print:hover {
+            transform: scale(1.02);
+            background: linear-gradient(100deg, #1f73a5, #1a5b85);
+            box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-card {
+            background: #fef9e6;
+            border-radius: 1.8rem;
+            padding: 1.2rem 1.8rem;
+            border-left: 8px solid #ffb347;
+            font-weight: 600;
+            font-size: 1.15rem;
+            color: #2d3e50;
+            display: inline-block;
+            width: auto;
+            min-width: 240px;
+            text-align: center;
+            backdrop-filter: blur(2px);
+        }
+
+        .result-card span {
+            font-weight: 800;
+            color: #c4450c;
+        }
+
+        footer {
+            background: #f1f4f9;
+            padding: 1rem 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #5c6f87;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Print styles - clean and professional */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+            .phq-container {
+                box-shadow: none;
+                border-radius: 0;
+                max-width: 100%;
+            }
+            .btn-print, .action-area .btn-print, .print-button {
+                display: none !important;
+            }
+            .brand-header {
+                background: #1f3b4c;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .info-grid {
+                background: #fafcff;
+                border: 1px solid #ccc;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .radio-option {
+                border: 1px solid #aaa;
+                background: white;
+            }
+            .result-card {
+                border: 2px solid #ffb347;
+                background: #fff6e0;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .phq-table td, .phq-table th {
+                border-color: #ccc;
+            }
+        }
+
+        /* mobile fine-tuning */
+        @media (max-width: 680px) {
+            body {
+                padding: 0.8rem;
+            }
+            .form-panel {
+                padding: 1.2rem;
+            }
+            .info-grid {
+                flex-direction: column;
+                gap: 0.9rem;
+            }
+            .radio-group {
+                gap: 0.3rem;
+            }
+            .radio-option {
+                padding: 0.2rem 0.5rem;
+            }
+            .radio-option label {
+                font-size: 0.65rem;
+            }
+            .question-text {
+                font-size: 0.85rem;
+            }
+            .btn-print {
+                width: 100%;
+                justify-content: center;
+            }
+            .result-card {
+                width: 100%;
+                text-align: center;
+                font-size: 1rem;
+            }
+            .brand-header h2 {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* severity color hint */
+        .severity-high {
+            color: #c0392b;
+        }
+        .severity-moderate {
+            color: #e67e22;
+        }
+    </style>
+</head>
+<body>
+
+<div class="phq-container">
+    <!-- refined header with simulated logo / clinic identity -->
+    <div class="brand-header">
+        <div class="logo-area">
+            <div class="clinic-badge">
+                <span>🏥 MENTAL HEALTH</span>
+                <small>screening</small>
+            </div>
+        </div>
+        <h2>📋 PHQ-9 Patient Health Questionnaire</h2>
+        <p>Standardized depression assessment · Quick & confidential</p>
+    </div>
+
+    <div class="form-panel">
+        <form id="phq9Form" onsubmit="return false;">
+            <!-- Patient data card -->
+            <div class="info-grid">
+                <div class="input-field">
+                    <label>Full name</label>
+                    <input type="text" id="patientName" placeholder="e.g., Aina Binti Yusof" required>
+                </div>
+                <div class="input-field">
+                    <label>IC / Passport</label>
+                    <input type="text" id="patientIC" placeholder="000101-01-1234" required>
+                </div>
+                <div class="input-field">
+                    <label>Assessment date</label>
+                    <input type="date" id="assessmentDate" required>
+                </div>
+            </div>
+
+            <!-- Questionnaire dynamic area -->
+            <div class="questions-section">
+                <div class="section-title">
+                    <span>📝</span> Over the last 2 weeks, how often have you been bothered by...
+                </div>
+                <div class="table-wrapper">
+                    <table class="phq-table" id="questionsTable">
+                        <thead>
+                            <tr>
+                                <th>Question</th>
+                                <th>Not at all <span style="font-weight:normal;">(0)</span></th>
+                                <th>Several days <span style="font-weight:normal;">(1)</span></th>
+                                <th>More than half the days <span style="font-weight:normal;">(2)</span></th>
+                                <th>Nearly every day <span style="font-weight:normal;">(3)</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="dynamicRows">
+                            <!-- JS will inject rows here for better maintainability -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- action bar: print & result preview -->
+            <div class="action-area">
+                <button type="button" class="btn-print" id="printReportBtn">
+                    🖨️ Print Report & Summary
+                </button>
+                <div id="resultPreview" class="result-card">
+                    <!-- dynamic score appears here -->
+                    Total: 0 — Not calculated yet
+                </div>
+            </div>
+        </form>
+    </div>
+    <footer>
+        © PHQ-9 © Pfizer Inc. | For clinical use & monitoring. Score interpretation guide: 0-4 minimal, 5-9 mild, 10-14 moderate, 15-19 moderately severe, 20-27 severe.
+    </footer>
+</div>
+
+<script>
+    // PHQ-9 questions array (exact wording)
+    const QUESTIONS = [
+        "Little interest or pleasure in doing things",
+        "Feeling down, depressed, or hopeless",
+        "Trouble falling or staying asleep, or sleeping too much",
+        "Feeling tired or having little energy",
+        "Poor appetite or overeating",
+        "Feeling bad about yourself — or that you are a failure",
+        "Trouble concentrating on things, such as reading the newspaper or watching television",
+        "Moving or speaking so slowly that other people could have noticed? Or the opposite — being so fidgety or restless that you have been moving around a lot more than usual",
+        "Thoughts that you would be better off dead or of hurting yourself in some way"
+    ];
+
+    // Build dynamic table rows with accessible radio groups
+    function buildQuestionnaireTable() {
+        const tbody = document.getElementById('dynamicRows');
+        tbody.innerHTML = '';
+        for (let idx = 0; idx < QUESTIONS.length; idx++) {
+            const qText = QUESTIONS[idx];
+            const row = document.createElement('tr');
+            
+            // Question cell
+            const tdQuestion = document.createElement('td');
+            tdQuestion.className = 'question-text';
+            tdQuestion.textContent = `${idx+1}. ${qText}`;
+            row.appendChild(tdQuestion);
+            
+            // Radio options: values 0,1,2,3
+            const values = [0, 1, 2, 3];
+            // labels: "Not at all", "Several days", "More than half the days", "Nearly every day"
+            const labels = ["Not at all", "Several days", "More than half", "Nearly every day"];
+            
+            for (let v = 0; v < values.length; v++) {
+                const td = document.createElement('td');
+                const radioValue = values[v];
+                const radioName = `q_${idx}`;
+                const radioId = `q_${idx}_val_${radioValue}`;
+                
+                const wrapperDiv = document.createElement('div');
+                wrapperDiv.className = 'radio-group';
+                
+                const radioSpan = document.createElement('div');
+                radioSpan.className = 'radio-option';
+                
+                const radioInput = document.createElement('input');
+                radioInput.type = 'radio';
+                radioInput.name = radioName;
+                radioInput.value = radioValue;
+                radioInput.id = radioId;
+                // required for first radio in each group? we set required on the first option group for UX but will validate at calculation.
+                if (v === 0) {
+                    // add required attribute only on first option to hint, but not enforce HTML5 blocking because we handle custom validation.
+                    radioInput.required = true;
+                }
+                
+                const labelSpan = document.createElement('label');
+                labelSpan.htmlFor = radioId;
+                labelSpan.textContent = labels[v];
+                
+                radioSpan.appendChild(radioInput);
+                radioSpan.appendChild(labelSpan);
+                wrapperDiv.appendChild(radioSpan);
+                td.appendChild(wrapperDiv);
+                row.appendChild(td);
+            }
+            tbody.appendChild(row);
+        }
+    }
+
+    // Helper to compute total score and severity string
+    function computeScoreAndSeverity() {
+        let totalScore = 0;
+        let allAnswered = true;
+        for (let i = 0; i < QUESTIONS.length; i++) {
+            const selectedRadio = document.querySelector(`input[name='q_${i}']:checked`);
+            if (selectedRadio) {
+                totalScore += parseInt(selectedRadio.value, 10);
+            } else {
+                allAnswered = false;
+            }
+        }
+        let severity = "";
+        if (totalScore >= 20) severity = "Severe depression";
+        else if (totalScore >= 15) severity = "Moderately severe depression";
+        else if (totalScore >= 10) severity = "Moderate depression";
+        else if (totalScore >= 5) severity = "Mild depression";
+        else severity = "Minimal or no depression";
+        
+        return { totalScore, severity, allAnswered };
+    }
+    
+    // Update live result preview
+    function updateResultPreview() {
+        const { totalScore, severity, allAnswered } = computeScoreAndSeverity();
+        const resultDiv = document.getElementById('resultPreview');
+        if (!allAnswered) {
+            resultDiv.innerHTML = `⚠️ Partial selection — Score: ${totalScore} (please answer all 9 items)`;
+            resultDiv.style.borderLeftColor = "#e6b422";
+            resultDiv.style.background = "#fff2df";
+        } else {
+            resultDiv.innerHTML = `📊 Total Score: <span>${totalScore}</span> — ${severity}`;
+            resultDiv.style.borderLeftColor = "#ffb347";
+            resultDiv.style.background = "#fef9e6";
+            // optional severity color for text
+            if (totalScore >= 15) {
+                resultDiv.style.color = "#b33b2c";
+            } else {
+                resultDiv.style.color = "#2d3e50";
+            }
+        }
+    }
+    
+    // Enhanced print report: build a beautiful printable section with all details, scores and interpretation
+    function generatePrintableReport() {
+        // Retrieve patient data
+        const patientName = document.getElementById('patientName').value.trim();
+        const patientIC = document.getElementById('patientIC').value.trim();
+        const assessmentDate = document.getElementById('assessmentDate').value;
+        
+        if (!patientName || !patientIC || !assessmentDate) {
+            alert("Please fill in Name, IC Number, and Date before printing the report.");
+            return false;
+        }
+        
+        // Get all scores per question
+        let answeredScores = [];
+        let totalScore = 0;
+        let allComplete = true;
+        for (let i = 0; i < QUESTIONS.length; i++) {
+            const selected = document.querySelector(`input[name='q_${i}']:checked`);
+            if (selected) {
+                const val = parseInt(selected.value, 10);
+                answeredScores.push(val);
+                totalScore += val;
+            } else {
+                answeredScores.push(null);
+                allComplete = false;
+            }
+        }
+        
+        if (!allComplete) {
+            const confirmIncomplete = confirm("You haven't answered all PHQ-9 questions. The report will show incomplete data. Continue?");
+            if (!confirmIncomplete) return false;
+        }
+        
+        let severity = "";
+        if (totalScore >= 20) severity = "Severe depression";
+        else if (totalScore >= 15) severity = "Moderately severe depression";
+        else if (totalScore >= 10) severity = "Moderate depression";
+        else if (totalScore >= 5) severity = "Mild depression";
+        else severity = "Minimal depression / No significant depression";
+        
+        const dateObj = new Date(assessmentDate);
+        const formattedDate = dateObj.toLocaleDateString('en-GB', { year:'numeric', month:'long', day:'numeric' });
+        const now = new Date();
+        const printDateTime = now.toLocaleString();
+        
+        // Build html for print window
+        let printHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>PHQ-9 Clinical Report - ${patientName}</title>
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { font-family: 'Inter', 'Segoe UI', Arial, sans-serif; padding: 2rem; background: white; color: #121826; }
+                .report-container { max-width: 1000px; margin: 0 auto; background: white; }
+                .header { text-align: center; border-bottom: 3px solid #1f6392; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+                .clinic-name { font-size: 1.6rem; font-weight: 700; color: #1a4f73; letter-spacing: -0.3px; }
+                .report-title { font-size: 1.9rem; margin: 0.3rem 0; color: #0b3b4f; }
+                .patient-details { background: #f2f6fc; padding: 1rem 1.5rem; border-radius: 20px; margin: 1rem 0; display: flex; justify-content: space-between; flex-wrap: wrap; }
+                .detail-item { font-size: 0.95rem; margin: 0.3rem 0; }
+                .score-summary { background: #eef2fa; border-left: 8px solid #ff9f4a; padding: 1rem 1.5rem; border-radius: 20px; margin: 1.5rem 0; }
+                .total-score { font-size: 2rem; font-weight: 800; color: #c4450c; }
+                table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; background: white; }
+                th, td { border: 1px solid #cfdee9; padding: 0.7rem; text-align: left; vertical-align: top; }
+                th { background: #e6eff8; font-weight: 700; }
+                .score-cell { text-align: center; font-weight: 600; width: 70px; }
+                .recommendation { margin-top: 1.8rem; padding: 0.8rem 1rem; background: #fef7e0; border-radius: 16px; }
+                .footer-note { margin-top: 2rem; font-size: 0.7rem; text-align: center; color: #6c7e97; border-top: 1px solid #d4e0ea; padding-top: 1rem; }
+                @media print {
+                    body { padding: 0.5rem; margin: 0; }
+                    .no-print { display: none; }
+                }
+                .answer-key { font-size: 0.8rem; color: #2c5f8a; margin-top: 0.2rem; }
+            </style>
+        </head>
+        <body>
+            <div class="report-container">
+                <div class="header">
+                    <div class="clinic-name">🏥 HEALTHEON CLINIC</div>
+                    <div class="report-title">PHQ-9 Depression Screening Report</div>
+                    <div>Generated: ${printDateTime}</div>
+                </div>
+                
+                <div class="patient-details">
+                    <div class="detail-item"><strong>Patient Name:</strong> ${escapeHtml(patientName)}</div>
+                    <div class="detail-item"><strong>IC / ID:</strong> ${escapeHtml(patientIC)}</div>
+                    <div class="detail-item"><strong>Assessment Date:</strong> ${formattedDate}</div>
+                </div>
+                
+                <div class="score-summary">
+                    <strong>📈 PHQ-9 Total Score:</strong> <span class="total-score">${totalScore} / 27</span><br>
+                    <strong>Severity level:</strong> ${severity}<br>
+                    <small>*Based on evidence-based cutoffs: 0-4 none-minimal, 5-9 mild, 10-14 moderate, 15-19 moderately severe, 20-27 severe.</small>
+                </div>
+                
+                <h3>📌 Detailed Responses</h3>
+                 <table>
+                    <thead>
+                        <tr><th>#</th><th>Question</th><th>Response (Score)</th></tr>
+                    </thead>
+                    <tbody>
+        `;
+        // Add each question and the selected answer label
+        const answerLabels = ["Not at all (0)", "Several days (1)", "More than half the days (2)", "Nearly every day (3)"];
+        for (let i = 0; i < QUESTIONS.length; i++) {
+            const scoreVal = answeredScores[i];
+            let answerText = "Not answered";
+            let displayScore = "—";
+            if (scoreVal !== null) {
+                displayScore = scoreVal;
+                if (scoreVal === 0) answerText = answerLabels[0];
+                else if (scoreVal === 1) answerText = answerLabels[1];
+                else if (scoreVal === 2) answerText = answerLabels[2];
+                else if (scoreVal === 3) answerText = answerLabels[3];
+            } else {
+                answerText = "❓ Missing";
+            }
+            printHtml += `
+                <tr>
+                    <td style="text-align:center">${i+1}</td>
+                    <td>${escapeHtml(QUESTIONS[i])}</td>
+                    <td class="score-cell">${answerText} ${scoreVal !== null ? `[${displayScore}]` : ''}</td>
+                </tr>
+            `;
+        }
+        printHtml += `
+                    </tbody>
+                </table>
+                <div class="recommendation">
+                    <strong>💡 Clinical guidance:</strong><br>
+                    - Scores ≥10 indicate moderate depression; clinical interview recommended.<br>
+                    - For item 9 (suicidal ideation) any positive score >0 requires further risk assessment.<br>
+                    - This report is a screening tool, not a standalone diagnosis.
+                </div>
+                <div class="footer-note">
+                    PHQ-9 is copyrighted by Pfizer Inc. | For medical professional use. Always consider clinical context.
+                </div>
+            </div>
+            <script>window.onload = function() { window.print(); }<\/script>
+        </body>
+        </html>
+        `;
+        return printHtml;
+    }
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+    
+    // Print report function: open new window or print from iframe
+    function printFullReport() {
+        const reportHtml = generatePrintableReport();
+        if (reportHtml === false) return;
+        const printWindow = window.open('', '_blank', 'width=900,height=700,toolbar=yes,scrollbars=yes');
+        if (printWindow) {
+            printWindow.document.write(reportHtml);
+            printWindow.document.close();
+        } else {
+            alert("Please allow pop-ups to view the printable report.");
+        }
+    }
+    
+    // attach event listeners: update result on any radio change
+    function attachRadioListeners() {
+        const allRadios = document.querySelectorAll('input[type="radio"]');
+        allRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                updateResultPreview();
+            });
+        });
+    }
+    
+    // initialize dynamic table, set date default, attach event listeners after DOM
+    function init() {
+        buildQuestionnaireTable();
+        // set default date to today
+        const dateInput = document.getElementById('assessmentDate');
+        if (dateInput) {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            dateInput.value = `${yyyy}-${mm}-${dd}`;
+        }
+        // after building, reattach listeners
+        attachRadioListeners();
+        // initial update
+        updateResultPreview();
+        
+        // add dynamic listener for future radios (via mutation? but simple reattach after any later? but we add once)
+        const observer = new MutationObserver(() => {
+            attachRadioListeners();
+            updateResultPreview();
+        });
+        observer.observe(document.getElementById('dynamicRows'), { childList: true, subtree: true });
+        // print button
+        const printBtn = document.getElementById('printReportBtn');
+        if (printBtn) printBtn.addEventListener('click', printFullReport);
+    }
+    
+    init();
+</script>
+</body>
+</html>

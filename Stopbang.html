@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>STOP-BANG | OSA Risk Screener</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #e0eef7 0%, #c9ddec 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* main card */
+        .osa-card {
+            max-width: 1000px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.3), 0 8px 18px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        /* header */
+        .header-gradient {
+            background: linear-gradient(120deg, #1a4d5f, #0f3b48);
+            padding: 1.2rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            border-bottom: 3px solid #ffcd7e;
+        }
+
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-img {
+            height: 55px;
+            width: auto;
+            background: white;
+            border-radius: 12px;
+            padding: 4px 12px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .title-wrap h1 {
+            color: white;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .title-wrap p {
+            color: #ffdfb3;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .patient-badge {
+            background: rgba(255,255,240,0.12);
+            backdrop-filter: blur(4px);
+            border-radius: 60px;
+            padding: 0.5rem 1.2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: baseline;
+        }
+
+        .patient-badge span {
+            color: white;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .patient-badge input {
+            background: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            width: 180px;
+            outline: none;
+            font-weight: 500;
+        }
+
+        .patient-badge input:focus {
+            box-shadow: 0 0 0 2px #ffcd7e;
+        }
+
+        /* main content */
+        .content-padding {
+            padding: 2rem 2rem 1.8rem;
+        }
+
+        /* STOP-BANG features grid - modern cards */
+        .criteria-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 0.9rem;
+            margin: 1.8rem 0 2rem;
+        }
+
+        .criteria-card {
+            background: #fbfeff;
+            border-radius: 1.3rem;
+            border: 1px solid #e2edf5;
+            transition: all 0.2s;
+            cursor: pointer;
+            transition: 0.1s ease;
+        }
+
+        .criteria-card:hover {
+            border-color: #bdd7e4;
+            background: #ffffff;
+        }
+
+        .card-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.2rem;
+        }
+
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .card-letter {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: #2c7da0;
+            line-height: 1;
+        }
+
+        .card-desc {
+            font-weight: 600;
+            color: #1e4a62;
+            font-size: 0.95rem;
+        }
+
+        .card-hint {
+            font-size: 0.7rem;
+            color: #6c8ea3;
+        }
+
+        .custom-toggle {
+            width: 1.6rem;
+            height: 1.6rem;
+            accent-color: #2b7a62;
+            transform: scale(1.1);
+            cursor: pointer;
+        }
+
+        /* result zone */
+        .result-zone {
+            background: #f0f7fc;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            margin: 0.5rem 0 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            border-left: 6px solid #2b7a62;
+        }
+
+        .score-pill {
+            background: #1a4d5f;
+            color: white;
+            border-radius: 60px;
+            padding: 0.4rem 1.2rem;
+            font-weight: 800;
+            font-size: 1.8rem;
+            min-width: 110px;
+            text-align: center;
+            letter-spacing: 1px;
+            box-shadow: inset 0 -1px 0 #3f7b94, 0 5px 12px -8px black;
+        }
+
+        .risk-text {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1f5068;
+            flex: 1;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .btn {
+            border: none;
+            background: #e2edf4;
+            padding: 0.7rem 1.5rem;
+            border-radius: 3rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #2b7a62;
+            color: white;
+            box-shadow: 0 2px 6px rgba(43,122,98,0.3);
+        }
+
+        .btn-primary:hover {
+            background: #216b55;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #e2ecf3;
+            color: #235f7a;
+            border: 1px solid #cbdde6;
+        }
+
+        .btn-secondary:hover {
+            background: #d0e2ed;
+        }
+
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            padding: 1rem 1.5rem 1.3rem;
+            color: #7b99ae;
+            border-top: 1px solid #e2edf2;
+            background: #fefefe;
+        }
+
+        @media (max-width: 680px) {
+            body {
+                padding: 0.8rem;
+            }
+            .content-padding {
+                padding: 1.2rem;
+            }
+            .header-gradient {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .patient-badge {
+                justify-content: center;
+            }
+            .result-zone {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .button-group {
+                width: 100%;
+                justify-content: stretch;
+            }
+            .btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .osa-card {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            .button-group, .btn, .btn-primary, .btn-secondary {
+                display: none !important;
+            }
+            .custom-toggle {
+                accent-color: black;
+            }
+            .header-gradient {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="osa-card">
+    <div class="header-gradient">
+        <div class="logo-wrap">
+            <img class="logo-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRapfnKWx-M62sVVu3p9heG4yRI2UMNBSj8zojoFl7l03izIT7In4hxe_I&s=10" alt="Clinic Logo" 
+                 onerror="this.src='https://via.placeholder.com/100x50?text=SleepClinic';">
+            <div class="title-wrap">
+                <h1>STOP‑BANG</h1>
+                <p>OSA Risk Screening Tool</p>
+            </div>
+        </div>
+        <div class="patient-badge">
+            <span>🧑‍⚕️ Patient:</span>
+            <input type="text" id="patientName" placeholder="Full name">
+            <span>📅 Date:</span>
+            <input type="text" id="dateField" readonly style="background:#f5f9fe; width:130px;">
+        </div>
+    </div>
+
+    <div class="content-padding">
+        <!-- dynamic STOP-BANG items -->
+        <div class="criteria-grid" id="itemsGrid"></div>
+
+        <!-- results + buttons -->
+        <div class="result-zone">
+            <div class="score-pill" id="totalScoreSpan">0</div>
+            <div class="risk-text" id="riskInterpretation">Awaiting selection</div>
+            <div class="button-group">
+                <button class="btn btn-primary" id="calcBtn">🔍 Calculate Risk</button>
+                <button class="btn btn-secondary" id="printBtn">🖨️ Print Report</button>
+            </div>
+        </div>
+        <footer>
+            ⚕️ STOP-BANG (Chung et al.) : Low risk 0-2, Intermediate 3-4, High ≥5. Clinical correlation advised for OSA diagnosis.
+        </footer>
+    </div>
+</div>
+
+<script>
+    // STOP-BANG items definition (mnemonic order)
+    const STOPBANG_ITEMS = [
+        { letter: "S", label: "Snoring loudly", description: "Loud snoring (heard through closed door)", score: 1 },
+        { letter: "T", label: "Tired, fatigued, sleepy during daytime", description: "Frequent daytime sleepiness", score: 1 },
+        { letter: "O", label: "Observed apnoea", description: "Stopped breathing / choking during sleep", score: 1 },
+        { letter: "P", label: "High blood pressure", description: "Hypertension or under treatment", score: 1 },
+        { letter: "B", label: "BMI > 35 kg/m²", description: "Body mass index greater than 35", score: 1 },
+        { letter: "A", label: "Age > 50 years", description: "Age above 50 years", score: 1 },
+        { letter: "N", label: "Neck circumference > 40 cm", description: "Neck size > 40 cm (≈16 inches)", score: 1 },
+        { letter: "G", label: "Gender = Male", description: "Male sex", score: 1 }
+    ];
+
+    // store current checked status (boolean)
+    let selectedState = new Array(STOPBANG_ITEMS.length).fill(false);
+
+    // DOM elements
+    const gridContainer = document.getElementById('itemsGrid');
+    const totalSpan = document.getElementById('totalScoreSpan');
+    const riskDiv = document.getElementById('riskInterpretation');
+    const patientNameInput = document.getElementById('patientName');
+    const dateField = document.getElementById('dateField');
+
+    // helper: compute total score and risk interpretation
+    function computeAndUpdate() {
+        let total = 0;
+        for (let i = 0; i < selectedState.length; i++) {
+            if (selectedState[i]) total += STOPBANG_ITEMS[i].score;
+        }
+        totalSpan.innerText = total;
+        let interpretation = '';
+        let riskLevel = '';
+        if (total >= 5) {
+            interpretation = '⚠️ High risk of Obstructive Sleep Apnea (OSA) — strongly consider polysomnography.';
+            riskLevel = 'high';
+        } else if (total >= 3) {
+            interpretation = '📊 Intermediate risk of OSA — further evaluation recommended.';
+            riskLevel = 'medium';
+        } else {
+            interpretation = '✅ Low risk of OSA (unlikely moderate-severe OSA)';
+            riskLevel = 'low';
+        }
+        riskDiv.innerHTML = `<strong>Score ${total}</strong> · ${interpretation}`;
+        return total;
+    }
+
+    // render all items in modern layout
+    function renderItems() {
+        if (!gridContainer) return;
+        gridContainer.innerHTML = '';
+        STOPBANG_ITEMS.forEach((item, idx) => {
+            const card = document.createElement('div');
+            card.className = 'criteria-card';
+            card.dataset.index = idx;
+            
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'card-row';
+            
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'card-info';
+            infoDiv.innerHTML = `
+                <div class="card-letter">${escapeHtml(item.letter)}</div>
+                <div class="card-desc">${escapeHtml(item.label)}</div>
+                <div class="card-hint">${escapeHtml(item.description)}</div>
+            `;
+            
+            const chk = document.createElement('input');
+            chk.type = 'checkbox';
+            chk.className = 'custom-toggle';
+            chk.checked = selectedState[idx];
+            chk.addEventListener('change', (e) => {
+                selectedState[idx] = chk.checked;
+                computeAndUpdate();
+                // add little interactive feedback: change card style
+                if (chk.checked) {
+                    card.style.backgroundColor = '#f6fbfe';
+                    card.style.borderLeft = '3px solid #2b7a62';
+                } else {
+                    card.style.backgroundColor = '';
+                    card.style.borderLeft = '';
+                }
+            });
+            // initial style sync
+            if (selectedState[idx]) {
+                card.style.backgroundColor = '#f6fbfe';
+                card.style.borderLeft = '3px solid #2b7a62';
+            }
+            
+            rowDiv.appendChild(infoDiv);
+            rowDiv.appendChild(chk);
+            card.appendChild(rowDiv);
+            gridContainer.appendChild(card);
+        });
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // set today's date
+    function setCurrentDate() {
+        if (dateField) {
+            const today = new Date();
+            const formatted = today.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+            dateField.value = formatted;
+        }
+    }
+
+    // generate printable HTML report (includes full answers)
+    function generatePrintHTML() {
+        const patientName = patientNameInput.value.trim() || "Not specified";
+        const assessmentDate = dateField.value || new Date().toLocaleDateString();
+        
+        // collect items with responses
+        const itemsDetails = [];
+        let totalScore = 0;
+        for (let i = 0; i < STOPBANG_ITEMS.length; i++) {
+            const item = STOPBANG_ITEMS[i];
+            const answered = selectedState[i];
+            const responseText = answered ? "Yes (1 point)" : "No (0 point)";
+            if (answered) totalScore += item.score;
+            itemsDetails.push({
+                letter: item.letter,
+                label: item.label,
+                description: item.description,
+                response: answered,
+                responseText: responseText
+            });
+        }
+        
+        let riskCategory = '';
+        if (totalScore >= 5) riskCategory = 'High risk of OSA';
+        else if (totalScore >= 3) riskCategory = 'Intermediate risk of OSA';
+        else riskCategory = 'Low risk of OSA';
+        
+        const rowsHtml = itemsDetails.map(item => `
+            <tr style="border-bottom:1px solid #d9e6ef;">
+                <td style="padding: 10px 12px;"><strong>${escapeHtml(item.letter)}</strong> ${escapeHtml(item.label)}<br><span style="font-size:0.7rem; color:#5c7f95;">${escapeHtml(item.description)}</span></td>
+                <td style="padding: 10px 12px; text-align:center;">${item.responseText}</td>
+            </tr>
+        `).join('');
+        
+        return `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>STOP-BANG Clinical Report</title>
+            <style>
+                * { margin:0; padding:0; box-sizing: border-box; }
+                body {
+                    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+                    background: white;
+                    padding: 2rem;
+                    color: #1f2f3a;
+                }
+                .report-card {
+                    max-width: 900px;
+                    margin: 0 auto;
+                    background: #ffffff;
+                    border-radius: 28px;
+                    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+                    border: 1px solid #e0edf2;
+                    overflow: hidden;
+                }
+                .header-print {
+                    background: #1a4d5f;
+                    padding: 1.4rem;
+                    text-align: center;
+                    color: white;
+                }
+                .header-print img {
+                    max-width: 180px;
+                    background: white;
+                    border-radius: 12px;
+                    padding: 4px 12px;
+                    margin-bottom: 10px;
+                }
+                .header-print h2 {
+                    margin-top: 5px;
+                }
+                .content-print {
+                    padding: 1.8rem 2rem;
+                }
+                .info-line {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 0.6rem 0;
+                    border-bottom: 1px solid #e2edf2;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 1.2rem 0;
+                    border-radius: 16px;
+                    overflow: hidden;
+                }
+                th {
+                    background: #eef3f7;
+                    padding: 10px 12px;
+                    text-align: left;
+                }
+                td {
+                    padding: 10px 12px;
+                    vertical-align: top;
+                }
+                .score-box {
+                    background: #f2f7fb;
+                    border-radius: 20px;
+                    padding: 1rem;
+                    text-align: center;
+                    margin-top: 1.2rem;
+                    border-left: 5px solid #2b7a62;
+                }
+                .footer-note {
+                    font-size: 0.7rem;
+                    text-align: center;
+                    margin-top: 2rem;
+                    color: #6c8d9c;
+                }
+                @media print {
+                    body { padding: 0; margin:0; }
+                }
+            </style>
+        </head>
+        <body>
+        <div class="report-card">
+            <div class="header-print">
+                <img src="https://i.postimg.cc/141g0bXq/ghvTprd.png" alt="Clinic Logo" onerror="this.src='https://via.placeholder.com/150x50?text=SleepClinic'">
+                <h2>STOP‑BANG Obstructive Sleep Apnea Risk Report</h2>
+                <p>Validated screening questionnaire</p>
+            </div>
+            <div class="content-print">
+                <div class="info-line"><strong>Patient name</strong> <span>${escapeHtml(patientName)}</span></div>
+                <div class="info-line"><strong>Assessment date</strong> <span>${escapeHtml(assessmentDate)}</span></div>
+                
+                <h3 style="margin: 1.5rem 0 0.5rem;">STOP-BANG responses</h3>
+                <table>
+                    <thead><tr><th>Criteria (with description)</th><th style="width:120px;">Response</th></tr></thead>
+                    <tbody>${rowsHtml}</tbody>
+                </table>
+                <div class="score-box">
+                    <span style="font-weight:600;">Total STOP-BANG Score</span><br>
+                    <span style="font-size:2.2rem; font-weight:800;">${totalScore}</span><br>
+                    <span style="font-weight:500;">${riskCategory}</span>
+                    <p style="margin-top: 10px; font-size:0.85rem;">${totalScore >= 5 ? 'High risk — polysomnography strongly recommended.' : totalScore >= 3 ? 'Moderate risk — clinical assessment and possible testing.' : 'Low risk — unlikely moderate-severe OSA.'}</p>
+                </div>
+                <div class="footer-note">
+                    ⚕️ STOP-BANG questionnaire (Chung F et al., Anesthesiology 2008). Score ≥3 indicates increased risk, ≥5 high probability of moderate-severe OSA. Clinical judgment required.
+                </div>
+            </div>
+        </div>
+        </body>
+        </html>`;
+    }
+
+    function printReport() {
+        const printHtml = generatePrintHTML();
+        const printWin = window.open('', '_blank', 'width=950,height=750,menubar=yes,toolbar=yes,scrollbars=yes');
+        if (!printWin) {
+            alert("Pop-up blocked. Please allow pop-ups to print the report.");
+            return;
+        }
+        printWin.document.write(printHtml);
+        printWin.document.close();
+        printWin.focus();
+        printWin.print();
+    }
+    
+    // recalc after button press (already live but for clarity)
+    function recalcScore() {
+        computeAndUpdate();
+        // extra animation feedback
+        const btn = document.getElementById('calcBtn');
+        if (btn) {
+            btn.style.transform = 'scale(0.96)';
+            setTimeout(() => { if(btn) btn.style.transform = ''; }, 120);
+        }
+    }
+
+    // initial render
+    function init() {
+        renderItems();
+        setCurrentDate();
+        computeAndUpdate(); // init display with zeros
+        
+        const calcButton = document.getElementById('calcBtn');
+        const printButton = document.getElementById('printBtn');
+        if (calcButton) calcButton.addEventListener('click', recalcScore);
+        if (printButton) printButton.addEventListener('click', printReport);
+        
+        // optional: dynamic input on patient name? no needed extra, but fine.
+        // also support enter key for nothing
+    }
+    
+    init();
+</script>
+</body>
+</html>

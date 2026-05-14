@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Alvarado Score | Appendicitis Risk Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #e9f0f5 0%, #d9e2ec 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* modern card container */
+        .calculator-card {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(0px);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        /* header area with logo & title */
+        .header {
+            background: #1a3e4c;
+            background-image: radial-gradient(circle at 10% 30%, #205c6e, #0e2f3a);
+            padding: 1.2rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            border-bottom: 3px solid #ffcd7e;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-img {
+            height: 55px;
+            width: auto;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            border-radius: 12px;
+            background: white;
+            padding: 4px 8px;
+            object-fit: contain;
+        }
+
+        .title-badge h1 {
+            color: white;
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .title-badge p {
+            color: #ffdfb3;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .patient-info {
+            background: rgba(255,255,240,0.15);
+            backdrop-filter: blur(4px);
+            border-radius: 60px;
+            padding: 0.5rem 1.2rem;
+            display: flex;
+            gap: 0.8rem;
+            align-items: baseline;
+            flex-wrap: wrap;
+        }
+
+        .patient-info label {
+            color: white;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .patient-info input {
+            background: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            width: 200px;
+            outline: none;
+            font-weight: 500;
+            transition: 0.2s;
+            box-shadow: inset 0 1px 2px #0001, 0 1px 2px white;
+        }
+
+        .patient-info input:focus {
+            box-shadow: 0 0 0 2px #ffcd7e;
+        }
+
+        /* main content */
+        .content {
+            padding: 1.8rem 2rem 2rem 2rem;
+        }
+
+        /* responsive grid for items */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 0.75rem;
+            margin: 1.8rem 0 2rem 0;
+        }
+
+        .feature-item {
+            background: #ffffff;
+            border-radius: 1.2rem;
+            transition: all 0.2s;
+            border: 1px solid #e2edf2;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        }
+
+        .feature-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.2rem;
+            cursor: pointer;
+        }
+
+        .feature-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .feature-name {
+            font-weight: 600;
+            color: #1f3f4a;
+            font-size: 1rem;
+        }
+
+        .feature-score {
+            font-size: 0.8rem;
+            background: #eef3f7;
+            display: inline-block;
+            padding: 0.2rem 0.7rem;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #0f5b6e;
+            width: fit-content;
+        }
+
+        /* custom checkbox - modern */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-wrapper input {
+            width: 1.4rem;
+            height: 1.4rem;
+            cursor: pointer;
+            accent-color: #2b7a62;
+            transition: transform 0.1s;
+        }
+
+        .checkbox-wrapper input:hover {
+            transform: scale(1.05);
+        }
+
+        /* result panel */
+        .result-panel {
+            background: #f4f9fe;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            margin: 1rem 0 1.8rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            border-left: 6px solid #2b7a62;
+        }
+
+        .score-badge {
+            background: #1e2f38;
+            color: white;
+            border-radius: 60px;
+            padding: 0.4rem 1.2rem;
+            font-weight: 700;
+            font-size: 1.6rem;
+            min-width: 120px;
+            text-align: center;
+            letter-spacing: 1px;
+            box-shadow: inset 0 -1px 0 #3f6b7a, 0 6px 12px -8px black;
+        }
+
+        .interpretation {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #1b4e5e;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            border: none;
+            background: #eef3f7;
+            padding: 0.8rem 1.8rem;
+            border-radius: 3rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .btn-primary {
+            background: #2b7a62;
+            color: white;
+            box-shadow: 0 4px 8px rgba(43, 122, 98, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #216b55;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #e0eef5;
+            color: #1f5e6b;
+            border: 1px solid #cbdde6;
+        }
+
+        .btn-secondary:hover {
+            background: #cde3ec;
+            transform: translateY(-1px);
+        }
+
+        hr {
+            margin: 1rem 0;
+            border: none;
+            height: 1px;
+            background: linear-gradient(to right, #c0d9e5, transparent);
+        }
+
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            padding: 1rem 2rem 1.5rem;
+            color: #7e9aa8;
+            border-top: 1px solid #e2edf2;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 0.8rem;
+            }
+            .content {
+                padding: 1rem;
+            }
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .patient-info {
+                justify-content: space-between;
+            }
+            .feature-row {
+                padding: 0.8rem 1rem;
+            }
+            .result-panel {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .score-badge {
+                font-size: 1.4rem;
+                width: 100%;
+            }
+            .interpretation {
+                font-size: 1rem;
+            }
+            .action-buttons {
+                width: 100%;
+                justify-content: stretch;
+            }
+            .btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+
+        /* small touches */
+        .badge-note {
+            background: #fff1df;
+            border-radius: 24px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #b8641a;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<div class="calculator-card">
+    <div class="header">
+        <div class="logo-area">
+            <!-- Fallback logo: reliable medical icon style, using an embedded data-safe public domain style clinic badge -->
+            <img class="logo-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRapfnKWx-M62sVVu3p9heG4yRI2UMNBSj8zojoFl7l03izIT7In4hxe_I&s=10" alt="Clinic Logo" 
+                 onerror="this.src='https://via.placeholder.com/100x50?text=ClinicCare'; this.style.opacity='0.9';">
+            <div class="title-badge">
+                <h1>Alvarado Score</h1>
+                <p>Appendicitis Risk Assessment Tool</p>
+            </div>
+        </div>
+        <div class="patient-info">
+            <label>👤 Patient name</label>
+            <input type="text" id="participantName" placeholder="e.g. Maria Gonzales" autocomplete="off">
+        </div>
+    </div>
+
+    <div class="content">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;">
+            <span class="badge-note">✔️ Select all relevant clinical features</span>
+            <span class="badge-note" style="background:#e9f0f5;">📋 Alvarado (MANTRELS)</span>
+        </div>
+
+        <!-- Dynamic checkbox grid -->
+        <div class="features-grid" id="featuresGrid"></div>
+
+        <!-- Results area -->
+        <div class="result-panel">
+            <div class="score-badge" id="scoreValue">0</div>
+            <div class="interpretation" id="interpretationText">Awaiting calculation</div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="calcBtn">⟳ Calculate Score</button>
+                <button class="btn btn-secondary" id="printBtn">🖨️ Print Report</button>
+            </div>
+        </div>
+
+        <footer>
+            ⚕️ Alvarado scoring system (MANTRELS) | Scores ≥5 suggest consideration for appendicitis | Always combine with clinical judgment.
+        </footer>
+    </div>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // Data model: features with label, score value, unique id
+    // --------------------------------------------------------------
+    const FEATURES = [
+        { id: "migration", label: "Migration of pain", score: 1, description: "Pain starts periumbilical → RLQ" },
+        { id: "anorexia", label: "Anorexia", score: 1, description: "Loss of appetite" },
+        { id: "nausea", label: "Nausea / Vomiting", score: 1, description: "Nausea or episodes of vomiting" },
+        { id: "tenderness", label: "Tenderness in right lower quadrant", score: 2, description: "RLQ tenderness on palpation" },
+        { id: "rebound", label: "Rebound pain", score: 1, description: "Guarding / rebound tenderness" },
+        { id: "fever", label: "Elevated temperature (≥37.3°C)", score: 1, description: "Fever > 37.3°C / 99.1°F" },
+        { id: "leukocytosis", label: "Leucocytosis (WBC > 10,000)", score: 2, description: "Elevated white cell count" },
+        { id: "leftShift", label: "Shift of WBC to the left", score: 1, description: "Neutrophil predominance / bands" }
+    ];
+
+    // Helper to get interpretation and severity color class
+    function getInterpretation(total) {
+        if (total <= 3) return { text: "⚠️ Low probability — less likely appendicitis", short: "Less likely appendicitis", risk: "low" };
+        if (total === 4) return { text: "🔍 Equivocal — consider observation or further imaging", short: "Equivocal / possible appendicitis", risk: "equivocal" };
+        if (total >= 5 && total <= 6) return { text: "📌 Compatible with acute appendicitis", short: "Compatible with acute appendicitis", risk: "moderate" };
+        if (total >= 7 && total <= 8) return { text: "⚠️ Probable appendicitis — strong surgical consideration", short: "Probable appendicitis", risk: "high" };
+        if (total >= 9 && total <= 10) return { text: "🚨 Very probable appendicitis — high surgical priority", short: "Very probable appendicitis", risk: "very high" };
+        return { text: "Invalid score", short: "Error", risk: "unknown" };
+    }
+
+    // Render checkboxes dynamically (ensures clean UI and maintainability)
+    function renderFeatureGrid() {
+        const grid = document.getElementById('featuresGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        FEATURES.forEach(feature => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'feature-item';
+            itemDiv.innerHTML = `
+                <div class="feature-row" data-id="${feature.id}">
+                    <div class="feature-info">
+                        <div class="feature-name">${escapeHtml(feature.label)}</div>
+                        <div class="feature-score">Score: ${feature.score}</div>
+                        <small style="color:#6797a8; font-size: 0.7rem;">${escapeHtml(feature.description)}</small>
+                    </div>
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" class="score-checkbox" data-score="${feature.score}" data-label="${escapeHtml(feature.label)}" id="chk_${feature.id}">
+                    </div>
+                </div>
+            `;
+            grid.appendChild(itemDiv);
+        });
+        attachCheckboxEvents();
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Update total score and interpretation in realtime when checkboxes change
+    let currentScore = 0;
+
+    function updateScoreAndDisplay() {
+        let total = 0;
+        const allCheckboxes = document.querySelectorAll('.score-checkbox');
+        allCheckboxes.forEach(cb => {
+            if (cb.checked) {
+                total += parseInt(cb.getAttribute('data-score') || 0, 10);
+            }
+        });
+        currentScore = total;
+        const interp = getInterpretation(total);
+        const scoreSpan = document.getElementById('scoreValue');
+        const interpTxt = document.getElementById('interpretationText');
+        if (scoreSpan) scoreSpan.innerText = total;
+        if (interpTxt) {
+            interpTxt.innerHTML = interp.text;
+            // style dynamic feedback
+            if (total >= 7) {
+                interpTxt.style.color = "#bc5a2c";
+                interpTxt.style.fontWeight = "600";
+            } else if (total >= 5) {
+                interpTxt.style.color = "#cc7b2b";
+                interpTxt.style.fontWeight = "500";
+            } else {
+                interpTxt.style.color = "#2b7a62";
+                interpTxt.style.fontWeight = "500";
+            }
+        }
+        return total;
+    }
+
+    function attachCheckboxEvents() {
+        const checkboxes = document.querySelectorAll('.score-checkbox');
+        checkboxes.forEach(cb => {
+            cb.removeEventListener('change', handleCheckboxChange);
+            cb.addEventListener('change', handleCheckboxChange);
+        });
+    }
+
+    function handleCheckboxChange() {
+        updateScoreAndDisplay();
+    }
+
+    // explicitly calculate again to be safe (button action)
+    function calculateAndSync() {
+        updateScoreAndDisplay();
+        // gentle animation feedback
+        const btn = document.getElementById('calcBtn');
+        if (btn) {
+            btn.style.transform = 'scale(0.97)';
+            setTimeout(() => { if(btn) btn.style.transform = ''; }, 120);
+        }
+    }
+
+    // Print report: modern layout, includes all checked items, patient name, date, score interpretation
+    function generatePrintHTML() {
+        const patientName = document.getElementById('participantName')?.value.trim() || "Not specified";
+        const today = new Date();
+        const formattedDate = today.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+        
+        // collect checked items with their labels & individual scores
+        const checkedItems = [];
+        const allCheckboxes = document.querySelectorAll('.score-checkbox');
+        let total = 0;
+        allCheckboxes.forEach(cb => {
+            if (cb.checked) {
+                const scoreVal = parseInt(cb.getAttribute('data-score'), 10);
+                const labelRaw = cb.getAttribute('data-label') || 'Feature';
+                total += scoreVal;
+                checkedItems.push({ label: labelRaw, score: scoreVal });
+            }
+        });
+        
+        const interpretationObj = getInterpretation(total);
+        const finalInterpretation = interpretationObj.short;
+        const finalText = `Total Alvarado Score: ${total} — ${finalInterpretation}`;
+        
+        // create rows HTML
+        let rowsHtml = '';
+        if (checkedItems.length === 0) {
+            rowsHtml = `<tr><td colspan="2" style="text-align:center; padding:1rem;">No features selected (score 0)</td></tr>`;
+        } else {
+            checkedItems.forEach(item => {
+                rowsHtml += `<tr style="border-bottom:1px solid #cbdde6;">
+                                <td style="padding:8px 12px;">${escapeHtml(item.label)}</td>
+                                <td style="padding:8px 12px; text-align:center; font-weight:600;">${item.score}</td>
+                             </tr>`;
+            });
+        }
+        
+        // generate full printable html with clinic header
+        return `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Alvarado Score Clinical Report</title>
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body {
+                    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+                    padding: 2rem;
+                    background: white;
+                    color: #1a2c34;
+                }
+                .report-container {
+                    max-width: 800px;
+                    margin: 0 auto;
+                    background: #ffffff;
+                    border-radius: 24px;
+                    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+                    overflow: hidden;
+                    border: 1px solid #e0edf2;
+                }
+                .report-header {
+                    background: #1a3e4c;
+                    padding: 1.5rem;
+                    text-align: center;
+                    color: white;
+                }
+                .report-header img {
+                    max-width: 180px;
+                    margin-bottom: 0.8rem;
+                    background: white;
+                    border-radius: 12px;
+                    padding: 6px 12px;
+                }
+                .report-header h2 {
+                    margin: 0.5rem 0 0.2rem;
+                    font-weight: 600;
+                    letter-spacing: -0.3px;
+                }
+                .report-body {
+                    padding: 1.6rem 2rem;
+                }
+                .info-row {
+                    display: flex;
+                    justify-content: space-between;
+                    border-bottom: 1px solid #d9e6ef;
+                    padding: 0.6rem 0;
+                    font-size: 1rem;
+                }
+                .info-label {
+                    font-weight: 600;
+                    color: #2c687a;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 1.2rem 0;
+                    border-radius: 14px;
+                    overflow: hidden;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                }
+                th {
+                    background: #eef3f7;
+                    padding: 10px 12px;
+                    text-align: left;
+                    font-weight: 700;
+                    color: #1b4f5e;
+                }
+                td {
+                    padding: 8px 12px;
+                    background: white;
+                }
+                .score-total-box {
+                    background: #f2f7fb;
+                    border-radius: 28px;
+                    padding: 1rem 1.2rem;
+                    margin: 1.5rem 0 0.8rem;
+                    text-align: center;
+                    border-left: 5px solid #2b7a62;
+                }
+                .footer-note {
+                    text-align: center;
+                    font-size: 0.7rem;
+                    color: #6c8d9c;
+                    margin-top: 2rem;
+                    border-top: 1px solid #d9e9f0;
+                    padding-top: 1rem;
+                }
+                @media print {
+                    body { padding: 0; margin: 0; }
+                    .report-container { box-shadow: none; border: none; margin: 0; }
+                    .report-header { background: #1a3e4c; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                    th { background: #eef3f7; -webkit-print-color-adjust: exact; }
+                }
+            </style>
+        </head>
+        <body>
+        <div class="report-container">
+            <div class="report-header">
+                <!-- Using same logo image fallback support -->
+                <img src="https://i.postimg.cc/141g0bXq/ghvTprd.png" alt="Clinic Logo" style="max-width:180px;" onerror="this.src='https://via.placeholder.com/150x50?text=ClinicCare'">
+                <h2>Alvarado Score Report</h2>
+                <p style="opacity:0.9">Acute Appendicitis Risk Assessment</p>
+            </div>
+            <div class="report-body">
+                <div class="info-row"><span class="info-label">Patient name</span><span>${escapeHtml(patientName)}</span></div>
+                <div class="info-row"><span class="info-label">Assessment date</span><span>${formattedDate}</span></div>
+                <div class="info-row"><span class="info-label">Scoring system</span><span>MANTRELS (Alvarado)</span></div>
+                
+                <h3 style="margin: 1.5rem 0 0.5rem 0; font-size:1.2rem;">✓ Selected clinical criteria</h3>
+                <table>
+                    <thead>
+                        <tr><th>Clinical feature</th><th style="width:80px;">Points</th></tr>
+                    </thead>
+                    <tbody>
+                        ${rowsHtml}
+                    </tbody>
+                </table>
+                
+                <div class="score-total-box">
+                    <span style="font-size: 1.1rem; font-weight:500;">Overall Alvarado Score</span><br>
+                    <span style="font-size: 2.2rem; font-weight:800;">${total}</span><br>
+                    <span style="font-weight:600; background:#e1f0e8; padding: 0.2rem 1rem; border-radius:40px; display:inline-block; margin-top:5px;">${finalInterpretation}</span>
+                    <p style="margin-top: 12px; font-size:0.9rem;">${interpretationObj.text}</p>
+                </div>
+                <div class="footer-note">
+                    ⚕️ This score is a clinical prediction tool. Acute surgical consultation is advised for scores ≥5 or when appendicitis is suspected.<br>
+                    Generated via Alvarado Digital Calculator · ${formattedDate}
+                </div>
+            </div>
+        </div>
+        </body>
+        </html>`;
+    }
+    
+    function printReport() {
+        const printHtml = generatePrintHTML();
+        const printWindow = window.open('', '_blank', 'width=900,height=700,toolbar=yes,scrollbars=yes,resizable=yes');
+        if (!printWindow) {
+            alert("Please allow pop-ups to print the report.");
+            return;
+        }
+        printWindow.document.write(printHtml);
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+    }
+
+    // init page: render, attach event listeners, set initial state (zero)
+    function init() {
+        renderFeatureGrid();
+        // ensure all checkboxes are unchecked by default (clean start)
+        const checkboxes = document.querySelectorAll('.score-checkbox');
+        checkboxes.forEach(cb => cb.checked = false);
+        updateScoreAndDisplay();
+        
+        const calcBtn = document.getElementById('calcBtn');
+        const printBtn = document.getElementById('printBtn');
+        if (calcBtn) calcBtn.addEventListener('click', calculateAndSync);
+        if (printBtn) printBtn.addEventListener('click', printReport);
+        
+        // Optional: pressing enter in patient name field doesn't interfere but stays friendly
+        const nameInput = document.getElementById('participantName');
+        if (nameInput) {
+            nameInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') calculateAndSync();
+            });
+        }
+    }
+    
+    window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

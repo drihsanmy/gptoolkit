@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Framingham Risk Score | CVD Risk Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #eef2f7;
+            padding: 1.5rem;
+            color: #1a2c3e;
+        }
+
+        /* main container */
+        .main-card {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        /* header with logo area */
+        .header {
+            background: linear-gradient(135deg, #1e3c4c 0%, #2c5a6e 100%);
+            padding: 1.5rem 2rem;
+            color: white;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-area img {
+            max-height: 65px;
+            width: auto;
+            filter: brightness(0) invert(1);
+            opacity: 0.9;
+        }
+
+        .title-area h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .title-area p {
+            font-size: 0.85rem;
+            opacity: 0.85;
+            margin-top: 4px;
+        }
+
+        /* patient info bar */
+        .patient-bar {
+            background: #f8fafc;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.8rem;
+            align-items: flex-end;
+        }
+
+        .patient-field {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .patient-field label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #5b6e8c;
+            letter-spacing: 0.5px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .patient-field input, .patient-field span {
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 14px;
+            padding: 0.6rem 1rem;
+            width: 100%;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #0f2b3b;
+        }
+
+        .patient-field span {
+            display: inline-block;
+            background: #f1f5f9;
+        }
+
+        /* modern tabs */
+        .tabs {
+            display: flex;
+            padding: 0 2rem;
+            background: white;
+            border-bottom: 1px solid #e2edf2;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 1rem 1.8rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #4a627a;
+            border-radius: 30px 30px 0 0;
+            margin-bottom: -1px;
+        }
+
+        .tab-btn.active {
+            color: #1e6f5c;
+            background: #ffffff;
+            border-bottom: 3px solid #1e6f5c;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: #f0f6fa;
+            color: #1e3c4c;
+        }
+
+        /* content panels */
+        .tab-pane {
+            display: none;
+            padding: 2rem;
+            animation: fade 0.25s ease;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fade {
+            from { opacity: 0; transform: translateY(6px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* two-column layout for calculator + result */
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 780px) {
+            .calculator-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .tabs, .tab-pane {
+                padding: 1rem;
+            }
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .patient-bar {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            body {
+                padding: 0.8rem;
+            }
+        }
+
+        .form-card {
+            background: #fefefe;
+            border-radius: 28px;
+            padding: 1.2rem 0.2rem 0.2rem 0.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+            color: #1f3b4c;
+            font-size: 0.85rem;
+        }
+
+        select, .radio-group {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border-radius: 20px;
+            border: 1.5px solid #e0e9f0;
+            background: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #2c9b7a;
+            box-shadow: 0 0 0 3px rgba(44,155,122,0.2);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+            background: #f9fdfe;
+            border: 1.5px solid #e0e9f0;
+            padding: 0.5rem 1rem;
+        }
+
+        .radio-group label {
+            font-weight: normal;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 0;
+        }
+
+        .btn {
+            background: #1e6f5c;
+            border: none;
+            padding: 0.9rem 1.8rem;
+            border-radius: 44px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .btn:hover {
+            background: #0e5545;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: white;
+            color: #1e6f5c;
+            border: 1.5px solid #cbdde6;
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: #eef6f3;
+            transform: none;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 1.5rem;
+        }
+
+        /* result styling */
+        .result {
+            border-radius: 28px;
+            padding: 1.6rem;
+            background: #f8fafc;
+            transition: all 0.2s;
+        }
+
+        .risk-low {
+            background: #e0f2e9;
+            border-left: 8px solid #2c9b7a;
+        }
+        .risk-intermediate {
+            background: #fff1e0;
+            border-left: 8px solid #e9b35f;
+        }
+        .risk-high {
+            background: #ffe6e5;
+            border-left: 8px solid #c75146;
+        }
+
+        .result h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .points-badge {
+            background: white;
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 60px;
+            font-weight: 800;
+            margin: 0.5rem 0;
+        }
+
+        hr {
+            margin: 1rem 0;
+            border-color: #e2edf2;
+        }
+
+        /* reference tables */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+        th {
+            background: #eef3f8;
+            padding: 10px 8px;
+            border: 1px solid #cfdfe8;
+        }
+        td {
+            padding: 8px 6px;
+            border: 1px solid #e2edf2;
+        }
+        .risk-level-low { background: #e0f2e9; }
+        .risk-level-intermediate { background: #fff1e0; }
+        .risk-level-high { background: #ffe6e5; }
+
+        /* print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+            .main-card {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            .tabs, .tab-btn, .button-group, .btn, .patient-bar input, .patient-field input, .tab-pane:not(.active) {
+                display: none !important;
+            }
+            .tab-pane.active {
+                display: block !important;
+                padding: 0.5rem;
+            }
+            .calculator-grid {
+                display: block;
+            }
+            .result, .form-card {
+                break-inside: avoid;
+            }
+            select {
+                border: none;
+                background: transparent;
+                appearance: none;
+                padding: 0;
+                font-weight: bold;
+            }
+            .radio-group {
+                border: none;
+                background: none;
+                padding: 0;
+            }
+            .header {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .print-only-show {
+                display: block;
+            }
+        }
+
+        .print-only-show {
+            display: none;
+        }
+
+        small.note {
+            font-size: 0.7rem;
+            color: #7c8f9c;
+            display: block;
+            margin-top: 1rem;
+        }
+        footer {
+            background: #f9fbfd;
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.7rem;
+            color: #6b8da8;
+            border-top: 1px solid #e2edf2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-card">
+    <div class="header">
+        <div class="logo-area">
+            <img src="https://img.magnific.com/free-vector/digital-health-medical-research-background-with-heartbeat-line_1017-50392.jpg?semt=ais_hybrid&w=740&q=80" alt="Clinic Logo" style="max-height:70px;">
+        </div>
+        <div class="title-area">
+            <h1>Framingham Risk Score</h1>
+            <p>10-Year CVD Risk Assessment (ATP-III updated)</p>
+        </div>
+    </div>
+
+    <!-- patient info compact -->
+    <div class="patient-bar">
+        <div class="patient-field">
+            <label>Patient Name</label>
+            <input type="text" id="patientName" placeholder="Full name">
+        </div>
+        <div class="patient-field">
+            <label>IC / ID No.</label>
+            <input type="text" id="patientIc" placeholder="Identification number">
+        </div>
+        <div class="patient-field">
+            <label>Assessment Date</label>
+            <span id="liveDate"></span>
+        </div>
+    </div>
+
+    <!-- Tabs navigation -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="calculator">📊 Calculator</button>
+        <button class="tab-btn" data-tab="about">📖 About the Score</button>
+        <button class="tab-btn" data-tab="reference">📚 Reference Tables</button>
+    </div>
+
+    <!-- Calculator tab -->
+    <div id="calculator" class="tab-pane active">
+        <div class="calculator-grid">
+            <!-- left form -->
+            <div class="form-card">
+                <div class="form-group">
+                    <label>⚥ Gender</label>
+                    <div class="radio-group" id="genderGroup">
+                        <label><input type="radio" name="gender" value="male" checked> Male</label>
+                        <label><input type="radio" name="gender" value="female"> Female</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>🎂 Age range</label>
+                    <select id="age">
+                        <option value="30-34">30-34 years</option><option value="35-39">35-39</option><option value="40-44">40-44</option>
+                        <option value="45-49">45-49</option><option value="50-54">50-54</option><option value="55-59">55-59</option>
+                        <option value="60-64">60-64</option><option value="65-69">65-69</option><option value="70-74">70-74</option>
+                        <option value="75+">75+ years</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>🧬 HDL Cholesterol (mmol/L)</label>
+                    <select id="hdl">
+                        <option value=">1.6">>1.6 mmol/L</option><option value="1.3-1.6">1.3-1.6</option>
+                        <option value="1.2-1.29">1.2-1.29</option><option value="0.9-1.19">0.9-1.19</option>
+                        <option value="<0.9">&lt;0.9 mmol/L</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>🩸 Total Cholesterol (mmol/L)</label>
+                    <select id="cholesterol">
+                        <option value="<4.1">&lt;4.1</option><option value="4.1-5.19">4.1-5.19</option>
+                        <option value="5.2-6.19">5.2-6.19</option><option value="6.2-7.2">6.2-7.2</option>
+                        <option value=">7.2">&gt;7.2</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>❤️ Systolic BP (mmHg)</label>
+                    <select id="systolic">
+                        <option value="<120">&lt;120</option><option value="120-129">120-129</option>
+                        <option value="130-139">130-139</option><option value="140-149">140-149</option>
+                        <option value="150-159">150-159</option><option value="160+">160+</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>💊 On BP treatment?</label>
+                    <div class="radio-group" id="treatedGroup">
+                        <label><input type="radio" name="treated" value="no" checked> No</label>
+                        <label><input type="radio" name="treated" value="yes"> Yes</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>🚬 Smoker?</label>
+                    <div class="radio-group" id="smokerGroup">
+                        <label><input type="radio" name="smoker" value="no" checked> No</label>
+                        <label><input type="radio" name="smoker" value="yes"> Yes</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>🍬 Diabetes?</label>
+                    <div class="radio-group" id="diabetesGroup">
+                        <label><input type="radio" name="diabetes" value="no" checked> No</label>
+                        <label><input type="radio" name="diabetes" value="yes"> Yes</label>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="btn" id="calcBtn">Calculate 10-Year Risk</button>
+                    <button class="btn btn-outline" onclick="window.print()">🖨️ Print Report</button>
+                </div>
+                <small class="note">* Based on Framingham original cohort. For clinical guidance only.</small>
+            </div>
+
+            <!-- right side result panel -->
+            <div id="resultPanel" class="result risk-low">
+                <h3>📋 Risk Assessment</h3>
+                <p><strong>👤 Patient:</strong> <span id="resultName">—</span> &nbsp;| <strong>ID:</strong> <span id="resultId">—</span></p>
+                <p><strong>⭐ Total Points:</strong> <span id="totalPoints" style="font-weight:800; font-size:1.5rem;">0</span></p>
+                <p><strong>📈 10-Year CVD Risk:</strong> <span id="riskPercentage" style="font-size:1.3rem; font-weight:700;">&lt;1%</span></p>
+                <p><strong>⚠️ Risk Level:</strong> <span id="riskLevel" style="font-weight:800;">Low</span></p>
+                <hr>
+                <p id="riskDescription">Your 10-year risk of developing cardiovascular disease is less than 10%. This is considered a low risk category.</p>
+                <div class="print-only-show" style="margin-top: 20px; border-top: 1px dashed #ccc; padding-top: 12px;">
+                    <p><strong>Healthcare Provider Signature:</strong> ________________________</p>
+                    <p><em>Generated on <span id="printDateFooter"></span></em></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Tab -->
+    <div id="about" class="tab-pane">
+        <h2>About the Framingham Risk Score</h2>
+        <p>The Framingham Risk Score is a gender‑specific algorithm to estimate the 10‑year cardiovascular disease (CVD) risk. Developed from the Framingham Heart Study, it remains a cornerstone for primary prevention.</p>
+        <h3>Included risk factors:</h3>
+        <ul style="margin:1rem 0 1rem 1.8rem;">
+            <li>Age & Gender</li><li>Total & HDL cholesterol</li><li>Systolic blood pressure & hypertension treatment</li>
+            <li>Smoking status</li><li>Diabetes mellitus</li>
+        </ul>
+        <h3>Risk categories:</h3>
+        <ul><li><strong>Low risk:</strong> &lt;10% 10‑year CVD risk</li>
+        <li><strong>Intermediate:</strong> 10–19.9%</li>
+        <li><strong>High risk:</strong> ≥20%</li></ul>
+        <p><strong>Note:</strong> This tool is for educational use; always interpret results alongside clinical judgment.</p>
+    </div>
+
+    <!-- Reference Tab -->
+    <div id="reference" class="tab-pane">
+        <h2>📖 Framingham Point Reference Tables</h2>
+        <div class="table-wrapper">
+            <h3>Points by risk factor (Men / Women)</h3>
+            <table>
+                <thead><tr><th>Risk factor</th><th>Category</th><th>Men points</th><th>Women points</th></tr></thead>
+                <tbody>
+                    <tr><td>Age</td><td>30-34</td><td>0</td><td>0</td></tr>
+                    <tr><td></td><td>35-39</td><td>2</td><td>2</td></tr>
+                    <tr><td></td><td>40-44</td><td>5</td><td>4</td></tr>
+                    <tr><td></td><td>45-49</td><td>6</td><td>5</td></tr>
+                    <tr><td></td><td>50-54</td><td>8</td><td>7</td></tr>
+                    <tr><td></td><td>55-59</td><td>10</td><td>8</td></tr>
+                    <tr><td></td><td>60-64</td><td>11</td><td>9</td></tr>
+                    <tr><td></td><td>65-69</td><td>12</td><td>10</td></tr>
+                    <tr><td></td><td>70-74</td><td>14</td><td>11</td></tr>
+                    <tr><td></td><td>75+</td><td>15</td><td>12</td></tr>
+                    <tr><td>HDL-C</td><td>>1.6</td><td>-2</td><td>-2</td></tr>
+                    <tr><td></td><td>1.3-1.6</td><td>-1</td><td>-1</td></tr>
+                    <tr><td></td><td>1.2-1.29</td><td>0</td><td>0</td></tr>
+                    <tr><td></td><td>0.9-1.19</td><td>1</td><td>1</td></tr>
+                    <tr><td></td><td><0.9</td><td>2</td><td>2</td></tr>
+                    <tr><td>Total C</td><td><4.1</td><td>0</td><td>0</td></tr>
+                    <tr><td></td><td>4.1-5.19</td><td>1</td><td>1</td></tr>
+                    <tr><td></td><td>5.2-6.19</td><td>2</td><td>3</td></tr>
+                    <tr><td></td><td>6.2-7.2</td><td>3</td><td>4</td></tr>
+                    <tr><td></td><td>>7.2</td><td>4</td><td>5</td></tr>
+                    <tr><td>SBP (untreated)</td><td><120</td><td>-2</td><td>-3</td></tr>
+                    <tr><td></td><td>120-129</td><td>0</td><td>0</td></tr>
+                    <tr><td></td><td>130-139</td><td>1</td><td>1</td></tr>
+                    <tr><td></td><td>140-149</td><td>2</td><td>2</td></tr>
+                    <tr><td></td><td>150-159</td><td>2</td><td>4</td></tr>
+                    <tr><td></td><td>160+</td><td>3</td><td>5</td></tr>
+                    <tr><td>SBP (treated)</td><td><120</td><td>0</td><td>-1</td></tr>
+                    <tr><td></td><td>120-129</td><td>2</td><td>2</td></tr>
+                    <tr><td></td><td>130-139</td><td>3</td><td>3</td></tr>
+                    <tr><td></td><td>140-149</td><td>4</td><td>5</td></tr>
+                    <tr><td></td><td>150-159</td><td>4</td><td>6</td></tr>
+                    <tr><td></td><td>160+</td><td>5</td><td>7</td></tr>
+                    <tr><td>Smoker</td><td>Yes</td><td>4</td><td>3</td></tr>
+                    <tr><td>Diabetes</td><td>Yes</td><td>3</td><td>4</td></tr>
+                </tbody>
+            </table>
+            <h3>10-Year Risk by total points</h3>
+            <table>
+                <thead><tr><th>Points</th><th>Men risk</th><th>Women risk</th></tr></thead>
+                <tbody>
+                    <tr><td>≤ -2</td><td>&lt;1%</td><td>&lt;1%</td></tr>
+                    <tr><td>0</td><td>1.4%</td><td>1.2%</td></tr>
+                    <tr><td>5</td><td>3.3%</td><td>2.8%</td></tr>
+                    <tr><td>9</td><td>6.7%</td><td>5.3%</td></tr>
+                    <tr><td>11</td><td>9.4%</td><td>7.3%</td></tr>
+                    <tr><td>12</td><td>11.2%</td><td>8.6%</td></tr>
+                    <tr><td>14</td><td>15.6%</td><td>11.7%</td></tr>
+                    <tr><td>16</td><td>21.6%</td><td>15.9%</td></tr>
+                    <tr><td>18</td><td>29.4%</td><td>21.5%</td></tr>
+                    <tr><td>≥20</td><td>&gt;30%</td><td>&gt;30%</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <footer>Framingham Risk Score — educational reference. Always validate with clinical assessment.</footer>
+</div>
+
+<script>
+    // date
+    function setDate() {
+        const now = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('liveDate').innerText = now.toLocaleDateString(undefined, options);
+        document.getElementById('printDateFooter').innerText = now.toLocaleDateString(undefined, options);
+    }
+    setDate();
+
+    // tab switching
+    const tabs = document.querySelectorAll('.tab-btn');
+    const panes = document.querySelectorAll('.tab-pane');
+    tabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-tab');
+            tabs.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            panes.forEach(pane => pane.classList.remove('active'));
+            document.getElementById(targetId).classList.add('active');
+        });
+    });
+
+    // risk calculation logic fully merged (framingham ATP III)
+    function calculateRisk() {
+        const gender = document.querySelector('input[name="gender"]:checked').value;
+        const age = document.getElementById('age').value;
+        const hdl = document.getElementById('hdl').value;
+        const cholesterol = document.getElementById('cholesterol').value;
+        const systolic = document.getElementById('systolic').value;
+        const treated = document.querySelector('input[name="treated"]:checked').value;
+        const smoker = document.querySelector('input[name="smoker"]:checked').value;
+        const diabetes = document.querySelector('input[name="diabetes"]:checked').value;
+
+        let points = 0;
+
+        // Age points
+        const ageMapMale = {"30-34":0,"35-39":2,"40-44":5,"45-49":6,"50-54":8,"55-59":10,"60-64":11,"65-69":12,"70-74":14,"75+":15};
+        const ageMapFemale = {"30-34":0,"35-39":2,"40-44":4,"45-49":5,"50-54":7,"55-59":8,"60-64":9,"65-69":10,"70-74":11,"75+":12};
+        points += gender === 'male' ? ageMapMale[age] : ageMapFemale[age];
+
+        // HDL
+        const hdlMap = {">1.6":-2,"1.3-1.6":-1,"1.2-1.29":0,"0.9-1.19":1,"<0.9":2};
+        points += hdlMap[hdl];
+
+        // Total Cholesterol
+        const cholMapMale = {"<4.1":0,"4.1-5.19":1,"5.2-6.19":2,"6.2-7.2":3,">7.2":4};
+        const cholMapFemale = {"<4.1":0,"4.1-5.19":1,"5.2-6.19":3,"6.2-7.2":4,">7.2":5};
+        points += gender === 'male' ? cholMapMale[cholesterol] : cholMapFemale[cholesterol];
+
+        // SBP + treatment
+        const sbpMapMaleNoTx = {"<120":-2,"120-129":0,"130-139":1,"140-149":2,"150-159":2,"160+":3};
+        const sbpMapMaleTx = {"<120":0,"120-129":2,"130-139":3,"140-149":4,"150-159":4,"160+":5};
+        const sbpMapFemaleNoTx = {"<120":-3,"120-129":0,"130-139":1,"140-149":2,"150-159":4,"160+":5};
+        const sbpMapFemaleTx = {"<120":-1,"120-129":2,"130-139":3,"140-149":5,"150-159":6,"160+":7};
+
+        if (gender === 'male') {
+            points += treated === 'no' ? sbpMapMaleNoTx[systolic] : sbpMapMaleTx[systolic];
+        } else {
+            points += treated === 'no' ? sbpMapFemaleNoTx[systolic] : sbpMapFemaleTx[systolic];
+        }
+
+        // Smoker
+        if (smoker === 'yes') points += gender === 'male' ? 4 : 3;
+        // Diabetes
+        if (diabetes === 'yes') points += gender === 'male' ? 3 : 4;
+
+        // risk conversion tables
+        let riskText = '';
+        const riskMale = {
+            "-2":"<1%","-1":"1.1%","0":"1.4%","1":"1.6%","2":"1.9%","3":"2.3%","4":"2.8%","5":"3.3%","6":"3.9%","7":"4.7%",
+            "8":"5.6%","9":"6.7%","10":"7.9%","11":"9.4%","12":"11.2%","13":"13.2%","14":"15.6%","15":"18.4%","16":"21.6%","17":"25.3%","18":"29.4%"
+        };
+        const riskFemale = {
+            "-2":"<1%","-1":"1.0%","0":"1.2%","1":"1.5%","2":"1.7%","3":"2.0%","4":"2.4%","5":"2.8%","6":"3.3%","7":"3.9%","8":"4.5%","9":"5.3%",
+            "10":"6.3%","11":"7.3%","12":"8.6%","13":"10.0%","14":"11.7%","15":"13.7%","16":"15.9%","17":"18.5%","18":"21.5%","19":"24.8%","20":"28.5%"
+        };
+
+        if (gender === 'male') {
+            if (points >= 19) riskText = ">30%";
+            else if (points <= -2) riskText = "<1%";
+            else riskText = riskMale[points] || (points>18?">30%":"<1%");
+        } else {
+            if (points >= 21) riskText = ">30%";
+            else if (points <= -2) riskText = "<1%";
+            else riskText = riskFemale[points] || (points>20?">30%":"<1%");
+        }
+
+        let numericRisk = parseFloat(riskText);
+        if (riskText.includes("<")) numericRisk = 0.5;
+        if (riskText.includes(">")) numericRisk = 31;
+        let riskLevel = "Low", riskClass = "risk-low", desc = "";
+        if (numericRisk < 10) { riskLevel = "Low"; riskClass = "risk-low"; desc = "10-year CVD risk less than 10% — low risk category. Lifestyle optimization is encouraged."; }
+        else if (numericRisk < 20) { riskLevel = "Intermediate"; riskClass = "risk-intermediate"; desc = "10-year CVD risk 10-20% — intermediate risk. Consider risk factor modification."; }
+        else { riskLevel = "High"; riskClass = "risk-high"; desc = "10-year CVD risk ≥20% — high risk. Clinical management and preventive therapy strongly advised."; }
+
+        // update UI
+        document.getElementById("totalPoints").innerText = points;
+        document.getElementById("riskPercentage").innerHTML = riskText;
+        document.getElementById("riskLevel").innerHTML = riskLevel;
+        document.getElementById("riskDescription").innerHTML = desc;
+        const resultDiv = document.getElementById("resultPanel");
+        resultDiv.className = `result ${riskClass}`;
+        
+        const patientName = document.getElementById("patientName").value || "—";
+        const patientId = document.getElementById("patientIc").value || "—";
+        document.getElementById("resultName").innerText = patientName;
+        document.getElementById("resultId").innerText = patientId;
+    }
+
+    document.getElementById("calcBtn").addEventListener("click", calculateRisk);
+    // initial run
+    window.addEventListener("DOMContentLoaded", () => {
+        calculateRisk();
+        // sync realtime name display optional
+        document.getElementById("patientName").addEventListener("input", calculateRisk);
+        document.getElementById("patientIc").addEventListener("input", calculateRisk);
+        const allRadios = document.querySelectorAll('input[type="radio"], select');
+        allRadios.forEach(el => el.addEventListener("change", calculateRisk));
+    });
+</script>
+</body>
+</html>

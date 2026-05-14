@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>WHODAS 2.0 | Professional Disability Assessment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #e9f0f5 0%, #dbe4ec 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            padding: 24px 16px;
+            min-height: 100vh;
+        }
+
+        /* main container – adaptive width */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        /* header area with logo and title */
+        .hero {
+            background: #1A3E4C;
+            padding: 20px 28px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            border-bottom: 4px solid #FFC107;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .logo-placeholder {
+            background: rgba(255,255,240,0.15);
+            backdrop-filter: blur(2px);
+            border-radius: 50px;
+            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #FFECB3;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-placeholder span {
+            font-size: 1.6rem;
+        }
+
+        .hero h1 {
+            color: white;
+            font-size: 1.7rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .badge {
+            background: #FFC107;
+            color: #1A3E4C;
+            padding: 8px 18px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        /* patient card – modern grid */
+        .patient-card {
+            background: #F8FAFE;
+            margin: 24px 28px 0 28px;
+            padding: 20px 24px;
+            border-radius: 32px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255,255,255,0.8);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .input-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-field label {
+            font-weight: 600;
+            color: #1e2f3a;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-field input {
+            padding: 12px 16px;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 24px;
+            font-size: 0.95rem;
+            transition: 0.2s;
+            background: white;
+            font-family: inherit;
+        }
+
+        .input-field input:focus {
+            outline: none;
+            border-color: #1A3E4C;
+            box-shadow: 0 0 0 3px rgba(26,62,76,0.15);
+        }
+
+        /* scoring hint */
+        .scoring-hint {
+            margin: 16px 28px 0 28px;
+            background: #EFF6FF;
+            border-radius: 28px;
+            padding: 12px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #0b3b4f;
+            border-left: 5px solid #FFC107;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .legend span {
+            background: white;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        /* questions table – modern card style */
+        .questions-section {
+            padding: 8px 28px 16px 28px;
+        }
+
+        .questions-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .question-row {
+            background: #FFFFFF;
+            border-radius: 28px;
+            padding: 8px 20px 8px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            transition: all 0.2s;
+            border: 1px solid #edf2f7;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .question-row:hover {
+            background: #FCFDFF;
+            border-color: #cbdde6;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        .question-text {
+            flex: 3;
+            font-weight: 500;
+            color: #1F2F3A;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            padding: 8px 0;
+        }
+
+        .question-select {
+            flex: 0 0 130px;
+            min-width: 110px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 60px;
+            border: 1.5px solid #DCE5EC;
+            background: white;
+            font-weight: 500;
+            font-family: inherit;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            appearance: none;
+        }
+
+        select:focus {
+            border-color: #1A3E4C;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(26,62,76,0.2);
+        }
+
+        /* buttons */
+        .action-bar {
+            padding: 8px 28px 24px 28px;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            justify-content: center;
+            border-top: 1px solid #eef2f8;
+            margin-top: 8px;
+        }
+
+        .btn {
+            border: none;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            background: white;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: #1A3E4C;
+            color: white;
+            box-shadow: 0 6px 14px rgba(26,62,76,0.25);
+        }
+
+        .btn-primary:hover {
+            background: #0F2E3A;
+            transform: translateY(-1px);
+            box-shadow: 0 12px 20px -8px rgba(26,62,76,0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 1px solid #B9CFDF;
+            color: #1A3E4C;
+        }
+
+        .btn-secondary:hover {
+            background: #F0F6FA;
+            border-color: #8FAEC2;
+        }
+
+        /* results panel – elegant */
+        .results-panel {
+            margin: 8px 28px 32px 28px;
+            background: linear-gradient(135deg, #EFFAF5 0%, #E6F0F0 100%);
+            border-radius: 32px;
+            padding: 24px 28px;
+            display: none;
+            border: 1px solid #CCE0D9;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            align-items: baseline;
+            margin-bottom: 18px;
+            border-bottom: 2px dashed #BED4CC;
+            padding-bottom: 12px;
+        }
+
+        .results-header h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1A3E4C;
+            letter-spacing: -0.3px;
+        }
+
+        .score-circle {
+            background: #1A3E4C;
+            color: white;
+            padding: 6px 18px;
+            border-radius: 80px;
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+
+        .patient-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 28px;
+            background: white;
+            padding: 14px 20px;
+            border-radius: 28px;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+
+        .interpretation-box {
+            background: white;
+            border-radius: 24px;
+            padding: 16px 22px;
+            margin: 16px 0;
+            border-left: 8px solid #FFC107;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .score-table {
+            margin-top: 18px;
+            background: white;
+            border-radius: 28px;
+            overflow-x: auto;
+            padding: 6px;
+        }
+
+        .score-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        .score-table th, .score-table td {
+            padding: 12px 8px;
+            text-align: center;
+            border-bottom: 1px solid #E9EDF2;
+        }
+
+        .score-table th {
+            background: #F4F9FC;
+            font-weight: 700;
+            color: #1e3f4b;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 12px;
+            }
+            .hero h1 {
+                font-size: 1.3rem;
+            }
+            .patient-card {
+                margin: 16px 16px 0 16px;
+                padding: 16px;
+            }
+            .questions-section {
+                padding: 8px 16px 16px 16px;
+            }
+            .question-row {
+                padding: 6px 16px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .question-select {
+                flex: auto;
+            }
+            .action-bar {
+                padding: 8px 16px 24px 16px;
+            }
+            .results-panel {
+                margin: 8px 16px 24px 16px;
+                padding: 20px;
+            }
+            .scoring-hint {
+                margin: 16px 16px 0 16px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            .action-bar, .btn, .scoring-hint, .badge, .logo-placeholder, .btn-primary, .btn-secondary {
+                display: none;
+            }
+            .results-panel {
+                display: block !important;
+                background: white;
+                box-shadow: none;
+                border: 1px solid #ccc;
+                margin: 20px;
+            }
+            .question-row select {
+                border: none;
+                background: transparent;
+                font-weight: normal;
+                appearance: auto;
+                -webkit-appearance: menulist;
+            }
+            .patient-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+            .hero {
+                background: #1A3E4C;
+                print-color-adjust: exact;
+            }
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #6c828e;
+            padding: 16px 28px 24px;
+            border-top: 1px solid #eef2f8;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <div class="logo-area">
+            <div class="logo-placeholder">
+                <span>⚕️📋</span> WHODAS 2.0
+            </div>
+            <h1>Disability Assessment Schedule</h1>
+        </div>
+        <div class="badge">WHO standard 36-item (12-item version)</div>
+    </div>
+
+    <!-- patient info card -->
+    <div class="patient-card">
+        <div class="form-grid">
+            <div class="input-field">
+                <label>Full name</label>
+                <input type="text" id="patientName" placeholder="e.g. Ahmad Fauzi" autocomplete="off">
+            </div>
+            <div class="input-field">
+                <label>IC / Passport number</label>
+                <input type="text" id="patientIC" placeholder="identification number">
+            </div>
+            <div class="input-field">
+                <label>Assessment date</label>
+                <input type="date" id="assessmentDate">
+            </div>
+        </div>
+    </div>
+
+    <!-- score legend hint -->
+    <div class="scoring-hint">
+        <div><strong>📊 Scoring system:</strong></div>
+        <div class="legend">
+            <span>1 – No difficulty</span>
+            <span>2 – Mild</span>
+            <span>3 – Moderate</span>
+            <span>4 – Severe</span>
+            <span>5 – Extreme / cannot do</span>
+        </div>
+    </div>
+
+    <!-- dynamic questions list -->
+    <div class="questions-section">
+        <div class="questions-grid" id="questionsGrid"></div>
+    </div>
+
+    <div class="action-bar">
+        <button class="btn btn-primary" id="calculateBtn">📈 Calculate Score</button>
+        <button class="btn btn-secondary" id="printBtn">🖨️ Print / Save Report</button>
+    </div>
+
+    <!-- results panel -->
+    <div id="resultsPanel" class="results-panel">
+        <div class="results-header">
+            <h3>WHODAS 2.0 Report</h3>
+            <div class="score-circle" id="totalScoreDisplay">--</div>
+        </div>
+        <div class="patient-details">
+            <div><strong>🧑 Patient:</strong> <span id="displayName">—</span></div>
+            <div><strong>🆔 IC No.:</strong> <span id="displayIC">—</span></div>
+            <div><strong>📅 Date:</strong> <span id="displayDate">—</span></div>
+        </div>
+        <div class="interpretation-box">
+            <strong>📌 Clinical interpretation:</strong> <span id="interpretationText"></span>
+            <div style="margin-top: 8px; font-size:0.8rem; color:#2c5a6e;"><span id="scoreRangeNote"></span></div>
+        </div>
+        <div class="score-table" id="scoreDetailsContainer"></div>
+    </div>
+    <footer>© WHODAS 2.0 (12-item self-report) — Disability assessment | Score range 12-60</footer>
+</div>
+
+<script>
+    // WHODAS 2.0 official 12 questions (based on domains: cognition, mobility, self-care, getting along, life activities, participation)
+    const questionsList = [
+        "1. Standing for long periods (e.g. 30 minutes)?",
+        "2. Taking care of household responsibilities (cleaning, cooking, chores)?",
+        "3. Learning a new task (e.g. using a phone, app, or new route)?",
+        "4. Joining community activities (festivals, religious, social events)?",
+        "5. Emotionally affected by your health problems (anxiety, sadness)?",
+        "6. Concentrating for 10 minutes without distraction?",
+        "7. Walking a long distance (e.g. 1km / 0.6 miles)?",
+        "8. Washing your whole body (bathing/showering)?",
+        "9. Getting dressed (choosing clothes, buttoning, zipping)?",
+        "10. Dealing with strangers or unfamiliar people?",
+        "11. Maintaining a friendship (keeping in touch, social support)?",
+        "12. Day-to-day work / school / household duties (overall impact)?"
+    ];
+
+    // generate dynamic selectors
+    let selectElements = [];
+
+    function buildQuestionnaire() {
+        const grid = document.getElementById('questionsGrid');
+        grid.innerHTML = '';
+        selectElements = [];
+        for (let i = 0; i < questionsList.length; i++) {
+            const qNumber = i + 1;
+            const row = document.createElement('div');
+            row.className = 'question-row';
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question-text';
+            questionDiv.innerText = `${qNumber}. ${questionsList[i]}`;
+            const selectDiv = document.createElement('div');
+            selectDiv.className = 'question-select';
+            const select = document.createElement('select');
+            select.id = `q_${qNumber}`;
+            // populate options 1-5
+            for (let val = 1; val <= 5; val++) {
+                const option = document.createElement('option');
+                option.value = val;
+                let label = '';
+                if (val === 1) label = '1 - No difficulty';
+                else if (val === 2) label = '2 - Mild';
+                else if (val === 3) label = '3 - Moderate';
+                else if (val === 4) label = '4 - Severe';
+                else label = '5 - Extreme';
+                option.textContent = label;
+                select.appendChild(option);
+            }
+            // default to 1 (no difficulty)
+            select.value = "1";
+            selectDiv.appendChild(select);
+            row.appendChild(questionDiv);
+            row.appendChild(selectDiv);
+            grid.appendChild(row);
+            selectElements.push(select);
+        }
+    }
+
+    // calculate total & interpretation
+    function computeScores() {
+        let total = 0;
+        const scoresArray = [];
+        for (let i = 0; i < selectElements.length; i++) {
+            const val = parseInt(selectElements[i].value, 10);
+            total += val;
+            scoresArray.push({ qIndex: i+1, score: val });
+        }
+        return { total, scoresArray };
+    }
+
+    function getInterpretation(total) {
+        if (total <= 24) return { text: "✅ No or mild disability — Minimal impact on daily functioning.", level: "Mild" };
+        if (total <= 36) return { text: "⚠️ Moderate disability — Noticeable difficulties in several domains; support may be beneficial.", level: "Moderate" };
+        if (total <= 48) return { text: "🔴 Severe disability — Major limitations across daily activities; comprehensive support often required.", level: "Severe" };
+        return { text: "⚠️⚠️ Extreme disability — Very severe functional restrictions; intensive care or constant assistance recommended.", level: "Extreme" };
+    }
+
+    function renderScoreTable(scoresArray) {
+        // Create a stylish 2-column grid for small footprint, but clean table
+        const half = Math.ceil(scoresArray.length / 2);
+        const firstHalf = scoresArray.slice(0, half);
+        const secondHalf = scoresArray.slice(half);
+        let html = '<table style="width:100%"><thead><tr><th>Question</th><th>Score</th><th>Question</th><th>Score</th></tr></thead><tbody>';
+        const maxRows = Math.max(firstHalf.length, secondHalf.length);
+        for (let i = 0; i < maxRows; i++) {
+            const left = firstHalf[i];
+            const right = secondHalf[i];
+            html += '<tr>';
+            if (left) {
+                html += `<td style="text-align:left; padding-left:12px;"><strong>Q${left.qIndex}</strong> — ${questionsList[left.qIndex-1].substring(0, 55)}${questionsList[left.qIndex-1].length > 55 ? '…' : ''}</td>`;
+                html += `<td style="font-weight:700; text-align:center">${left.score}</td>`;
+            } else {
+                html += '<td></td><td></td>';
+            }
+            if (right) {
+                html += `<td style="text-align:left; padding-left:12px;"><strong>Q${right.qIndex}</strong> — ${questionsList[right.qIndex-1].substring(0, 55)}${questionsList[right.qIndex-1].length > 55 ? '…' : ''}</td>`;
+                html += `<td style="font-weight:700; text-align:center">${right.score}</td>`;
+            } else {
+                html += '<td></td><td></td>';
+            }
+            html += '</tr>';
+        }
+        html += '</tbody></table>';
+        return html;
+    }
+
+    function refreshResults() {
+        // get patient info
+        const name = document.getElementById('patientName').value.trim() || "Anonymous";
+        const icNumber = document.getElementById('patientIC').value.trim() || "Not provided";
+        let dateRaw = document.getElementById('assessmentDate').value;
+        let formattedDate = dateRaw;
+        if (!dateRaw) {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('assessmentDate').value = today;
+            formattedDate = today;
+        } else {
+            formattedDate = dateRaw;
+        }
+
+        const { total, scoresArray } = computeScores();
+        const interpretationObj = getInterpretation(total);
+
+        // update UI
+        document.getElementById('displayName').innerText = name;
+        document.getElementById('displayIC').innerText = icNumber;
+        document.getElementById('displayDate').innerText = formattedDate;
+        document.getElementById('totalScoreDisplay').innerHTML = total + '<span style="font-size:0.8rem;">/60</span>';
+        document.getElementById('interpretationText').innerHTML = interpretationObj.text;
+        const rangeNote = `📊 Total raw score: ${total} (range 12–60) · ${interpretationObj.level} disability level`;
+        document.getElementById('scoreRangeNote').innerHTML = rangeNote;
+        
+        const detailsHtml = renderScoreTable(scoresArray);
+        document.getElementById('scoreDetailsContainer').innerHTML = detailsHtml;
+        
+        // show panel
+        const panel = document.getElementById('resultsPanel');
+        panel.style.display = 'block';
+        
+        // scroll smoothly to results on mobile/pc
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function printReport() {
+        // ensure that results panel is visible before printing
+        const panel = document.getElementById('resultsPanel');
+        const wasHidden = panel.style.display === 'none';
+        if (wasHidden) {
+            refreshResults();  // auto-calc and show if hidden
+        }
+        // Also ensure patient data if empty fields we fill minimal
+        const nameInput = document.getElementById('patientName');
+        if (!nameInput.value.trim()) nameInput.value = "Unnamed Patient";
+        const icInput = document.getElementById('patientIC');
+        if (!icInput.value.trim()) icInput.value = "—";
+        if (!document.getElementById('assessmentDate').value) {
+            document.getElementById('assessmentDate').valueAsDate = new Date();
+        }
+        refreshResults(); // refresh final sync
+        setTimeout(() => {
+            window.print();
+        }, 100);
+    }
+
+    // initial load
+    function setDefaultDate() {
+        if (!document.getElementById('assessmentDate').value) {
+            document.getElementById('assessmentDate').valueAsDate = new Date();
+        }
+    }
+    
+    // Auto-reset and event listeners
+    function init() {
+        buildQuestionnaire();
+        setDefaultDate();
+        
+        const calculateButton = document.getElementById('calculateBtn');
+        const printButton = document.getElementById('printBtn');
+        
+        calculateButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            // basic validation: ensure name or ic not empty? not mandatory but nicer
+            const nameField = document.getElementById('patientName');
+            if (nameField.value.trim() === "") {
+                // optional: subtle note but not required
+            }
+            refreshResults();
+        });
+        
+        printButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            printReport();
+        });
+        
+        // optional: add live listener for demo - no need, but keeps consistency
+        // If you want you can instantly show default summary? but better explicit.
+        // add on window load a prefill?
+        const style = document.createElement('style');
+        style.innerText = `@media print { .results-panel { display: block !important; } }`;
+        document.head.appendChild(style);
+    }
+    
+    init();
+</script>
+</body>
+</html>

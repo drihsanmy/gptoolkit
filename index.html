@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>GP Toolkit | Clinical Calculators & Formulary</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #eef2f7;
+      font-family: system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Noto Sans', sans-serif;
+      padding: 1.5rem;
+      color: #1a2c3e;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding: 0 0.5rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 6vw, 2.8rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #1f5e3a, #1e6f5c, #2c6e9e);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+      color: #2c4b66;
+      max-width: 650px;
+      margin: 0 auto;
+      opacity: 0.85;
+      font-weight: 500;
+    }
+
+    .badge-row {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .badge {
+      background: rgba(30, 100, 80, 0.12);
+      backdrop-filter: blur(2px);
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #1f6e4a;
+      letter-spacing: 0.3px;
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .tool-card {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 28px;
+      box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.12), 0 4px 10px -4px rgba(0, 0, 0, 0.02);
+      transition: all 0.25s ease;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 22px 32px -14px rgba(0, 0, 0, 0.2);
+      background: white;
+      border-color: #cbdde9;
+    }
+
+    .card-content {
+      padding: 1.6rem 1.3rem 1.8rem 1.3rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-title {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      color: #1f3e48;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: #4c6172;
+      line-height: 1.4;
+      margin-bottom: 1.4rem;
+      flex-grow: 1;
+    }
+
+    .external-badge {
+      background: #eef2fc;
+      border-radius: 50px;
+      padding: 0.2rem 0.7rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #2c6e9e;
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #eef3f7;
+      padding: 0.7rem 1rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-decoration: none;
+      color: #1e5a6f;
+      transition: all 0.2s;
+      border: 1px solid #cfe0ea;
+      width: fit-content;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: #1f6e5c;
+      border: none;
+      color: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .btn-primary:hover {
+      background: #0f5a48;
+      transform: scale(0.97);
+      color: white;
+    }
+
+    .btn-outline:hover {
+      background: #e2ecf3;
+      border-color: #aac2d0;
+    }
+
+    .external-link-btn {
+      background: #edf4fa;
+      border: 1px solid #bbd4e8;
+      color: #005f73;
+    }
+
+    .external-link-btn:hover {
+      background: #d9e9f2;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 2rem;
+      padding: 1.2rem 0.5rem;
+      font-size: 0.75rem;
+      color: #5a6f7c;
+      border-top: 1px solid rgba(100, 120, 130, 0.2);
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 1rem;
+      }
+      .tool-grid {
+        gap: 1rem;
+        grid-template-columns: 1fr;
+      }
+      .card-content {
+        padding: 1.2rem;
+      }
+      .card-title {
+        font-size: 1.3rem;
+      }
+      .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+        width: 100%;
+        justify-content: center;
+      }
+      .hero h1 {
+        font-size: 1.9rem;
+      }
+    }
+
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .tool-grid {
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #dce5ec;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #8aaec0;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <h1>🩺 GP Toolkit</h1>
+    <p>Clinical calculators, risk scores, formularies & essential references. One place for the modern practitioner</p>
+    <div class="badge-row">
+      <span class="badge">📊 Evidence-based</span>
+      <span class="badge">⚡ Fast access</span>
+      <span class="badge">📱 Mobile ready</span>
+      <span class="badge">🌐 Dual TCM Formularies</span>
+    </div>
+  </div>
+
+  <div class="tool-grid" id="toolkitGrid"></div>
+
+  <div class="footer-note">
+    ⚕️ General Practitioner Toolkit — curated clinical decision support tools.<br>
+    Drug Formulary opens official Malaysia national formulary portal. Both Chinese and Malay TCM Formularies included.
+  </div>
+</div>
+
+<script>
+  // ---------- TOOLKIT DATA (all local files + external drug formulary) ----------
+  // Added Chinese_TCM_Formulary.html as requested.
+  // Original files list: Malay_TCM_Formulary.html, Framingham_score.html, IPSS.html, MMSE.html, PHQ9.html,
+  // WHODAS2.html, Stopbang.html, Epworth.html, BMI.html, Alvarado.html, Paediatric_calculator.html, fagestrom.html
+  // plus now Chinese_TCM_Formulary.html (additional)
+  
+  const tools = [
+    {
+      name: "Chinese TCM Formulary",
+      file: "Chinese_TCM_Formulary.html",
+      desc: "Traditional Chinese Medicine formulary & herbal reference database.",
+      icon: "🏮"
+    },
+    {
+      name: "Malay TCM Formulary",
+      file: "Malay_TCM_Formulary.html",
+      desc: "Traditional & complementary medicine formulary reference (Malay language).",
+      icon: "🌿"
+    },
+    {
+      name: "Framingham Score",
+      file: "Framingham_score.html",
+      desc: "10-year cardiovascular risk assessment tool for primary prevention.",
+      icon: "❤️"
+    },
+    {
+      name: "IPSS",
+      file: "IPSS.html",
+      desc: "International Prostate Symptom Score — evaluate lower urinary tract symptoms.",
+      icon: "🚽"
+    },
+    {
+      name: "MMSE",
+      file: "MMSE.html",
+      desc: "Mini-Mental State Examination — cognitive impairment screening.",
+      icon: "🧠"
+    },
+    {
+      name: "PHQ-9",
+      file: "PHQ9.html",
+      desc: "Patient Health Questionnaire-9 for depression severity assessment.",
+      icon: "😔"
+    },
+    {
+      name: "WHODAS 2.0",
+      file: "WHODAS2.html",
+      desc: "World Health Organization Disability Assessment Schedule.",
+      icon: "♿"
+    },
+    {
+      name: "STOP-Bang",
+      file: "Stopbang.html",
+      desc: "Obstructive sleep apnea screening (snoring, tiredness, observed apnea...).",
+      icon: "😴"
+    },
+    {
+      name: "Epworth Sleepiness Scale",
+      file: "Epworth.html",
+      desc: "Measure daytime sleepiness & likelihood of dozing off.",
+      icon: "💤"
+    },
+    {
+      name: "BMI Calculator",
+      file: "BMI.html",
+      desc: "Body Mass Index & healthy weight range assessment.",
+      icon: "⚖️"
+    },
+    {
+      name: "Alvarado Score",
+      file: "Alvarado.html",
+      desc: "Predictive scoring for acute appendicitis diagnosis.",
+      icon: "🩻"
+    },
+    {
+      name: "Paediatric Calculator",
+      file: "Paediatric_calculator.html",
+      desc: "Paediatric growth, drug dosing or age-specific scores.",
+      icon: "👶"
+    },
+    {
+      name: "Fagerström Test",
+      file: "fagestrom.html",
+      desc: "Nicotine dependence assessment for smoking cessation guidance.",
+      icon: "🚬"
+    }
+  ];
+
+  // External Drug Formulary (Malaysia myformulary)
+  const externalDrugFormulary = {
+    name: "Drug Formulary (Malaysia)",
+    file: null,
+    externalUrl: "https://myformulary.pharmacy.gov.my/",
+    desc: "Official Malaysia National Drug Formulary — search for medicines, indications, and formulary status.",
+    icon: "💊",
+    isExternal: true
+  };
+
+  // Combine: first internal tools (including new Chinese TCM), then external Formulary at the end (or could be anywhere)
+  // To keep clear layout, external formulary appears after all internal tools.
+  const allItems = [...tools, externalDrugFormulary];
+
+  function getIcon(item) {
+    if (item.icon) return item.icon;
+    if (item.name.toLowerCase().includes("drug")) return "💊";
+    if (item.name.toLowerCase().includes("bmi")) return "⚖️";
+    return "📋";
+  }
+
+  function getDescription(item) {
+    if (item.desc) return item.desc;
+    if (item.isExternal) return "External reference – opens official myformulary portal.";
+    return `Quick access to ${item.name} calculator.`;
+  }
+
+  function getActionButton(item) {
+    if (item.isExternal && item.externalUrl) {
+      return `<a href="${item.externalUrl}" target="_blank" rel="noopener noreferrer" class="btn external-link-btn">🔗 Open Formulary →</a>`;
+    } else if (item.file) {
+      return `<a href="${item.file}" class="btn btn-primary">📂 Launch Tool →</a>`;
+    } else {
+      return `<span class="btn" style="background:#ddd; cursor:not-allowed;">unavailable</span>`;
+    }
+  }
+
+  function renderGrid() {
+    const gridContainer = document.getElementById('toolkitGrid');
+    if (!gridContainer) return;
+
+    let cardsHTML = '';
+    for (let item of allItems) {
+      const icon = getIcon(item);
+      const title = item.name;
+      const desc = getDescription(item);
+      const actionBtn = getActionButton(item);
+      
+      let tagExternal = '';
+      if (item.isExternal) {
+        tagExternal = '<span class="external-badge">🔗 National Portal</span>';
+      }
+      // For TCM formularies, optional small badge but not necessary, keep clean
+      if (title.includes("Chinese TCM")) {
+        // subtle extra identification
+        tagExternal = tagExternal || '<span class="external-badge" style="background:#f0efe7;">🌾 TCM</span>';
+      }
+      if (title.includes("Malay TCM")) {
+        tagExternal = tagExternal || '<span class="external-badge" style="background:#e0f0e8;">🌿 Herbal</span>';
+      }
+      
+      cardsHTML += `
+        <div class="tool-card">
+          <div class="card-content">
+            <div class="card-icon">${icon}</div>
+            <div class="card-title">
+              ${title}
+              ${tagExternal}
+            </div>
+            <div class="card-desc">${desc}</div>
+            <div style="margin-top: auto; display: flex; justify-content: flex-start;">
+              ${actionBtn}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    gridContainer.innerHTML = cardsHTML;
+  }
+
+  renderGrid();
+</script>
+
+<style>
+  .external-badge {
+    background: #eef2fa;
+    border-radius: 30px;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #166b7e;
+    white-space: nowrap;
+  }
+  .tool-card .btn {
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .tool-card .btn-primary {
+    background: #1f6e5c;
+    border: none;
+  }
+  .tool-card .btn-primary:hover {
+    background: #0d5a49;
+  }
+  .external-link-btn {
+    background: #eef2fa;
+    color: #1b6b87;
+    border: 1px solid #c7ddec;
+  }
+  .external-link-btn:hover {
+    background: #e2edf5;
+    border-color: #9bbbd0;
+  }
+  @media (max-width: 480px) {
+    .btn {
+      width: 100%;
+      justify-content: center;
+    }
+    .card-title {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+</style>
+</body>
+</html>

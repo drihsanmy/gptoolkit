@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>BMI Compass | Smart Body Mass Index Tool</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: linear-gradient(145deg, #d4e0f7 0%, #b7c9e2 100%);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  /* main card container – soft modern glassmorphism effect */
+  .bmi-card {
+    max-width: 520px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(0px);
+    border-radius: 2.5rem;
+    box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.3), 0 8px 18px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.2s ease;
+  }
+
+  /* header with gradient accent */
+  .bmi-header {
+    background: linear-gradient(120deg, #1f4870, #1e3a5f);
+    padding: 1.6rem 1.8rem;
+    text-align: center;
+    border-bottom: 3px solid #ffcd7e;
+  }
+
+  .bmi-header h1 {
+    font-size: 1.9rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .bmi-header p {
+    color: #ffdfb3;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  /* content area */
+  .bmi-content {
+    padding: 2rem 1.8rem 1.8rem;
+  }
+
+  /* input groups - modern floating style */
+  .input-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .input-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: #1e3a5f;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .input-label span {
+    font-size: 1.2rem;
+  }
+
+  .input-wrapper {
+    display: flex;
+    align-items: center;
+    background: #f3f7fc;
+    border-radius: 1.2rem;
+    border: 1.5px solid #e2edf4;
+    transition: all 0.2s;
+    padding: 0.2rem 0.8rem;
+  }
+
+  .input-wrapper:focus-within {
+    border-color: #2c7da0;
+    box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.2);
+    background: white;
+  }
+
+  .input-wrapper input {
+    width: 100%;
+    padding: 0.9rem 0.5rem 0.9rem 0.2rem;
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    font-weight: 500;
+    outline: none;
+    color: #1f2f3e;
+  }
+
+  .input-wrapper input::placeholder {
+    color: #9bb1c2;
+    font-weight: 400;
+  }
+
+  .unit {
+    font-weight: 600;
+    color: #5f7f9e;
+    background: #e9f0f5;
+    padding: 0.2rem 0.7rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+  }
+
+  /* button */
+  .calc-btn {
+    background: linear-gradient(95deg, #2c7da0, #1f5e7e);
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 3rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin: 0.8rem 0 1.2rem;
+    box-shadow: 0 5px 12px rgba(31, 80, 110, 0.3);
+  }
+
+  .calc-btn:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(95deg, #236b8c, #184f6b);
+    box-shadow: 0 10px 18px rgba(31, 80, 110, 0.35);
+  }
+
+  .calc-btn:active {
+    transform: translateY(1px);
+  }
+
+  /* result panel – dynamic and sleek */
+  .result-panel {
+    background: #f8fbfe;
+    border-radius: 1.5rem;
+    margin-top: 1.2rem;
+    padding: 0.2rem;
+    transition: all 0.2s;
+  }
+
+  .result-card {
+    border-radius: 1.5rem;
+    padding: 1.3rem 1.2rem;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    border: 1px solid #e9f0f5;
+  }
+
+  .bmi-value {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
+  }
+
+  .bmi-category {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    display: inline-block;
+    padding: 0.2rem 1rem;
+    border-radius: 60px;
+  }
+
+  .health-note {
+    font-size: 0.8rem;
+    color: #5f7b92;
+    border-top: 1px solid #e9eff4;
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+  }
+
+  /* status colors */
+  .status-underweight .bmi-value { color: #3b82f6; }
+  .status-underweight .bmi-category { background: #e0f2fe; color: #0369a1; }
+
+  .status-normal .bmi-value { color: #10b981; }
+  .status-normal .bmi-category { background: #dcfce7; color: #15803d; }
+
+  .status-overweight .bmi-value { color: #f59e0b; }
+  .status-overweight .bmi-category { background: #ffedd5; color: #b45309; }
+
+  .status-obese .bmi-value { color: #ef4444; }
+  .status-obese .bmi-category { background: #fee2e2; color: #b91c1c; }
+
+  .error-state .bmi-value { color: #9ca3af; font-size: 1.5rem; }
+  .error-state .bmi-category { background: #f3f4f6; color: #4b5563; }
+
+  /* hidden utility */
+  .hidden-result {
+    display: none;
+  }
+
+  /* small interactive badge */
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    font-size: 0.7rem;
+    background: #f3f9ff;
+    padding: 0.6rem 1rem;
+    border-radius: 1.2rem;
+    color: #2c5a74;
+    font-weight: 500;
+  }
+
+  /* responsive adjustments */
+  @media (max-width: 520px) {
+    body {
+      padding: 1rem;
+    }
+    .bmi-content {
+      padding: 1.5rem;
+    }
+    .bmi-header h1 {
+      font-size: 1.5rem;
+    }
+    .bmi-value {
+      font-size: 2.4rem;
+    }
+    .bmi-category {
+      font-size: 1rem;
+    }
+    .input-wrapper input {
+      padding: 0.7rem 0.2rem;
+    }
+  }
+
+  /* tooltip & extra style */
+  .unit-hint {
+    font-size: 0.7rem;
+    margin-top: 0.3rem;
+    color: #6883a0;
+    padding-left: 0.5rem;
+  }
+  footer {
+    font-size: 0.65rem;
+    text-align: center;
+    padding: 1rem 1.5rem 1.3rem;
+    color: #7c97ae;
+    border-top: 1px solid #e2ebf3;
+    background: #fefefe;
+  }
+</style>
+</head>
+<body>
+
+<div class="bmi-card">
+  <div class="bmi-header">
+    <h1>
+      <span>⚖️</span> BMI Compass
+    </h1>
+    <p>Evidence-based body mass index · WHO classification</p>
+  </div>
+
+  <div class="bmi-content">
+    <div class="input-group">
+      <div class="input-label">
+        <span>📏</span> Height
+      </div>
+      <div class="input-wrapper">
+        <input type="number" id="heightInput" placeholder="e.g. 175" step="0.1">
+        <div class="unit">cm</div>
+      </div>
+      <div class="unit-hint">centimeters (cm)</div>
+    </div>
+
+    <div class="input-group">
+      <div class="input-label">
+        <span>⚡</span> Weight
+      </div>
+      <div class="input-wrapper">
+        <input type="number" id="weightInput" placeholder="e.g. 70" step="0.1">
+        <div class="unit">kg</div>
+      </div>
+      <div class="unit-hint">kilograms (kg)</div>
+    </div>
+
+    <button class="calc-btn" id="calculateBtn">
+      <span>🔄</span> Calculate BMI
+    </button>
+
+    <!-- dynamic result panel -->
+    <div id="resultContainer" class="result-panel hidden-result">
+      <div class="result-card" id="resultCard">
+        <div class="bmi-value" id="bmiNumber">--</div>
+        <div class="bmi-category" id="bmiCategory">Awaiting data</div>
+        <div class="health-note" id="healthSuggestion">
+          Enter height & weight above
+        </div>
+      </div>
+    </div>
+
+    <div class="info-row">
+      <span>📘 Underweight: &lt;18.5</span>
+      <span>✅ Normal: 18.5–24.9</span>
+      <span>⚠️ Overweight: 25–29.9</span>
+      <span>🔴 Obese: ≥30</span>
+    </div>
+  </div>
+  <footer>
+    ⚕️ Clinical reference: BMI is a screening tool. Always consult a healthcare provider for individual assessment.
+  </footer>
+</div>
+
+<script>
+  // DOM elements
+  const heightInput = document.getElementById('heightInput');
+  const weightInput = document.getElementById('weightInput');
+  const calculateBtn = document.getElementById('calculateBtn');
+  const resultContainer = document.getElementById('resultContainer');
+  const bmiNumberSpan = document.getElementById('bmiNumber');
+  const bmiCategorySpan = document.getElementById('bmiCategory');
+  const healthSuggestionSpan = document.getElementById('healthSuggestion');
+  const resultCard = document.getElementById('resultCard');
+
+  // Helper: compute BMI and return object with numeric value + category key + formatted suggestion
+  function computeBMI(heightCm, weightKg) {
+    if (!heightCm || !weightKg || heightCm <= 0 || weightKg <= 0) {
+      return { error: true, message: "⚠️ Please enter valid height (>0) and weight (>0)." };
+    }
+    const heightM = heightCm / 100;
+    const bmiValue = weightKg / (heightM * heightM);
+    if (!isFinite(bmiValue)) {
+      return { error: true, message: "⚠️ Invalid numeric values." };
+    }
+    
+    let categoryKey = '';
+    let categoryName = '';
+    let suggestion = '';
+    
+    if (bmiValue < 18.5) {
+      categoryKey = 'underweight';
+      categoryName = 'Underweight';
+      suggestion = '🔹 Consider nutritional support & medical evaluation. Focus on balanced calorie intake.';
+    } else if (bmiValue >= 18.5 && bmiValue <= 24.9) {
+      categoryKey = 'normal';
+      categoryName = 'Normal weight';
+      suggestion = '✅ Healthy range! Maintain with balanced diet and regular physical activity.';
+    } else if (bmiValue >= 25 && bmiValue <= 29.9) {
+      categoryKey = 'overweight';
+      categoryName = 'Overweight';
+      suggestion = '⚠️ Weight management may reduce cardiovascular risks. Consult lifestyle modifications.';
+    } else {
+      categoryKey = 'obese';
+      categoryName = 'Obese';
+      suggestion = '🔴 Higher risk for metabolic conditions. Medical guidance recommended for sustainable plan.';
+    }
+    
+    return {
+      error: false,
+      bmi: bmiValue,
+      categoryKey: categoryKey,
+      categoryName: categoryName,
+      suggestion: suggestion
+    };
+  }
+
+  // Update UI with result and dynamic theming
+  function updateBMIResult() {
+    // get raw values
+    let heightRaw = heightInput.value.trim();
+    let weightRaw = weightInput.value.trim();
+    
+    const height = parseFloat(heightRaw);
+    const weight = parseFloat(weightRaw);
+    
+    // validation: check if inputs are numbers and not NaN
+    if (isNaN(height) || isNaN(weight) || heightRaw === "" || weightRaw === "") {
+      // show result panel but with error state
+      resultContainer.classList.remove('hidden-result');
+      // reset any previous status classes
+      resetStatusClasses();
+      bmiNumberSpan.textContent = '? ?';
+      bmiCategorySpan.textContent = 'Missing data';
+      healthSuggestionSpan.textContent = 'Please fill both height (cm) and weight (kg).';
+      // apply error styling
+      resultCard.classList.add('error-state');
+      return;
+    }
+    
+    if (height <= 0 || weight <= 0) {
+      resultContainer.classList.remove('hidden-result');
+      resetStatusClasses();
+      bmiNumberSpan.textContent = 'Invalid';
+      bmiCategorySpan.textContent = 'Negative/Zero value';
+      healthSuggestionSpan.textContent = 'Height and weight must be greater than zero.';
+      resultCard.classList.add('error-state');
+      return;
+    }
+    
+    // compute using the core logic
+    const result = computeBMI(height, weight);
+    
+    if (result.error) {
+      resultContainer.classList.remove('hidden-result');
+      resetStatusClasses();
+      bmiNumberSpan.textContent = 'Error';
+      bmiCategorySpan.textContent = 'Invalid input';
+      healthSuggestionSpan.textContent = result.message;
+      resultCard.classList.add('error-state');
+      return;
+    }
+    
+    // Remove error class if present
+    resultCard.classList.remove('error-state');
+    // Remove all previous category classes
+    resetStatusClasses();
+    
+    // apply fresh status class for proper theming
+    if (result.categoryKey === 'underweight') {
+      resultCard.classList.add('status-underweight');
+    } else if (result.categoryKey === 'normal') {
+      resultCard.classList.add('status-normal');
+    } else if (result.categoryKey === 'overweight') {
+      resultCard.classList.add('status-overweight');
+    } else if (result.categoryKey === 'obese') {
+      resultCard.classList.add('status-obese');
+    }
+    
+    // format BMI to one decimal place (standard)
+    const bmiFormatted = result.bmi.toFixed(1);
+    bmiNumberSpan.textContent = bmiFormatted;
+    bmiCategorySpan.textContent = result.categoryName;
+    healthSuggestionSpan.innerHTML = result.suggestion;
+    
+    // ensure result container is visible
+    resultContainer.classList.remove('hidden-result');
+    
+    // Add smooth animation to highlight changes
+    resultCard.style.transform = 'scale(1.01)';
+    setTimeout(() => {
+      if (resultCard) resultCard.style.transform = '';
+    }, 180);
+  }
+  
+  // Helper to reset all theme classes
+  function resetStatusClasses() {
+    resultCard.classList.remove('status-underweight', 'status-normal', 'status-overweight', 'status-obese', 'error-state');
+  }
+  
+  // Additional interactive feedback – also compute on pressing Enter
+  function handleEnterKey(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      updateBMIResult();
+    }
+  }
+  
+  // Add live realtime hint / optional but also show visual feedback when inputs change (dynamic)
+  // but to respect user preference we also add a clear button feeling: clicking calculate is primary.
+  // However to improve UX, we also compute if both fields are valid after a short delay? 
+  // We'll keep explicit button + also support "Enter" on each field + clear valdiations.
+  // Also ensure that the number inputs only allow positive numbers.
+  
+  // Additional feature: restrict negative values on blur
+  function sanitizeInputs() {
+    let hVal = parseFloat(heightInput.value);
+    let wVal = parseFloat(weightInput.value);
+    if (!isNaN(hVal) && hVal < 0) heightInput.value = '';
+    if (!isNaN(wVal) && wVal < 0) weightInput.value = '';
+    if (!isNaN(hVal) && hVal === 0) heightInput.value = '';
+    if (!isNaN(wVal) && wVal === 0) weightInput.value = '';
+  }
+  
+  // Extra live preview (optional): A convenience that shows computed BMI while typing? 
+  // Not invasive but nice: we'll add a small auto-update on input change, but only when both fields contain plausible numbers
+  // This makes the tool feel faster and more modern.
+  let debounceTimer;
+  function autoUpdatePreview() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      const height = parseFloat(heightInput.value);
+      const weight = parseFloat(weightInput.value);
+      if (!isNaN(height) && !isNaN(weight) && height > 0 && weight > 0 && heightInput.value !== "" && weightInput.value !== "") {
+        updateBMIResult();
+      } else if ((heightInput.value !== "" && weightInput.value !== "") && (height <= 0 || weight <= 0)) {
+        // show error for invalid positive
+        updateBMIResult(); // will trigger error state
+      } else if (heightInput.value === "" || weightInput.value === "") {
+        // keep hidden until both are filled? but we'll show neutral clear state only if we want. We will maintain a more intuitive UX:
+        // If any field empty but user expects result, we only show missing data when they click OR after they finish typing but not annoying.
+        // To avoid clutter, we only auto-refresh when both have numbers>0, otherwise we keep a "waiting for data"
+        if (resultContainer && !resultContainer.classList.contains('hidden-result')) {
+          // If result panel is visible but missing fields, we optionally set neutral state without hiding abruptly
+          const hasHeightEmpty = heightInput.value.trim() === "";
+          const hasWeightEmpty = weightInput.value.trim() === "";
+          if (hasHeightEmpty || hasWeightEmpty) {
+            resetStatusClasses();
+            bmiNumberSpan.textContent = '--';
+            bmiCategorySpan.textContent = 'Enter data';
+            healthSuggestionSpan.innerHTML = 'Provide height & weight to see BMI';
+            resultCard.classList.add('error-state');
+            resultContainer.classList.remove('hidden-result');
+          } else {
+            // maybe both have values but invalid numbers
+            updateBMIResult();
+          }
+        } else if ((heightInput.value.trim() !== "" && weightInput.value.trim() !== "")) {
+          updateBMIResult();
+        }
+      }
+    }, 400);
+  }
+  
+  // attach event listeners for a modern, fluid experience
+  function attachEvents() {
+    calculateBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      updateBMIResult();
+      // provide haptic feedback
+      calculateBtn.style.transform = 'scale(0.97)';
+      setTimeout(() => { if(calculateBtn) calculateBtn.style.transform = ''; }, 120);
+    });
+    
+    heightInput.addEventListener('input', () => {
+      sanitizeInputs();
+      autoUpdatePreview();
+    });
+    weightInput.addEventListener('input', () => {
+      sanitizeInputs();
+      autoUpdatePreview();
+    });
+    
+    heightInput.addEventListener('keypress', handleEnterKey);
+    weightInput.addEventListener('keypress', handleEnterKey);
+    
+    heightInput.addEventListener('blur', () => {
+      sanitizeInputs();
+      if (heightInput.value !== "" && parseFloat(heightInput.value) <= 0) heightInput.value = "";
+    });
+    weightInput.addEventListener('blur', () => {
+      sanitizeInputs();
+      if (weightInput.value !== "" && parseFloat(weightInput.value) <= 0) weightInput.value = "";
+    });
+  }
+  
+  // initial check: result hidden by default until first interaction
+  // but we want a clean start: the result panel is hidden with hidden-result class.
+  // However we also want to display something smart if the user already has prefilled demo? 
+  // We'll set a demo optional placeholder but not intrusive. Shows 'awaiting data' only when needed.
+  // Also if both fields have example numbers? No, but we can keep them blank.
+  function init() {
+    attachEvents();
+    // ensure result container hidden initially to avoid empty content before any action
+    resultContainer.classList.add('hidden-result');
+    // safe default reset
+    resetStatusClasses();
+    bmiNumberSpan.textContent = '--';
+    bmiCategorySpan.textContent = 'Awaiting data';
+    healthSuggestionSpan.innerHTML = 'Enter your height & weight then click Calculate';
+    // extra: if browser prefills? then we automatically update after a slight delay to respect existing cached values
+    setTimeout(() => {
+      const hVal = heightInput.value.trim();
+      const wVal = weightInput.value.trim();
+      if (hVal !== "" && wVal !== "" && !isNaN(parseFloat(hVal)) && !isNaN(parseFloat(wVal)) && parseFloat(hVal) > 0 && parseFloat(wVal) > 0) {
+        updateBMIResult();
+      } else {
+        // keep hidden or show neutral? better to keep neutral but result still hidden until filled.
+        // user will fill and see realtime preview.
+        resultContainer.classList.add('hidden-result');
+      }
+    }, 100);
+  }
+  
+  // prevent non-numeric dots and ensure step consistency but number input already handles.
+  // Also handle cases where user inputs extreme numbers - but still gives correct BMI logic.
+  // Final tiny improvement: add a visual tooltip for metric system.
+  
+  init();
+</script>
+</body>
+</html>

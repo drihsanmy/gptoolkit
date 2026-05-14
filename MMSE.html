@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>MMSE | Mini-Mental State Examination</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #eef2f7;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            padding: 24px 16px;
+            color: #1a2c3e;
+            line-height: 1.4;
+        }
+
+        /* modern container */
+        .mmse-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        /* header area with gradient + logo */
+        .hero-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2b4c7c 100%);
+            padding: 28px 28px 20px 28px;
+            text-align: center;
+            color: white;
+        }
+
+        .logo-area {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+
+        .logo-circle {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(4px);
+            border-radius: 60px;
+            padding: 10px 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .logo-circle span {
+            font-size: 28px;
+        }
+
+        .hero-header h1 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            margin: 12px 0 4px;
+        }
+
+        .hero-header p {
+            opacity: 0.85;
+            font-size: 0.9rem;
+        }
+
+        /* patient info card */
+        .info-card {
+            background: #f9fcff;
+            margin: 24px 28px 0 28px;
+            border-radius: 28px;
+            padding: 18px 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            border: 1px solid #e2edf7;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .info-field {
+            flex: 1 1 180px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .info-field label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #2c6280;
+        }
+
+        .info-field input {
+            background: white;
+            border: 1px solid #cddfe7;
+            border-radius: 18px;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: 0.2s;
+            outline: none;
+        }
+
+        .info-field input:focus {
+            border-color: #2b7a62;
+            box-shadow: 0 0 0 3px rgba(43,122,98,0.2);
+        }
+
+        /* sections */
+        .sections-wrapper {
+            padding: 20px 28px 32px 28px;
+        }
+
+        .section-card {
+            background: #ffffff;
+            border-radius: 24px;
+            margin-bottom: 28px;
+            border: 1px solid #e9f0f5;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .section-card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+        }
+
+        .section-title {
+            background: #f4f9fe;
+            padding: 14px 24px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #dcebf3;
+            color: #1f5068;
+            letter-spacing: -0.2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+        }
+
+        .section-title span:first-child {
+            background: #dcebf3;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            color: #1f5068;
+            font-weight: 500;
+        }
+
+        .items-grid {
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .question-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid #ecf3f8;
+            padding-bottom: 14px;
+        }
+
+        .question-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .question-text {
+            flex: 3;
+            min-width: 180px;
+            font-weight: 600;
+            color: #1f3b4a;
+        }
+
+        .response-area {
+            flex: 5;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .input-group {
+            flex: 1;
+            min-width: 110px;
+        }
+
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 16px;
+            border: 1px solid #cbdde6;
+            font-family: inherit;
+            font-size: 0.85rem;
+            background: #fff;
+            transition: 0.15s;
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .score-badge {
+            width: 60px;
+            text-align: center;
+            background: #f1f5f9;
+            border-radius: 30px;
+            padding: 6px 0;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .score-badge input {
+            width: 46px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #0f3b2c;
+            pointer-events: none;
+        }
+
+        .inline-multi {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .inline-item {
+            background: #fafdff;
+            border-radius: 20px;
+            padding: 6px 12px;
+            border: 1px solid #e2edf5;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1 0 120px;
+        }
+
+        .inline-item span {
+            font-size: 0.75rem;
+            color: #3e6b82;
+            font-weight: 500;
+        }
+
+        /* drawing preview */
+        .design-preview {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .copy-shape {
+            background: #fef7e0;
+            border-radius: 20px;
+            padding: 10px;
+            border: 1px solid #f0e2bc;
+        }
+        .shape-box {
+            width: 70px;
+            height: 70px;
+            position: relative;
+            border: 1px solid #1f3b4a;
+            background: white;
+        }
+        .shape-box div {
+            width: 45px;
+            height: 45px;
+            border: 1px solid #1f3b4a;
+            position: absolute;
+            top: 12px;
+            left: 12px;
+        }
+        .shape-box div div {
+            width: 25px;
+            height: 25px;
+            top: 10px;
+            left: 10px;
+        }
+
+        /* total score area */
+        .total-area {
+            background: #eef3fc;
+            margin: 8px 28px 24px 28px;
+            border-radius: 40px;
+            padding: 18px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-weight: 700;
+        }
+        .total-label {
+            font-size: 1.2rem;
+            color: #1f5068;
+        }
+        .total-value {
+            font-size: 2.4rem;
+            background: white;
+            padding: 6px 24px;
+            border-radius: 60px;
+            color: #236653;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            letter-spacing: 1px;
+        }
+
+        /* buttons */
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+            padding: 8px 28px 36px 28px;
+        }
+        .btn {
+            border: none;
+            background: white;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border: 1px solid #c7dbe8;
+            color: #2c5a74;
+        }
+        .btn-primary {
+            background: #2b7a62;
+            border: none;
+            color: white;
+            box-shadow: 0 4px 8px rgba(43,122,98,0.2);
+        }
+        .btn-primary:hover {
+            background: #216b55;
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: #f0f5fa;
+            border-color: #cbdde6;
+        }
+        .btn-secondary:hover {
+            background: #e6eef5;
+        }
+        .btn-print {
+            background: #fef7e0;
+            border-color: #f0e2bc;
+        }
+
+        /* report card */
+        .report-card {
+            margin: 0 28px 32px 28px;
+            background: #ffffff;
+            border-radius: 28px;
+            border: 1px solid #cde1ec;
+            padding: 24px;
+            display: none;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        .report-card.show {
+            display: block;
+            animation: fadeSlide 0.3s ease;
+        }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(12px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .report-header {
+            text-align: center;
+            border-bottom: 2px dashed #cfdfea;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+        .report-header img {
+            max-height: 55px;
+            opacity: 0.8;
+        }
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fbfefe;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .report-table th, .report-table td {
+            border: 1px solid #e2edf5;
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+        .report-table th {
+            background: #e9f2f9;
+            font-weight: 700;
+        }
+        .interpret {
+            margin-top: 18px;
+            background: #f0f7fc;
+            border-radius: 20px;
+            padding: 14px 20px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 12px;
+            }
+            .sections-wrapper, .info-card {
+                margin-left: 16px;
+                margin-right: 16px;
+            }
+            .section-title {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .question-row {
+                flex-direction: column;
+            }
+            .response-area {
+                width: 100%;
+            }
+            .score-badge {
+                align-self: flex-end;
+            }
+            .total-value {
+                font-size: 1.8rem;
+            }
+            .hero-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+            .action-bar, .btn, .no-print {
+                display: none !important;
+            }
+            .mmse-container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            .info-card, .section-card, .total-area, .report-card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+            .report-card {
+                display: block !important;
+                border: 1px solid #ccc;
+                margin-top: 20px;
+            }
+            .hero-header {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+        small.hint {
+            font-size: 0.7rem;
+            color: #7492a5;
+            display: block;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="mmse-container">
+    <div class="hero-header">
+        <div class="logo-area">
+            <div class="logo-circle">
+                <span>🧠</span> NEURO ASSESSMENT
+            </div>
+        </div>
+        <h1>Mini-Mental State Examination</h1>
+        <p>Standardized cognitive screening · Folstein MMSE</p>
+    </div>
+
+    <div class="info-card">
+        <div class="info-field"><label>Full name</label><input type="text" id="patientName" placeholder="e.g., Maria Gonzalez" autocomplete="off"></div>
+        <div class="info-field"><label>IC / ID number</label><input type="text" id="patientId" placeholder="Identification number" autocomplete="off"></div>
+        <div class="info-field"><label>Assessment date</label><input type="text" id="examDate" readonly style="background:#fef9e6;"></div>
+    </div>
+
+    <div class="sections-wrapper" id="examSections">
+        <!-- ORIENTATION TIME (5) -->
+        <div class="section-card">
+            <div class="section-title"><span>🧭 ORIENTATION · TIME (5 pts)</span><span>score /5</span></div>
+            <div class="items-grid" id="timeOrientation"></div>
+        </div>
+        <!-- ORIENTATION PLACE (5) -->
+        <div class="section-card">
+            <div class="section-title"><span>📍 ORIENTATION · PLACE (5 pts)</span><span>score /5</span></div>
+            <div class="items-grid" id="placeOrientation"></div>
+        </div>
+        <!-- REGISTRATION -->
+        <div class="section-card">
+            <div class="section-title"><span>📝 REGISTRATION (3 pts)</span><span>score /3</span></div>
+            <div class="items-grid" id="registrationGroup"></div>
+        </div>
+        <!-- ATTENTION/CALCULATION -->
+        <div class="section-card">
+            <div class="section-title"><span>➗ ATTENTION & CALCULATION (serial 7s) (5 pts)</span><span>score /5</span></div>
+            <div class="items-grid" id="calcGroup"></div>
+        </div>
+        <!-- RECALL -->
+        <div class="section-card">
+            <div class="section-title"><span>🔄 RECALL (3 pts)</span><span>score /3</span></div>
+            <div class="items-grid" id="recallGroup"></div>
+        </div>
+        <!-- LANGUAGE (9) -->
+        <div class="section-card">
+            <div class="section-title"><span>🗣️ LANGUAGE (9 pts)</span><span>score /9</span></div>
+            <div class="items-grid" id="languageGroup"></div>
+        </div>
+    </div>
+
+    <div class="total-area">
+        <div class="total-label">TOTAL SCORE (max 30)</div>
+        <div class="total-value" id="globalTotalDisplay">0</div>
+    </div>
+
+    <div class="action-bar">
+        <button class="btn btn-primary" id="calcBtn">✨ Calculate & Refresh</button>
+        <button class="btn btn-secondary" id="reportBtn">📄 Generate Report</button>
+        <button class="btn btn-print" id="printBtn">🖨️ Print / Save PDF</button>
+    </div>
+
+    <div id="reportPanel" class="report-card">
+        <div class="report-header">
+            <span style="font-size:28px;">📋</span>
+            <h3 style="margin-top:6px;">MMSE Clinical Report</h3>
+        </div>
+        <div id="reportDynamic"></div>
+    </div>
+</div>
+
+<script>
+    // ---------- DATA DEFINITIONS ----------
+    const timeItems = [
+        { label: "Year", id: "time_year" },
+        { label: "Season", id: "time_season" },
+        { label: "Month", id: "time_month" },
+        { label: "Date", id: "time_date" },
+        { label: "Day of week", id: "time_day" }
+    ];
+    const placeItems = [
+        { label: "State", id: "place_state" },
+        { label: "County / District", id: "place_county" },
+        { label: "Town / City", id: "place_town" },
+        { label: "Hospital / Clinic", id: "place_hospital" },
+        { label: "Floor / Unit", id: "place_floor" }
+    ];
+    const registrationItems = [
+        { label: "Object 1", id: "reg_obj1" },
+        { label: "Object 2", id: "reg_obj2" },
+        { label: "Object 3", id: "reg_obj3" }
+    ];
+    const calcItems = [
+        { label: "100 - 7 = 93", id: "calc_1" },
+        { label: "93 - 7 = 86", id: "calc_2" },
+        { label: "86 - 7 = 79", id: "calc_3" },
+        { label: "79 - 7 = 72", id: "calc_4" },
+        { label: "72 - 7 = 65", id: "calc_5" }
+    ];
+    const recallItems = [
+        { label: "Recall Object 1", id: "recall_1" },
+        { label: "Recall Object 2", id: "recall_2" },
+        { label: "Recall Object 3", id: "recall_3" }
+    ];
+    const languageItems = [
+        { label: "Naming (pencil)", id: "lang_pencil", type: "text", placeholder: "Pencil response" },
+        { label: "Naming (watch)", id: "lang_watch", type: "text", placeholder: "Watch response" },
+        { label: "Repetition: 'No ifs, ands, or buts'", id: "lang_repeat", type: "text", placeholder: "Exact repetition?" },
+        { label: "3-stage command: Take paper in right hand", id: "lang_cmd1", type: "text", placeholder: "Performed?" },
+        { label: "3-stage command: Fold paper in half", id: "lang_cmd2", type: "text", placeholder: "Performed?" },
+        { label: "3-stage command: Put paper on floor", id: "lang_cmd3", type: "text", placeholder: "Performed?" },
+        { label: "Read & obey: 'CLOSE YOUR EYES'", id: "lang_read", type: "text", placeholder: "Response (closes eyes)" },
+        { label: "Write a sentence (with subject & verb)", id: "lang_write", type: "textarea", placeholder: "Patient's sentence" },
+        { label: "Copy intersecting pentagons / design", id: "lang_copy", type: "textarea", placeholder: "Description or drawing accuracy" }
+    ];
+
+    function buildForm() {
+        // time
+        buildGroup("timeOrientation", timeItems, "timeScore");
+        buildGroup("placeOrientation", placeItems, "placeScore");
+        buildGroup("registrationGroup", registrationItems, "regScore");
+        buildGroup("calcGroup", calcItems, "calcScore");
+        buildGroup("recallGroup", recallItems, "recallScore");
+        
+        // language group dynamic
+        const langContainer = document.getElementById("languageGroup");
+        langContainer.innerHTML = "";
+        languageItems.forEach((item, idx) => {
+            const row = document.createElement("div");
+            row.className = "question-row";
+            row.innerHTML = `
+                <div class="question-text">${item.label}</div>
+                <div class="response-area">
+                    <div class="input-group" style="flex:2">
+                        ${item.type === "textarea" ? `<textarea id="${item.id}" placeholder="${item.placeholder}"></textarea>` : `<input type="text" id="${item.id}" placeholder="${item.placeholder}">`}
+                    </div>
+                    <div class="score-badge"><input type="text" id="score_${item.id}" readonly value="0"></div>
+                </div>
+            `;
+            langContainer.appendChild(row);
+        });
+    }
+
+    function buildGroup(containerId, items, scoreIdPrefix) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = "";
+        items.forEach(item => {
+            const row = document.createElement("div");
+            row.className = "question-row";
+            row.innerHTML = `
+                <div class="question-text">${item.label}</div>
+                <div class="response-area">
+                    <div class="input-group"><input type="text" id="${item.id}" placeholder="Patient's answer" autocomplete="off"></div>
+                    <div class="score-badge"><input type="text" id="score_${item.id}" readonly value="0"></div>
+                </div>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    // scoring helper: any non-empty trim => 1 point
+    function fieldScore(fieldId) {
+        const el = document.getElementById(fieldId);
+        if (!el) return 0;
+        return (el.value.trim() !== "") ? 1 : 0;
+    }
+
+    function computeAllScores() {
+        // Time Orientation (5)
+        let timeTotal = 0;
+        timeItems.forEach(it => { timeTotal += fieldScore(it.id); });
+        document.querySelectorAll("#timeOrientation .score-badge input").forEach((inp, idx) => { if (idx < timeItems.length) inp.value = fieldScore(timeItems[idx].id); });
+        
+        // Place Orientation
+        let placeTotal = 0;
+        placeItems.forEach(it => { placeTotal += fieldScore(it.id); });
+        document.querySelectorAll("#placeOrientation .score-badge input").forEach((inp, idx) => { if (idx < placeItems.length) inp.value = fieldScore(placeItems[idx].id); });
+        
+        // Registration
+        let regTotal = 0;
+        registrationItems.forEach(it => { regTotal += fieldScore(it.id); });
+        document.querySelectorAll("#registrationGroup .score-badge input").forEach((inp, idx) => { if (idx < registrationItems.length) inp.value = fieldScore(registrationItems[idx].id); });
+        
+        // Calculation
+        let calcTotal = 0;
+        calcItems.forEach(it => { calcTotal += fieldScore(it.id); });
+        document.querySelectorAll("#calcGroup .score-badge input").forEach((inp, idx) => { if (idx < calcItems.length) inp.value = fieldScore(calcItems[idx].id); });
+        
+        // Recall
+        let recallTotal = 0;
+        recallItems.forEach(it => { recallTotal += fieldScore(it.id); });
+        document.querySelectorAll("#recallGroup .score-badge input").forEach((inp, idx) => { if (idx < recallItems.length) inp.value = fieldScore(recallItems[idx].id); });
+        
+        // Language scoring: naming (2 items: pencil, watch), repetition, 3 commands, read, write, copy.
+        let langSum = 0;
+        const naming1 = fieldScore("lang_pencil");
+        const naming2 = fieldScore("lang_watch");
+        const repetition = fieldScore("lang_repeat");
+        const cmd1 = fieldScore("lang_cmd1");
+        const cmd2 = fieldScore("lang_cmd2");
+        const cmd3 = fieldScore("lang_cmd3");
+        const readCmd = fieldScore("lang_read");
+        const writeSen = fieldScore("lang_write");
+        const copyDesign = fieldScore("lang_copy");
+        langSum = naming1 + naming2 + repetition + cmd1 + cmd2 + cmd3 + readCmd + writeSen + copyDesign;
+        
+        // update language individual score fields
+        const langScoreMap = {
+            "score_lang_pencil": naming1, "score_lang_watch": naming2, "score_lang_repeat": repetition,
+            "score_lang_cmd1": cmd1, "score_lang_cmd2": cmd2, "score_lang_cmd3": cmd3,
+            "score_lang_read": readCmd, "score_lang_write": writeSen, "score_lang_copy": copyDesign
+        };
+        for (let [key, val] of Object.entries(langScoreMap)) {
+            const inp = document.getElementById(key);
+            if (inp) inp.value = val;
+        }
+        
+        const total = timeTotal + placeTotal + regTotal + calcTotal + recallTotal + langSum;
+        document.getElementById("globalTotalDisplay").innerText = total;
+        return { timeTotal, placeTotal, regTotal, calcTotal, recallTotal, langSum, total };
+    }
+
+    function getInterpretation(score) {
+        if (score >= 24) return "✅ Normal cognition (24-30)";
+        if (score >= 18) return "⚠️ Mild cognitive impairment (18-23)";
+        if (score >= 10) return "🔻 Moderate cognitive impairment (10-17)";
+        return "❌ Severe cognitive impairment (0-9)";
+    }
+
+    function generateReport() {
+        const scores = computeAllScores();
+        const name = document.getElementById("patientName").value.trim() || "—";
+        const ic = document.getElementById("patientId").value.trim() || "—";
+        const date = document.getElementById("examDate").value;
+        
+        const reportHtml = `
+            <div style="margin-bottom:8px;"><strong>🧑‍⚕️ Patient:</strong> ${name} &nbsp;|&nbsp; <strong>ID:</strong> ${ic} &nbsp;|&nbsp; <strong>Date:</strong> ${date}</div>
+            <table class="report-table">
+                <thead><tr><th>Domain</th><th>Score</th><th>Max</th></tr></thead>
+                <tbody>
+                    <tr><td>Orientation (Time)</td><td>${scores.timeTotal}</td><td>5</td></tr>
+                    <tr><td>Orientation (Place)</td><td>${scores.placeTotal}</td><td>5</td></tr>
+                    <tr><td>Registration</td><td>${scores.regTotal}</td><td>3</td></tr>
+                    <tr><td>Attention & Calculation</td><td>${scores.calcTotal}</td><td>5</td></tr>
+                    <tr><td>Recall</td><td>${scores.recallTotal}</td><td>3</td></tr>
+                    <tr><td>Language (Naming, repetition, command, reading, writing, copying)</td><td>${scores.langSum}</td><td>9</td></tr>
+                    <tr style="background:#eef3fc; font-weight:700;"><td>TOTAL MMSE</td><td colspan="2">${scores.total} / 30</td></tr>
+                </tbody>
+            </table>
+            <div class="interpret">
+                <strong>📌 Interpretation:</strong> ${getInterpretation(scores.total)}<br>
+                <small style="color:#4a6a7f;">*Points awarded for correct/appropriate responses. Clinical correlation advised.</small>
+            </div>
+            <div style="margin-top: 16px; font-size:0.75rem; text-align:center; border-top:1px solid #e2edf5; padding-top:12px;">
+                Mini-Mental State Examination © Folstein et al. | For clinical guidance
+            </div>
+        `;
+        document.getElementById("reportDynamic").innerHTML = reportHtml;
+        const reportPanel = document.getElementById("reportPanel");
+        reportPanel.classList.add("show");
+        reportPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function setToday() {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        document.getElementById("examDate").value = `${yyyy}-${mm}-${dd}`;
+    }
+
+    function attachEvents() {
+        document.getElementById("calcBtn").addEventListener("click", () => {
+            computeAllScores();
+        });
+        document.getElementById("reportBtn").addEventListener("click", () => {
+            computeAllScores();
+            generateReport();
+        });
+        document.getElementById("printBtn").addEventListener("click", () => {
+            computeAllScores();
+            generateReport();
+            setTimeout(() => { window.print(); }, 100);
+        });
+        // real-time slight update on input blur for convenience
+        const allInputs = document.querySelectorAll("input, textarea");
+        allInputs.forEach(inp => {
+            inp.addEventListener("blur", () => computeAllScores());
+        });
+    }
+
+    function init() {
+        buildForm();
+        setToday();
+        attachEvents();
+        computeAllScores(); // initial zeros
+    }
+    init();
+</script>
+</body>
+</html>
